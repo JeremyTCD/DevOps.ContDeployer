@@ -1,0 +1,16 @@
+﻿{
+  "pipeline": [
+    {
+      "name": "testPlugin",
+      "options": {
+        "testOptions":  "testOptionValue"
+      }
+    }
+  ],
+  "logging": {
+    "logLevel": {
+      "console": "Information",
+      "debug": "Information"
+    }
+  }
+}
