@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Composition;
@@ -8,21 +9,40 @@ namespace JeremyTCD.DevOps.ContDeployer
 {
     public class Pipeline
     {
-        public List<IPlugin> Plugins { get; set; }
-        public List<PluginConfig> Configs { get; set; }
+        public PipelineContext Context { get; }
+        public ILogger<Pipeline> Logger { get; }
+        public PipelineOptions Options { get; }
 
-        public Pipeline(List<IPlugin> plugins, List<PluginConfig> configs)
+        public Pipeline(PipelineContext context, IOptions<PipelineOptions> optionsAccessor, 
+            ILogger<Pipeline> logger)
         {
-            Plugins = plugins;
-            Configs = configs;
+            Context = context;
+            Logger = logger;
+            Options = optionsAccessor.Value;
         }
 
         public void Run()
         {
-            foreach(IPlugin plugin in Plugins)
+            Logger.LogInformation("=== Starting pipeline ===");
+
+            // use linked list
+            int i = 0;
+            while (i < Options.PipelineSteps.Count)
             {
+                PipelineStep pipelineStep = Options.PipelineSteps[i];
+
+                IPlugin plugin;
+                if (!Context.Plugins.TryGetValue(pipelineStep.PluginName, out plugin))
+                {
+                    throw new Exception($"{nameof(Pipeline)}: No plugin with name {pipelineStep.PluginName} exists");
+                }
+
                 plugin.Execute(/*metadata, config, allconfigs*/);
+
+                i++;
             }
+
+            Logger.LogInformation("=== Pipeline complete ===");
         }
     }
 }

@@ -26,7 +26,12 @@ namespace JeremyTCD.DevOps.ContDeployer
                 AddLogging().
                 AddOptions();
 
-            services.Configure<PipelineFactoryOptions>(_configurationRoot.GetSection("Pipeline"));
+            services.
+                AddSingleton<PipelineContextFactory>().
+                AddSingleton(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
+                AddSingleton<Pipeline>();
+
+            services.Configure<PipelineOptions>(_configurationRoot.GetSection("Pipeline"));
         }
 
         public void Configure(ILoggerFactory loggerFactory)

@@ -36,9 +36,9 @@ namespace JeremyTCD.DevOps.ContDeployer
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             startup.Configure(loggerFactory);
 
-            ILogger pipelineLogger = serviceProvider.GetService<ILogger<Pipeline>>();
+            Pipeline pipeline = serviceProvider.GetService<Pipeline>();
 
-
+            pipeline.Run();
         }
     }
 }

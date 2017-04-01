@@ -4,8 +4,8 @@ using System.Text;
 
 namespace JeremyTCD.DevOps.ContDeployer
 {
-    public class PipelineFactoryOptions
+    public class PipelineOptions
     {
-        public List<PluginConfig> PluginConfigs { get; set; }
+        public List<PipelineStep> PipelineSteps { get; set; }
     }
 }
