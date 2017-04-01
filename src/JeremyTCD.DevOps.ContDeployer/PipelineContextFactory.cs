@@ -43,17 +43,17 @@ namespace JeremyTCD.DevOps.ContDeployer
                     try
                     {
                         assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                        Logger.LogInformation($"Loaded assembly: {path}");
                     }
                     catch 
                     {
-                        Logger.LogWarning($"Unable to load assembly: {path}");
+                        Logger.LogWarning($"Unable to load assembly: {path}. It may already be loaded.");
                     }
 
                     return assembly;
                 }).
                 Where(assembly => assembly != null).
                 ToList();
-
             assemblies.
                 Add(typeof(PipelineContextFactory).GetTypeInfo().Assembly);
 
