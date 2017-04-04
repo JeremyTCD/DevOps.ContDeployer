@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Composition;
-using System.Text;
 using System.Linq;
 using JeremyTCD.ContDeployer.PluginTools;
 
@@ -24,7 +22,7 @@ namespace JeremyTCD.ContDeployer
         }
 
         /// <summary>
-        /// Executes each step serially
+        /// Executes each pipeline step serially
         /// </summary>
         public void Run()
         {
@@ -33,7 +31,6 @@ namespace JeremyTCD.ContDeployer
 
             Logger.LogInformation("=== Starting pipeline ===");
 
-            // use linked list
             while (steps.Count > 0)
             {
                 PipelineStep step = steps.First();
