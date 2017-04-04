@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using JeremyTCD.DotNetCore.Utils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace JeremyTCD.DevOps.ContDeployer
+namespace JeremyTCD.ContDeployer
 {
     class Startup
     {
@@ -27,7 +28,11 @@ namespace JeremyTCD.DevOps.ContDeployer
                 AddOptions();
 
             services.
+                AddSingleton<IAssemblyService, AssemblyService>();
+
+            services.
                 AddSingleton<PipelineContextFactory>().
+                // PipelineContext service
                 AddSingleton(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
                 AddSingleton<Pipeline>();
 

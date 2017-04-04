@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JeremyTCD.DevOps.ContDeployer
+namespace JeremyTCD.ContDeployer
 {
     class ContDeployer
     {
@@ -22,10 +22,6 @@ namespace JeremyTCD.DevOps.ContDeployer
 
             // All we need from args is log level
             // perhaps run / testrun
-
-            // Startup
-            // Create pipeline
-            // Start pipeline
 
             Startup startup = new Startup();
 

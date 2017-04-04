@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Text;
+using System.Linq;
+using JeremyTCD.ContDeployer.PluginTools;
 
-namespace JeremyTCD.DevOps.ContDeployer
+namespace JeremyTCD.ContDeployer
 {
     public class Pipeline
     {
@@ -21,25 +23,31 @@ namespace JeremyTCD.DevOps.ContDeployer
             Options = optionsAccessor.Value;
         }
 
+        /// <summary>
+        /// Executes each step serially
+        /// </summary>
         public void Run()
         {
+            // Use linked list since steps will be added to and removed from start of list
+            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>(Options.PipelineSteps);
+
             Logger.LogInformation("=== Starting pipeline ===");
 
             // use linked list
-            int i = 0;
-            while (i < Options.PipelineSteps.Count)
+            while (steps.Count > 0)
             {
-                PipelineStep pipelineStep = Options.PipelineSteps[i];
+                PipelineStep step = steps.First();
+                steps.RemoveFirst();
 
                 IPlugin plugin;
-                if (!Context.Plugins.TryGetValue(pipelineStep.PluginName, out plugin))
+                if (!Context.Plugins.TryGetValue(step.PluginName, out plugin))
                 {
-                    throw new Exception($"{nameof(Pipeline)}: No plugin with name {pipelineStep.PluginName} exists");
+                    throw new Exception($"{nameof(Pipeline)}: No plugin with name {step.PluginName} exists");
                 }
 
-                plugin.Execute(/*metadata, config, allconfigs*/);
-
-                i++;
+                Logger.LogInformation($"Running step with plugin: {step.PluginName}");
+                plugin.Execute(step.Config, Context, steps);
+                Logger.LogInformation("Step complete");
             }
 
             Logger.LogInformation("=== Pipeline complete ===");

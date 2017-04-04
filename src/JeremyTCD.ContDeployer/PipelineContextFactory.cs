@@ -1,25 +1,23 @@
-﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Loader;
-using System.Text;
 using System.Reflection;
-using System.Composition;
 using System.Composition.Hosting;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
+using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.DotNetCore.Utils;
 
-namespace JeremyTCD.DevOps.ContDeployer
+namespace JeremyTCD.ContDeployer
 {
     public class PipelineContextFactory
     {
         public ILogger<PipelineContextFactory> Logger { get; }
+        public IAssemblyService AssemblyService { get; }
 
-        public PipelineContextFactory(ILogger<PipelineContextFactory> logger)
+        public PipelineContextFactory(ILogger<PipelineContextFactory> logger, IAssemblyService assemblyService)
         {
             Logger = logger;
+            AssemblyService = assemblyService;
         }
 
         /// <summary>
@@ -32,30 +30,13 @@ namespace JeremyTCD.DevOps.ContDeployer
         {
             Logger.LogInformation("=== Building pipeline context ===");
 
-            // Get and load assemblies 
+            // Get assemblies 
             Logger.LogInformation("Loading assemblies");
-            string cwd = Directory.GetCurrentDirectory();
-            List<Assembly> assemblies = Directory.
-                GetFiles(Path.Combine(cwd, "plugins"), "*.dll", SearchOption.AllDirectories).
-                Select(path =>
-                {
-                    Assembly assembly = null;
-                    try
-                    {
-                        assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-                        Logger.LogInformation($"Loaded assembly: {path}");
-                    }
-                    catch 
-                    {
-                        Logger.LogWarning($"Unable to load assembly: {path}. It may already be loaded.");
-                    }
-
-                    return assembly;
-                }).
-                Where(assembly => assembly != null).
-                ToList();
-            assemblies.
-                Add(typeof(PipelineContextFactory).GetTypeInfo().Assembly);
+            string pluginToolsAssemblyName = typeof(IPlugin).GetTypeInfo().Assembly.GetName().Name;
+            string currentWorkingDir = Directory.GetCurrentDirectory();
+            IEnumerable<Assembly> assemblies = AssemblyService.
+                GetReferencingAssemblies(pluginToolsAssemblyName).
+                Concat(AssemblyService.GetAssembliesInDir(Path.Combine(currentWorkingDir, "plugins"), true));
 
             // Get instances of types that implement IPlugin
             Logger.LogInformation("Instantiating plugins");

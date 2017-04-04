@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>JeremyTCD.ContDeployer</AssemblyName>
     <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <ApplicationIcon />
@@ -14,6 +15,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
@@ -25,4 +27,14 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!--https://blogs.msdn.microsoft.com/kirillosenkov/2015/04/04/how-to-have-a-project-reference-without-referencing-the-actual-binary/-->
+    <!--https://github.com/Microsoft/msbuild/issues/1916-->
+    <!--https://github.com/dotnet/sdk/issues/1020-->
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj" />
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.csproj" />
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
+    <ProjectReference Include="..\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.DevOps.ContDeployer
+namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContext
     {

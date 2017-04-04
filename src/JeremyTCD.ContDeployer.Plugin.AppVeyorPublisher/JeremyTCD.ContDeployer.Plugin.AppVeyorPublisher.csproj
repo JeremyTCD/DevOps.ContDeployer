@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher</AssemblyName>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.0.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
+  </ItemGroup>
+
+</Project>

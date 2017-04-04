@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "JeremyTCD.DevOps.ContDeployer": {
+    "JeremyTCD.ContDeployer": {
       "commandName": "Project",
       "commandLineArgs": "-h"
     }
