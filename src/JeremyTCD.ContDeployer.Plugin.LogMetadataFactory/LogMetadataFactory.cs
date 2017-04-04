@@ -8,7 +8,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
     [Export(typeof(IPlugin))]
     public class LogMetadataFactory : IPlugin
     {
-        public void Execute(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
+        public void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

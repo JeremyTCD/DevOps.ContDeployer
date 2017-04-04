@@ -22,7 +22,7 @@ namespace JeremyTCD.ContDeployer
         }
 
         /// <summary>
-        /// Executes each pipeline step serially
+        /// Runs each pipeline step serially
         /// </summary>
         public void Run()
         {
@@ -43,7 +43,7 @@ namespace JeremyTCD.ContDeployer
                 }
 
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
-                plugin.Execute(step.Config, Context, steps);
+                plugin.Run(step.Config, Context, steps);
                 Logger.LogInformation("Step complete");
             }
 

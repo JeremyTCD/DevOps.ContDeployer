@@ -58,17 +58,17 @@ namespace JeremyTCD.ContDeployer.Tests
             PipelineContext context = new PipelineContext(mockPlugins.Object);
 
             mockPlugin.
-                Setup(m => m.Execute(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 2))
                     );
             mockPlugin.
-                Setup(m => m.Execute(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 1))
                     );
             mockPlugin.
-                Setup(m => m.Execute(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 0))
                     );
