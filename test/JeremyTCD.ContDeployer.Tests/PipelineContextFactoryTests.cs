@@ -16,54 +16,38 @@ namespace JeremyTCD.ContDeployer.Tests
 {
     public class PipelineContextFactoryTests
     {
-        public string TempDir { get; set; }
-        public string TempPluginsDir { get; set; }
-
-        public PipelineContextFactoryTests()
-        {
-            // Reset test folder
-            TempDir = Path.Combine(Path.GetTempPath(), "ContDeployerTemp");
-            TempPluginsDir = Path.Combine(TempDir, "plugins");
-            if (Directory.Exists(TempDir))
-            {
-                Directory.Delete(TempDir, true);
-            }
-            Directory.CreateDirectory(TempPluginsDir);
-        }
-
         [Fact]
         public void Build_CreatesPipelineContext()
         {
             // Arrange
             // Copy TestPlugin assembly over to temp plugins dir
-            string currentDir = typeof(PipelineContextFactoryTests).GetTypeInfo().Assembly.Location;
-            // Can't reference JeremyTCD.TestPlugin 
-            string testPluginAssemblyDir = Path.Combine(currentDir, "../../../../../JeremyTCD.ContDeployer.TestPlugin/bin/Debug/netcoreapp1.1");
-            string[] files = Directory.GetFiles(testPluginAssemblyDir);
-            foreach (string file in files)
-            {
-                File.Copy(file, Path.Combine(TempPluginsDir, Path.GetFileName(file)), true);
-            }
-            // Set current directory to the temp folder
-            Directory.SetCurrentDirectory(TempDir);
-            
             Mock<ILogger<PipelineContextFactory>> mockLogger = new Mock<ILogger<PipelineContextFactory>>();
-            AssemblyService assemblyService = new AssemblyService(); 
-            PipelineContextFactory pipelineContextFactory = new PipelineContextFactory(mockLogger.Object, assemblyService);
+            Mock<IAssemblyService> mockAssemblyService = new Mock<IAssemblyService>();
+            mockAssemblyService.
+                Setup(m => m.GetReferencingAssemblies(It.Is<string>(s => s == typeof(IPlugin).GetTypeInfo().Assembly.GetName().Name))).
+                Returns(new Assembly[] { typeof(LogMetadataFactory).GetTypeInfo().Assembly,
+                     typeof(TagGenerator).GetTypeInfo().Assembly});
+            mockAssemblyService.
+                Setup(m => m.GetAssembliesInDir(It.Is<string>(s => s == Path.Combine(Directory.GetCurrentDirectory(), "plugins")), 
+                    It.Is<bool>(b => b))).
+                Returns(new Assembly[] {
+                     typeof(AppVeyorPublisher).GetTypeInfo().Assembly
+                });
+
+            PipelineContextFactory pipelineContextFactory = new PipelineContextFactory(mockLogger.Object, mockAssemblyService.Object);
 
             // Act
             PipelineContext result = pipelineContextFactory.Build();
 
             // Assert
+            mockAssemblyService.VerifyAll();
             Assert.NotNull(result);
             Assert.NotNull(result.GlobalData);
             Assert.NotNull(result.Plugins);
-            Assert.Equal(4, result.Plugins.Count);
+            Assert.Equal(3, result.Plugins.Count);
             Assert.True(result.Plugins.Keys.Contains(nameof(LogMetadataFactory)));
             Assert.True(result.Plugins.Keys.Contains(nameof(TagGenerator)));
             Assert.True(result.Plugins.Keys.Contains(nameof(AppVeyorPublisher)));
-            // Can't reference JeremyTCD.TestPlugin
-            Assert.True(result.Plugins.Keys.Contains("TestPlugin"));
         }
     }
 }

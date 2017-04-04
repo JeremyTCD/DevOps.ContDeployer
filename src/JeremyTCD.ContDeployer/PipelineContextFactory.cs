@@ -21,7 +21,7 @@ namespace JeremyTCD.ContDeployer
         }
 
         /// <summary>
-        /// Creates a <see cref="PipelineContext"/> instance
+        /// Builds a <see cref="PipelineContext"/> instance
         /// </summary>
         /// <returns>
         /// <see cref="PipelineContext"/>
