@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plug
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\PluginTools.Tests\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{7372C701-9A34-4F07-832C-9FFA193E3041}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7372C701-9A34-4F07-832C-9FFA193E3041}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7372C701-9A34-4F07-832C-9FFA193E3041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4596FE1C-242D-4373-8529-C3D45F5E2FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4596FE1C-242D-4373-8529-C3D45F5E2FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4596FE1C-242D-4373-8529-C3D45F5E2FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4596FE1C-242D-4373-8529-C3D45F5E2FAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +84,6 @@ Global
 		{E94B00F1-114B-43C7-97AA-7503A686BE89} = {0C61E4F4-837A-41A8-A566-7244FEC812DA}
 		{A528121B-899B-46D7-A619-E5809BE983C6} = {0C61E4F4-837A-41A8-A566-7244FEC812DA}
 		{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D} = {0C61E4F4-837A-41A8-A566-7244FEC812DA}
+		{4596FE1C-242D-4373-8529-C3D45F5E2FAB} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 	EndGlobalSection
 EndGlobal
