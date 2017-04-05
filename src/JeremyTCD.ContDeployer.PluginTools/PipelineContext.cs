@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibGit2Sharp;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,9 +17,12 @@ namespace JeremyTCD.ContDeployer.PluginTools
         /// </summary>
         public IDictionary<string, object> GlobalData { get; set; }
 
-        public PipelineContext(IDictionary<string, IPlugin> plugins)
+        public IRepository Repository { get; set; }
+
+        public PipelineContext(IDictionary<string, IPlugin> plugins, IRepository repository)
         {
             Plugins = plugins;
+            Repository = repository;
             GlobalData = new Dictionary<string, object>();
         }
     }

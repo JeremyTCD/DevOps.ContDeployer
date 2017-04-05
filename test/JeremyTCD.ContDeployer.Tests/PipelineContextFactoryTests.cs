@@ -3,6 +3,7 @@ using JeremyTCD.ContDeployer.Plugin.LogMetadataFactory;
 using JeremyTCD.ContDeployer.Plugin.TagGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -33,8 +34,11 @@ namespace JeremyTCD.ContDeployer.Tests
                 Returns(new Assembly[] {
                      typeof(AppVeyorPublisher).GetTypeInfo().Assembly
                 });
+            Mock<IRepository> mockRepository = new Mock<IRepository>();
 
-            PipelineContextFactory pipelineContextFactory = new PipelineContextFactory(mockLogger.Object, mockAssemblyService.Object);
+            PipelineContextFactory pipelineContextFactory = new PipelineContextFactory(mockLogger.Object, 
+                mockAssemblyService.Object,
+                mockRepository.Object);
 
             // Act
             PipelineContext result = pipelineContextFactory.Build();
@@ -44,6 +48,7 @@ namespace JeremyTCD.ContDeployer.Tests
             Assert.NotNull(result);
             Assert.NotNull(result.GlobalData);
             Assert.NotNull(result.Plugins);
+            Assert.NotNull(result.Repository);
             Assert.Equal(3, result.Plugins.Count);
             Assert.True(result.Plugins.Keys.Contains(nameof(LogMetadataFactory)));
             Assert.True(result.Plugins.Keys.Contains(nameof(TagGenerator)));

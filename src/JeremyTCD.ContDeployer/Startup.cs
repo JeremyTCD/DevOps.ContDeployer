@@ -1,4 +1,6 @@
-﻿using JeremyTCD.DotNetCore.Utils;
+﻿using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.DotNetCore.Utils;
+using LibGit2Sharp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,12 +30,12 @@ namespace JeremyTCD.ContDeployer
                 AddOptions();
 
             services.
-                AddSingleton<IAssemblyService, AssemblyService>();
+                AddSingleton<IAssemblyService, AssemblyService>().
+                AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory()));
 
             services.
                 AddSingleton<PipelineContextFactory>().
-                // PipelineContext service
-                AddSingleton(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
+                AddSingleton<PipelineContext>(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
                 AddSingleton<Pipeline>();
 
             services.Configure<PipelineOptions>(_configurationRoot.GetSection("Pipeline"));
@@ -42,8 +44,10 @@ namespace JeremyTCD.ContDeployer
         public void Configure(ILoggerFactory loggerFactory)
         {
             loggerFactory.
-                AddConsole((LogLevel)Enum.Parse(typeof(LogLevel), _configurationRoot["Logging:LogLevel:Console"])).
-                AddDebug((LogLevel)Enum.Parse(typeof(LogLevel), _configurationRoot["Logging:LogLevel:Debug"]));
+                AddConsole((Microsoft.Extensions.Logging.LogLevel)Enum.Parse(typeof(Microsoft.Extensions.Logging.LogLevel),
+                    _configurationRoot["Logging:LogLevel:Console"])).
+                AddDebug((Microsoft.Extensions.Logging.LogLevel)Enum.Parse(typeof(Microsoft.Extensions.Logging.LogLevel),
+                   _configurationRoot["Logging:LogLevel:Debug"]));
         }
     }
 }

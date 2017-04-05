@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
+using LibGit2Sharp;
 
 namespace JeremyTCD.ContDeployer
 {
@@ -13,11 +14,15 @@ namespace JeremyTCD.ContDeployer
     {
         public ILogger<PipelineContextFactory> Logger { get; }
         public IAssemblyService AssemblyService { get; }
+        public IRepository Repository { get; }
 
-        public PipelineContextFactory(ILogger<PipelineContextFactory> logger, IAssemblyService assemblyService)
+        public PipelineContextFactory(ILogger<PipelineContextFactory> logger, 
+            IAssemblyService assemblyService,
+            IRepository repository)
         {
             Logger = logger;
             AssemblyService = assemblyService;
+            Repository = repository;
         }
 
         /// <summary>
@@ -33,10 +38,11 @@ namespace JeremyTCD.ContDeployer
             // Get assemblies 
             Logger.LogInformation("Loading assemblies");
             string pluginToolsAssemblyName = typeof(IPlugin).GetTypeInfo().Assembly.GetName().Name;
-            string currentWorkingDir = Directory.GetCurrentDirectory();
             IEnumerable<Assembly> assemblies = AssemblyService.
                 GetReferencingAssemblies(pluginToolsAssemblyName).
-                Concat(AssemblyService.GetAssembliesInDir(Path.Combine(currentWorkingDir, "plugins"), true));
+                Concat(AssemblyService.
+                    GetAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true)
+                );
 
             // Get instances of types that implement IPlugin
             Logger.LogInformation("Instantiating plugins");
@@ -47,7 +53,7 @@ namespace JeremyTCD.ContDeployer
                 ToDictionary(plugin => plugin.GetType().Name);
 
             // Instantiate pipeline context
-            PipelineContext context = new PipelineContext(plugins);
+            PipelineContext context = new PipelineContext(plugins, Repository);
 
             Logger.LogInformation("=== Pipeline context successfully built ===");
             return context;

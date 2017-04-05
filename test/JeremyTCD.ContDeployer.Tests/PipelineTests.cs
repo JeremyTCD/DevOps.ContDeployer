@@ -1,4 +1,5 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -55,7 +56,9 @@ namespace JeremyTCD.ContDeployer.Tests
                 Setup(p => p.TryGetValue(It.Is<string>(s => s == testPlugin3Name), out mockPluginObject)).
                 Returns(true);
 
-            PipelineContext context = new PipelineContext(mockPlugins.Object);
+            Mock<IRepository> mockRepository = new Mock<IRepository>();
+
+            PipelineContext context = new PipelineContext(mockPlugins.Object, mockRepository.Object);
 
             mockPlugin.
                 Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
