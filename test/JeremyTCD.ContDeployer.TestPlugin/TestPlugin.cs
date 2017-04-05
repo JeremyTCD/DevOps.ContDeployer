@@ -6,9 +6,11 @@ using System.Composition;
 namespace JeremyTCD.ContDeployer.TestPlugin
 {
     [Export(typeof(IPlugin))]
-    public class TestPlugin : IPlugin
+    public class TestPlugin : PluginBase
     {
-        public void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
+        public override IDictionary<string, object> DefaultConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

@@ -6,9 +6,11 @@ using System.Collections.Generic;
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
     [Export(typeof(IPlugin))]
-    public class TagGenerator : IPlugin
+    public class TagGenerator : PluginBase
     {
-        public void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
+        public override IDictionary<string, object> DefaultConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }
