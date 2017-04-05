@@ -38,16 +38,14 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<PipelineContext>(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
                 AddSingleton<Pipeline>();
 
-            services.Configure<PipelineOptions>(_configurationRoot.GetSection("Pipeline"));
+            services.Configure<PipelineOptions>(pipelineOptions => pipelineOptions = _configurationRoot.GetSection("pipeline").Get<PipelineOptions>());
         }
 
         public void Configure(ILoggerFactory loggerFactory)
         {
             loggerFactory.
-                AddConsole((Microsoft.Extensions.Logging.LogLevel)Enum.Parse(typeof(Microsoft.Extensions.Logging.LogLevel),
-                    _configurationRoot["Logging:LogLevel:Console"])).
-                AddDebug((Microsoft.Extensions.Logging.LogLevel)Enum.Parse(typeof(Microsoft.Extensions.Logging.LogLevel),
-                   _configurationRoot["Logging:LogLevel:Debug"]));
+                AddConsole(_configurationRoot.GetValue("Logging:LogLevel:Console", Microsoft.Extensions.Logging.LogLevel.Information)).
+                AddDebug(_configurationRoot.GetValue("Logging:LogLevel:Debug", Microsoft.Extensions.Logging.LogLevel.Information));
         }
     }
 }
