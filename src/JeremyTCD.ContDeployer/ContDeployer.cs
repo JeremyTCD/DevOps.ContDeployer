@@ -5,9 +5,9 @@ using System;
 
 namespace JeremyTCD.ContDeployer
 {
-    class ContDeployer
+    public class ContDeployer
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             //CommandLineApplication app = new CommandLineApplication();
             //app.Name = "ContDeployer";
