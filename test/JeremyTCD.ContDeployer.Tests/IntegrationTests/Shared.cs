@@ -36,6 +36,12 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         {
             Directory.SetCurrentDirectory("\\");
 
+            string[] gitFiles = Directory.GetFiles(Path.Combine(TempDir, ".git"), "*", SearchOption.AllDirectories);
+            foreach(string file in gitFiles)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+            }
+
             if (Directory.Exists(TempDir))
             {
                 Directory.Delete(TempDir, true);
