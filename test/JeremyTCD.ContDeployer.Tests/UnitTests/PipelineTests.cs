@@ -20,7 +20,7 @@ namespace JeremyTCD.ContDeployer.Tests
             string testPlugin3Name = "testPlugin3";
             PipelineOptions options = new PipelineOptions()
             {
-                PipelineSteps = new PipelineStep[] {
+                PipelineSteps = new List<PipelineStep> {
                         new PipelineStep()
                         {
                             PluginName = testPlugin1Name,
