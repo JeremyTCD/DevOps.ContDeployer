@@ -47,8 +47,8 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 
         public void Dispose()
         {
-            Directory.Delete(TempDir, true);
             Directory.SetCurrentDirectory("\\");
+            Directory.Delete(TempDir, true);
         }
     }
 }
