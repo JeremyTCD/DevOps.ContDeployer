@@ -1,4 +1,6 @@
 ﻿using LibGit2Sharp;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,18 +18,19 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
+        public JsonSerializerSettings SerializerSettings { get; }  
 
         public E2EFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), "ContDeployerTemp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
+            SerializerSettings  = new JsonSerializerSettings();
+            SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
 
         // Deletes entire temp directory, recreates it and inits git repository
         public void ResetTempDir()
         {
-            // instead of setting current directory, add a directory option to cd.json
-            // so devenv doesn't fuck up tests. 
             Directory.SetCurrentDirectory("\\");
 
             if (Directory.Exists(TempDir))
