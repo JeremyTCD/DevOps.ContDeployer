@@ -38,7 +38,11 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<PipelineContext>(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
                 AddSingleton<Pipeline>();
 
-            services.Configure<PipelineOptions>(pipelineOptions => pipelineOptions = _configurationRoot.GetSection("pipeline").Get<PipelineOptions>());
+            services.Configure<PipelineOptions>(pipelineOptions =>
+            {
+                ConfigurationBinder.Bind(_configurationRoot.GetSection("Pipeline"), pipelineOptions);
+                pipelineOptions.Validate();
+            });
         }
 
         public void Configure(ILoggerFactory loggerFactory)
