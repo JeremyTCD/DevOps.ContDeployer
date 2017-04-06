@@ -35,20 +35,34 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             // Arrange
             object options = new
             {
-                Pipeline = new
-                {
-                    PipelineSteps = new PipelineStep[] {
-                                new PipelineStep {PluginName="LogMetadataFactory"}
+                Pipeline = new PipelineOptions{
+                    PipelineSteps = new List<PipelineStep> {
+                                new PipelineStep
+                                {
+                                    PluginName = "LogMetadataFactory"
+                                }
                             }
                 }
             };
             string optionsJson = JsonConvert.SerializeObject(options, _serializerSettings);
             File.WriteAllText("cd.json", optionsJson);
 
+            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Initial commit", _signature, _signature);
+
+            File.AppendAllText("changelog.md", "\n## 0.2.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Commit 2", _signature, _signature);
+
+            File.AppendAllText("changelog.md", "\n## 0.3.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Commit 3", _signature, _signature);
+
             // Act
             ContDeployer.Main(null);
 
             // Assert
         }
-    }
+}
 }
