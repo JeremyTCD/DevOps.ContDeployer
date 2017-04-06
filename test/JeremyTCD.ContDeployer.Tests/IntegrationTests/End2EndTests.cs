@@ -6,6 +6,7 @@ using JeremyTCD.ContDeployer.PluginTools;
 using Newtonsoft.Json;
 using System.IO;
 using Newtonsoft.Json.Serialization;
+using LibGit2Sharp;
 
 namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 {
@@ -15,13 +16,17 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         private string _tempDir { get; }
         private string _tempPluginsDir { get; }
         private JsonSerializerSettings _serializerSettings { get; }
+        private Repository _repository { get; }
+        private Signature _signature { get; }
 
         public End2EndTests(E2EFixture fixture)
         {
+            fixture.ResetTempDir();
             _tempDir = fixture.TempDir;
             _tempPluginsDir = fixture.TempPluginsDir;
-            fixture.ResetTempDir();
             _serializerSettings = fixture.SerializerSettings;
+            _repository = fixture.Repository;
+            _signature = fixture.Signature;
         }
 
         [Fact]

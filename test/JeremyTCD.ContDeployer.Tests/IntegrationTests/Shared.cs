@@ -18,14 +18,17 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
-        public JsonSerializerSettings SerializerSettings { get; }  
+        public JsonSerializerSettings SerializerSettings { get; }
+        public Repository Repository { get; set; }
+        public Signature Signature { get; }
 
         public E2EFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), "ContDeployerTemp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
-            SerializerSettings  = new JsonSerializerSettings();
+            SerializerSettings = new JsonSerializerSettings();
             SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            Signature = new Signature(new Identity("TestName", "TestEmail"), DateTime.Now);
         }
 
         // Deletes entire temp directory, recreates it and inits git repository
@@ -42,12 +45,15 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 
             Repository.Init(TempDir);
 
+            Repository = new Repository(TempDir);
+
             Directory.SetCurrentDirectory(TempDir);
         }
 
         public void Dispose()
         {
             Directory.SetCurrentDirectory("\\");
+            Repository.Dispose();
             Directory.Delete(TempDir, true);
         }
     }
