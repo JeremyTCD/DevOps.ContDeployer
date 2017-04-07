@@ -35,6 +35,6 @@
     <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
-    <ProjectReference Include="..\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
   </ItemGroup>
 </Project>
