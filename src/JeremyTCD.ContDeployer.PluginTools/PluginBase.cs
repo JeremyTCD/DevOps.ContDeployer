@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
     {
         public abstract IDictionary<string, object> DefaultConfig { get; set; }
 
-        public abstract void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps);
+        public abstract void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps);
 
         /// <summary>
         /// Combines two <see cref="IDictionary{string, object}"/> instances, ignoring duplicates. <paramref name="primaryConfig"/> values take

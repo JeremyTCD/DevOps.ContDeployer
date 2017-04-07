@@ -12,13 +12,16 @@ namespace JeremyTCD.ContDeployer
         public PipelineContext Context { get; }
         public ILogger<Pipeline> Logger { get; }
         public PipelineOptions Options { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
         public Pipeline(PipelineContext context, IOptions<PipelineOptions> optionsAccessor, 
-            ILogger<Pipeline> logger)
+            ILogger<Pipeline> logger,
+            ILoggerFactory loggerFactory)
         {
             Context = context;
             Logger = logger;
             Options = optionsAccessor.Value;
+            LoggerFactory = loggerFactory;
         }
 
         /// <summary>
@@ -43,7 +46,9 @@ namespace JeremyTCD.ContDeployer
                 }
 
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
-                plugin.Run(step.Config, Context, steps);
+                // TODO avoid creating logger if a logger with the same category already exists?
+                ILogger pluginLogger = LoggerFactory.CreateLogger(plugin.GetType().FullName);
+                plugin.Run(step.Config, Context, pluginLogger, steps);
                 Logger.LogInformation("Step complete");
             }
 

@@ -4,6 +4,7 @@ using System.Composition;
 using System.Collections.Generic;
 using LibGit2Sharp;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
 {
@@ -16,7 +17,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
             { "branch", "master" }
         };
 
-        public override void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
+        public override void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps)
         {
             config = CombineConfigs(config, DefaultConfig);
             string fileName = (string) config["filename"];

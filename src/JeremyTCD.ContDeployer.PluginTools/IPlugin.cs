@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
     {
         IDictionary<string, Object> DefaultConfig { get; set; }
 
-        void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps);
+        void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps);
     }
 }

@@ -63,22 +63,29 @@ namespace JeremyTCD.ContDeployer.Tests
             mockPlugin.
                 Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
+                        It.IsAny<ILogger>(),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 2))
                     );
             mockPlugin.
                 Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
+                        It.IsAny<ILogger>(),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 1))
                     );
             mockPlugin.
                 Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
                         It.Is<PipelineContext>(p => p == context),
+                        It.IsAny<ILogger>(),
                         It.Is<LinkedList<PipelineStep>>(l => l.Count == 0))
                     );
 
             Mock<ILogger<Pipeline>> mockLogger = new Mock<ILogger<Pipeline>>();
+            Mock<ILoggerFactory> mockLoggerFactory = new Mock<ILoggerFactory>();
+            mockLoggerFactory.
+                Setup(l => l.CreateLogger(It.IsAny<string>())).
+                Returns(mockLogger.Object);
 
-            Pipeline pipeline = new Pipeline(context, mockOptionsAccessor.Object, mockLogger.Object);
+            Pipeline pipeline = new Pipeline(context, mockOptionsAccessor.Object, mockLogger.Object, mockLoggerFactory.Object);
 
             // Act
             pipeline.Run();
@@ -87,6 +94,7 @@ namespace JeremyTCD.ContDeployer.Tests
             mockOptionsAccessor.VerifyAll();
             mockPlugins.VerifyAll();
             mockPlugin.VerifyAll();
+            mockLoggerFactory.VerifyAll();
         }
     }
 }
