@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plug
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\PluginTools.Tests\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\JeremyTCD.ContDeployer.PluginTools.Tests\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

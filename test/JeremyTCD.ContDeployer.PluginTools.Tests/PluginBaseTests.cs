@@ -2,6 +2,7 @@
 using System;
 using Xunit;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace PluginTools.Tests
 {
@@ -38,7 +39,7 @@ namespace PluginTools.Tests
         {
             public override IDictionary<string, object> DefaultConfig { get; set; }
 
-            public override void Run(IDictionary<string, object> config, PipelineContext context, LinkedList<PipelineStep> steps)
+            public override void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps)
             {
                 throw new NotImplementedException();
             }
