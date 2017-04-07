@@ -20,12 +20,14 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         public string TempPluginsDir { get; }
         public JsonSerializerSettings SerializerSettings { get; }
         public Repository Repository { get; set; }
+        public string TempGitDir { get; }
         public Signature Signature { get; }
 
         public E2EFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), "ContDeployerTemp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
+            TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();
             SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             Signature = new Signature(new Identity("TestName", "TestEmail"), DateTime.Now);
@@ -36,14 +38,17 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         {
             Directory.SetCurrentDirectory("\\");
 
-            string[] gitFiles = Directory.GetFiles(Path.Combine(TempDir, ".git"), "*", SearchOption.AllDirectories);
-            foreach(string file in gitFiles)
-            {
-                File.SetAttributes(file, FileAttributes.Normal);
-            }
 
             if (Directory.Exists(TempDir))
             {
+                if (Directory.Exists(TempGitDir))
+                {
+                    string[] gitFiles = Directory.GetFiles(Path.Combine(TempDir, ".git"), "*", SearchOption.AllDirectories);
+                    foreach (string file in gitFiles)
+                    {
+                        File.SetAttributes(file, FileAttributes.Normal);
+                    }
+                }
                 Directory.Delete(TempDir, true);
             }
             Directory.CreateDirectory(TempDir);
@@ -60,7 +65,6 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         {
             Directory.SetCurrentDirectory("\\");
             Repository.Dispose();
-            Directory.Delete(TempDir, true);
         }
     }
 }
