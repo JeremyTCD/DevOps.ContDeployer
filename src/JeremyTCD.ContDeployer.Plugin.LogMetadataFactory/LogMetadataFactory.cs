@@ -50,12 +50,13 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
             }
 
             // Build changelog metadata
-            ChangelogMetadata headChangelogMetadata = GetChangelogMetadata(pattern, headChangelogText);
-            ChangelogMetadata previousChangelogMetadata = previousChangelogText != null ? 
-                GetChangelogMetadata(pattern, previousChangelogText): null;
+            ChangelogMetadataFactory changelogMetadataFactory = new ChangelogMetadataFactory();
+            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(pattern, headChangelogText);
+            ChangelogMetadata previousChangelogMetadata = previousChangelogText != null ?
+                changelogMetadataFactory.Build(pattern, previousChangelogText): null;
 
             // Diff changelog metadata
-
+            ChangelogMetadataDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
 
             // if new version added, add taggenerator, githubreleasepublisher and wtv publisher
             // if tag incremented, add taggenerator, githubreleasepublisher and wtv publisher
@@ -63,24 +64,6 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
 
 
             //Console.WriteLine(newTree.Id);
-        }
-
-        private ChangelogMetadata GetChangelogMetadata(string pattern, string changelogText)
-        {
-            ChangelogMetadata result = new ChangelogMetadata();
-            MatchCollection matches = Regex.Matches(changelogText, pattern, RegexOptions.Singleline);
-
-            foreach(Match match in matches)
-            {
-                result.Versions.Add(new Version()
-                {
-                    Raw = match.Groups[0].Value,
-                    SemVersion = SemVersion.Parse(match.Groups[1].Value),
-                    Notes = match.Groups[2].Value
-                });
-            }
-
-            return result;
         }
 
         private string GetHeadChangelogText(IRepository repository, string fileName, ILogger logger)
