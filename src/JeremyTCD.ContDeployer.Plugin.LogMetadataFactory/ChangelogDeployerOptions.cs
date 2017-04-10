@@ -7,6 +7,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
 {
     public class ChangelogDeployerOptions : IPluginOptions
     {
+        public string FileName { get; set; } = "changelog.md";
+        public string Branch { get; set; } = "master";
+        public string Pattern { get; set; } = @"##[ \t]+(\d*\.\d*\.\d*)(.*?)(?=##[ \t]+\d*\.\d*\.\d*|$)";
+
         public void Validate()
         {
             throw new NotImplementedException();

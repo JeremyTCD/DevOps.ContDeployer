@@ -1,18 +1,23 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Composition;
-using System.Text;
+using LibGit2Sharp;
+using Microsoft.Extensions.Logging;
 
 namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
 {
-    [Export(typeof(IPlugin))]
     public class AppVeyorPublisher : PluginBase
     {
-        public override IDictionary<string, object> DefaultConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        AppVeyorPublisherOptions Options { get; set; }
+        ILogger<AppVeyorPublisher> Logger { get; set; }
 
-        public override void Run(IDictionary<string, object> config, ILogger logger, LinkedList<PipelineStep> steps)
+        public AppVeyorPublisher(AppVeyorPublisherOptions options, ILogger<AppVeyorPublisher> logger, IRepository repository) : base(repository)
+        {
+            Options = options;
+            Logger = logger;
+        }
+
+        public override void Run(LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

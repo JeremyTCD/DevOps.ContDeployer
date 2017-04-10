@@ -7,8 +7,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public interface IPlugin
     {
-        IDictionary<string, Object> DefaultConfig { get; set; }
-
-        void Run(IDictionary<string, object> config, ILogger logger, LinkedList<PipelineStep> steps);
+        void Run(LinkedList<PipelineStep> steps);
     }
 }

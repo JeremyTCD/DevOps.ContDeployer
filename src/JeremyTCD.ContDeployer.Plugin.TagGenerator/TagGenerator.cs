@@ -1,17 +1,24 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using System;
-using System.Composition;
-using System.Collections.Generic;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
-    [Export(typeof(IPlugin))]
     public class TagGenerator : PluginBase
     {
-        public override IDictionary<string, object> DefaultConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TagGeneratorOptions Options { get; set; }
+        ILogger<TagGenerator> Logger { get; set; }
 
-        public override void Run(IDictionary<string, object> config, ILogger logger, LinkedList<PipelineStep> steps)
+        public TagGenerator(TagGeneratorOptions options, ILogger<TagGenerator> logger, IRepository repository):
+            base(repository)
+        {
+            Options = options;
+            Logger = logger;
+        }
+
+        public override void Run(LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

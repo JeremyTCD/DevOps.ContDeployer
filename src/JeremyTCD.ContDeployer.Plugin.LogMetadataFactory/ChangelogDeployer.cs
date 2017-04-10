@@ -1,11 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
-using System.Composition;
 using System.Collections.Generic;
 using LibGit2Sharp;
-using System.Linq;
-using System.IO;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using LibGit2Sharp.Extensions;
 using System.Text.RegularExpressions;
@@ -13,47 +9,43 @@ using Semver;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
 {
-    [Export(typeof(IPlugin))]
     public class ChangelogDeployer : PluginBase
     {
-        public override IDictionary<string, object> DefaultConfig { get; set; } = new Dictionary<string, object>
-        {
-            { "fileName", "changelog.md" },
-            { "branch", "master" },
-            // TODO include prerelease semver patterns
-            { "pattern", @"##[ \t]+(\d*\.\d*\.\d*)(.*?)(?=##[ \t]+\d*\.\d*\.\d*|$)"}
-        };
+        public ChangelogDeployerOptions Options { get; set; }
+        public ILogger<ChangelogDeployer> Logger { get; set; }
 
-        public override void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps)
+        public ChangelogDeployer(ChangelogDeployerOptions options, ILogger<ChangelogDeployer> logger, IRepository repository) :
+            base(repository)
         {
-            logger.LogInformation("=== Running LogMetadataFactory ===");
+            Options = options;
+            Logger = logger;
+        }
 
-            config = CombineConfigs(config, DefaultConfig);
-            string fileName = (string)config["fileName"];
-            string branch = (string)config["branch"];
-            string pattern = (string)config["pattern"];
+        public override void Run(LinkedList<PipelineStep> steps)
+        {
+            Logger.LogInformation("=== Running LogMetadataFactory ===");
 
             // TODO what if you're working another branch
             // Get changelog text
-            string headChangelogText = GetHeadChangelogText(context.Repository, fileName, logger);
+            string headChangelogText = GetHeadChangelogText();
             if (headChangelogText == null)
             {
                 return;
             }
-            string previousChangelogText = GetPreviousChangelogText(context.Repository, fileName, logger);
+            string previousChangelogText = GetPreviousChangelogText();
 
             // Check if changelog has changed
             if (headChangelogText == previousChangelogText)
             {
-                logger.LogInformation($"No changes to changelog: {fileName}");
+                Logger.LogInformation($"No changes to changelog: {Options.FileName}");
                 return;
             }
 
             // Build changelog metadata
             ChangelogMetadataFactory changelogMetadataFactory = new ChangelogMetadataFactory();
-            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(pattern, headChangelogText);
+            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(Options.Pattern, headChangelogText);
             ChangelogMetadata previousChangelogMetadata = previousChangelogText != null ?
-                changelogMetadataFactory.Build(pattern, previousChangelogText): null;
+                changelogMetadataFactory.Build(Options.Pattern, previousChangelogText) : null;
 
             // Diff changelog metadata
             ChangelogMetadataDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
@@ -66,36 +58,34 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
             //Console.WriteLine(newTree.Id);
         }
 
-        private string GetHeadChangelogText(IRepository repository, string fileName, ILogger logger)
+        private string GetHeadChangelogText()
         {
-            Commit head = repository.Lookup<Commit>("HEAD");
+            Commit head = Repository.Lookup<Commit>("HEAD");
             if (head == null)
             {
-                logger.LogInformation($"Repository has no commits");
-                return null;
+                throw new Exception($"Repository has no commits");
             }
-            GitObject headChangelogGitObject = head[fileName]?.Target;
+            GitObject headChangelogGitObject = head[Options.FileName]?.Target;
             if (headChangelogGitObject == null)
             {
-                logger.LogInformation($"No file with name: {fileName}");
-                return null;
+                throw new Exception($"No file with name: {Options.FileName}");
             }
 
             return ((Blob)headChangelogGitObject).ReadAsString();
         }
 
-        private string GetPreviousChangelogText(IRepository repository, string fileName, ILogger logger)
+        private string GetPreviousChangelogText()
         {
-            Commit previous = repository.Lookup<Commit>("HEAD^");
+            Commit previous = Repository.Lookup<Commit>("HEAD^");
             if (previous == null)
             {
-                logger.LogInformation($"First commit");
+                Logger.LogInformation($"First commit");
                 return null;
             }
-            GitObject previousChangelogGitObject = previous[fileName]?.Target;
+            GitObject previousChangelogGitObject = previous[Options.FileName]?.Target;
             if (previous == null)
             {
-                logger.LogInformation($"First commit for: {fileName}");
+                Logger.LogInformation($"First commit for: {Options.FileName}");
                 return null;
             }
 

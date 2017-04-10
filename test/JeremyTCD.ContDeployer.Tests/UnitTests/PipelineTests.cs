@@ -46,20 +46,11 @@ namespace JeremyTCD.ContDeployer.Tests
 
             Mock<IPlugin> mockPlugin = new Mock<IPlugin>();
             mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                    It.IsAny<ILogger>(),
-                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 2))
-                    );
+                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 2)));
             mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                    It.IsAny<ILogger>(),
-                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 1))
-                    );
+                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 1)));
             mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                    It.IsAny<ILogger>(),
-                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 0))
-                    );
+                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 0)));
             IPlugin mockPluginObject = mockPlugin.Object;
 
             Mock<IDictionary<string, IPlugin>> mockPlugins = new Mock<IDictionary<string, IPlugin>>();
