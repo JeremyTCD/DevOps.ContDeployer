@@ -11,10 +11,10 @@ using LibGit2Sharp.Extensions;
 using System.Text.RegularExpressions;
 using Semver;
 
-namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
 {
     [Export(typeof(IPlugin))]
-    public class LogMetadataFactory : PluginBase
+    public class ChangelogDeployer : PluginBase
     {
         public override IDictionary<string, object> DefaultConfig { get; set; } = new Dictionary<string, object>
         {

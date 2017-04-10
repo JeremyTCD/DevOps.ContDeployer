@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.csproj" />
+    <ProjectReference Include="..\..\src\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory\JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

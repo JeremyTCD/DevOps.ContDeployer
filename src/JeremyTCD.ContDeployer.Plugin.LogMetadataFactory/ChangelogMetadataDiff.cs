@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
 {
     public class ChangelogMetadataDiff
     {

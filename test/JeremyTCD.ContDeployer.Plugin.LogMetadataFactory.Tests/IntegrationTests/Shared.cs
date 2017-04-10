@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
 {
     [CollectionDefinition(nameof(LogMetadataFactoryCollection))]
     public class LogMetadataFactoryCollection : ICollectionFixture<LogMetadataFactoryFixture>
@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
 
         public LogMetadataFactoryFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(LogMetadataFactory)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(ChangelogDeployer)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();

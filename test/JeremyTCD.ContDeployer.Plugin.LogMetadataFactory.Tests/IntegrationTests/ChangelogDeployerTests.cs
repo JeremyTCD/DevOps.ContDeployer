@@ -10,10 +10,10 @@ using LibGit2Sharp;
 using Moq;
 using Microsoft.Extensions.Logging;
 
-namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
 {
     [Collection(nameof(LogMetadataFactoryCollection))]
-    public class LogMetadataFactoryTests
+    public class ChangelogDeployerTests
     {
         private string _tempDir { get; }
         private string _tempPluginsDir { get; }
@@ -22,7 +22,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
         private Signature _signature { get; }
         private Dictionary<string, object> _config { get; }
 
-        public LogMetadataFactoryTests(LogMetadataFactoryFixture fixture)
+        public ChangelogDeployerTests(LogMetadataFactoryFixture fixture)
         {
             fixture.ResetTempDir();
             _tempDir = fixture.TempDir;
@@ -37,7 +37,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            LogMetadataFactory logMetadataFactory = new LogMetadataFactory();
+            ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
             PipelineContext context = new PipelineContext(null, _repository);
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
@@ -53,7 +53,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Initial commit", _signature, _signature);
 
-            LogMetadataFactory logMetadataFactory = new LogMetadataFactory();
+            ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
             PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();
@@ -77,7 +77,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 2", _signature, _signature);
 
-            LogMetadataFactory logMetadataFactory = new LogMetadataFactory();
+            ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
             PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();
@@ -97,7 +97,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Initial commit", _signature, _signature);
 
-            LogMetadataFactory logMetadataFactory = new LogMetadataFactory();
+            ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
             PipelineContext context = new PipelineContext(null, _repository);
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
@@ -121,7 +121,7 @@ namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 3", _signature, _signature);
 
-            LogMetadataFactory logMetadataFactory = new LogMetadataFactory();
+            ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
             PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();

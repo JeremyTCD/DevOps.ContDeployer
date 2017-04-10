@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher;
-using JeremyTCD.ContDeployer.Plugin.LogMetadataFactory;
+using JeremyTCD.ContDeployer.Plugin.ChangelogDeployer;
 using JeremyTCD.ContDeployer.Plugin.TagGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
@@ -26,7 +26,7 @@ namespace JeremyTCD.ContDeployer.Tests
             Mock<IAssemblyService> mockAssemblyService = new Mock<IAssemblyService>();
             mockAssemblyService.
                 Setup(m => m.GetReferencingAssemblies(It.Is<string>(s => s == typeof(IPlugin).GetTypeInfo().Assembly.GetName().Name))).
-                Returns(new Assembly[] { typeof(LogMetadataFactory).GetTypeInfo().Assembly,
+                Returns(new Assembly[] { typeof(ChangelogDeployer).GetTypeInfo().Assembly,
                      typeof(TagGenerator).GetTypeInfo().Assembly});
             mockAssemblyService.
                 Setup(m => m.GetAssembliesInDir(It.Is<string>(s => s == Path.Combine(Directory.GetCurrentDirectory(), "plugins")), 
@@ -50,7 +50,7 @@ namespace JeremyTCD.ContDeployer.Tests
             Assert.NotNull(result.Plugins);
             Assert.NotNull(result.Repository);
             Assert.Equal(3, result.Plugins.Count);
-            Assert.True(result.Plugins.Keys.Contains(nameof(LogMetadataFactory)));
+            Assert.True(result.Plugins.Keys.Contains(nameof(ChangelogDeployer)));
             Assert.True(result.Plugins.Keys.Contains(nameof(TagGenerator)));
             Assert.True(result.Plugins.Keys.Contains(nameof(AppVeyorPublisher)));
         }

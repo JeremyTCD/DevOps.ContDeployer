@@ -3,22 +3,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.LogMetadataFactory
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
 {
     public class ChangelogMetadata
     {
-        public List<Version> Versions { get; set; }
+        /// <summary>
+        /// List of Versions contained in a changelog
+        /// </summary>
+        public List<Version> Versions { get; }
 
-        public ChangelogMetadata()
+        public ChangelogMetadata(List<Version> versions)
         {
-            Versions = new List<Version>();
+            Versions = versions;
         }
 
-        // TODO pls test this
-        // http://stackoverflow.com/questions/5958169/how-to-merge-two-sorted-arrays-into-a-sorted-array
-        public ChangelogMetadataDiff Compare(ChangelogMetadata otherChangelogMetadata)
+        /// <summary>
+        /// Creates a <see cref="ChangelogMetadataDiff"/> between this instance and another <see cref="ChangelogMetadata"/> instance.
+        /// <see cref="ChangelogMetadata.Versions"/> of both instances must be in descending <see cref="Version.SemVersion"/> order.
+        /// </summary>
+        /// <param name="otherChangelogMetadata"></param>
+        /// <returns></returns>
+        public ChangelogMetadataDiff Diff(ChangelogMetadata otherChangelogMetadata)
         {
-            // ChangelogMetadata is in semantic version order by default
+            // TODO: if other is null, add all versions to newly added 
+
             ChangelogMetadataDiff result = new ChangelogMetadataDiff();
             int i = 0, j = 0;
 
