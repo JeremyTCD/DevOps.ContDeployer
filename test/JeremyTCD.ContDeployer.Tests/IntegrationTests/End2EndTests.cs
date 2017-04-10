@@ -39,7 +39,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
                     PipelineSteps = new List<PipelineStep> {
                                 new PipelineStep
                                 {
-                                    PluginName = "LogMetadataFactory"
+                                    PluginName = "ChangelogDeployer"
                                 }
                             }
                 }
