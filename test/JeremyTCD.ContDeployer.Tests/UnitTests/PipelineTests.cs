@@ -1,8 +1,10 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.DotNetCore.Utils;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -43,6 +45,21 @@ namespace JeremyTCD.ContDeployer.Tests
                 Returns(options);
 
             Mock<IPlugin> mockPlugin = new Mock<IPlugin>();
+            mockPlugin.
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                    It.IsAny<ILogger>(),
+                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 2))
+                    );
+            mockPlugin.
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                    It.IsAny<ILogger>(),
+                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 1))
+                    );
+            mockPlugin.
+                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
+                    It.IsAny<ILogger>(),
+                    It.Is<LinkedList<PipelineStep>>(l => l.Count == 0))
+                    );
             IPlugin mockPluginObject = mockPlugin.Object;
 
             Mock<IDictionary<string, IPlugin>> mockPlugins = new Mock<IDictionary<string, IPlugin>>();
@@ -58,26 +75,6 @@ namespace JeremyTCD.ContDeployer.Tests
 
             Mock<IRepository> mockRepository = new Mock<IRepository>();
 
-            PipelineContext context = new PipelineContext(mockPlugins.Object, mockRepository.Object);
-
-            mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                        It.Is<PipelineContext>(p => p == context),
-                        It.IsAny<ILogger>(),
-                        It.Is<LinkedList<PipelineStep>>(l => l.Count == 2))
-                    );
-            mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                        It.Is<PipelineContext>(p => p == context),
-                        It.IsAny<ILogger>(),
-                        It.Is<LinkedList<PipelineStep>>(l => l.Count == 1))
-                    );
-            mockPlugin.
-                Setup(m => m.Run(It.Is<IDictionary<string, object>>(c => c == testPluginConfig),
-                        It.Is<PipelineContext>(p => p == context),
-                        It.IsAny<ILogger>(),
-                        It.Is<LinkedList<PipelineStep>>(l => l.Count == 0))
-                    );
 
             Mock<ILogger<Pipeline>> mockLogger = new Mock<ILogger<Pipeline>>();
             Mock<ILoggerFactory> mockLoggerFactory = new Mock<ILoggerFactory>();
@@ -85,7 +82,11 @@ namespace JeremyTCD.ContDeployer.Tests
                 Setup(l => l.CreateLogger(It.IsAny<string>())).
                 Returns(mockLogger.Object);
 
-            Pipeline pipeline = new Pipeline(context, mockOptionsAccessor.Object, mockLogger.Object, mockLoggerFactory.Object);
+            // TODO these two are incomplete
+            Mock<IServiceProvider> mockServiceProvider = new Mock<IServiceProvider>();
+            Mock<IAssemblyService> mockAssemblyService = new Mock<IAssemblyService>();
+
+            Pipeline pipeline = new Pipeline(mockOptionsAccessor.Object, mockAssemblyService.Object, mockLogger.Object, mockLoggerFactory.Object, mockServiceProvider.Object);
 
             // Act
             pipeline.Run();
@@ -95,6 +96,7 @@ namespace JeremyTCD.ContDeployer.Tests
             mockPlugins.VerifyAll();
             mockPlugin.VerifyAll();
             mockLoggerFactory.VerifyAll();
+            mockServiceProvider.VerifyAll();
         }
     }
 }

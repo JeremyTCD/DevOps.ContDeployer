@@ -34,8 +34,6 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory()));
 
             services.
-                AddSingleton<PipelineContextFactory>().
-                AddSingleton<PipelineContext>(provider => provider.GetRequiredService<PipelineContextFactory>().Build()).
                 AddSingleton<Pipeline>();
 
             services.Configure<PipelineOptions>(pipelineOptions =>

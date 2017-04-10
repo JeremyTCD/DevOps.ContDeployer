@@ -9,6 +9,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
     {
         IDictionary<string, Object> DefaultConfig { get; set; }
 
-        void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps);
+        void Run(IDictionary<string, object> config, ILogger logger, LinkedList<PipelineStep> steps);
     }
 }

@@ -39,8 +39,8 @@ namespace JeremyTCD.ContDeployer
                 PipelineStep step = steps.First();
                 steps.RemoveFirst();
 
-                IPlugin plugin;
-                if (!Context.Plugins.TryGetValue(step.PluginName, out plugin))
+                types.TryGetValue(step.PluginName, out Type pluginType);
+                if (pluginType == null)
                 {
                     throw new Exception($"{nameof(Pipeline)}: No plugin with name {step.PluginName} exists");
                 }
@@ -48,7 +48,7 @@ namespace JeremyTCD.ContDeployer
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
                 // TODO avoid creating logger if a logger with the same category already exists?
                 ILogger pluginLogger = LoggerFactory.CreateLogger(plugin.GetType().FullName);
-                plugin.Run(step.Config, Context, pluginLogger, steps);
+                //plugin.Run(step.Config, Context, pluginLogger, steps);
                 Logger.LogInformation("Step complete");
             }
 

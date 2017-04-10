@@ -11,7 +11,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
     {
         public override IDictionary<string, object> DefaultConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public override void Run(IDictionary<string, object> config, PipelineContext context, ILogger logger, LinkedList<PipelineStep> steps)
+        public override void Run(IDictionary<string, object> config, ILogger logger, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

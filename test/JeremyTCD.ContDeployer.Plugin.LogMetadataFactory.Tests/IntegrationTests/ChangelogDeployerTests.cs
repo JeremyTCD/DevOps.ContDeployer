@@ -38,11 +38,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
         {
             // Arrange
             ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
-            PipelineContext context = new PipelineContext(null, _repository);
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
             // Act and Assert
-            Assert.Throws<Exception>(() => logMetadataFactory.Run(_config, context, mockLogger.Object, null));
+            Assert.Throws<Exception>(() => logMetadataFactory.Run(_config, mockLogger.Object, null));
         }
 
         [Fact]
@@ -54,12 +53,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             _repository.Commit("Initial commit", _signature, _signature);
 
             ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
-            PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
             // Act
-            logMetadataFactory.Run(_config, context, mockLogger.Object, steps);
+            logMetadataFactory.Run(_config, mockLogger.Object, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -78,12 +76,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             _repository.Commit("Commit 2", _signature, _signature);
 
             ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
-            PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
             // Act
-            logMetadataFactory.Run(_config, context, mockLogger.Object, steps);
+            logMetadataFactory.Run(_config, mockLogger.Object, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -98,7 +95,6 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             _repository.Commit("Initial commit", _signature, _signature);
 
             ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
-            PipelineContext context = new PipelineContext(null, _repository);
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
 
@@ -122,12 +118,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             _repository.Commit("Commit 3", _signature, _signature);
 
             ChangelogDeployer logMetadataFactory = new ChangelogDeployer();
-            PipelineContext context = new PipelineContext(null, _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 
             // Act
-            logMetadataFactory.Run(_config, context, mockLogger.Object, steps);
+            logMetadataFactory.Run(_config, mockLogger.Object, steps);
 
             // Assert
         }
