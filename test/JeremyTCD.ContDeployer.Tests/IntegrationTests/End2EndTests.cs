@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using JeremyTCD.ContDeployer.PluginTools;
-using Newtonsoft.Json;
-using System.IO;
-using Newtonsoft.Json.Serialization;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using Xunit;
 
 namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 {
