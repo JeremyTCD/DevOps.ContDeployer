@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,14 +10,30 @@ namespace JeremyTCD.ContDeployer.PluginTools
     /// </summary>
     public class PipelineStep
     {
-        /// <summary>
-        /// Name of plugin for the step
-        /// </summary>
-        public string PluginName { get; set; } = "";
+        public PipelineStep()
+        {
+
+        }
+
+        public PipelineStep(string pluginName, IPluginOptions options)
+        {
+            PluginName = pluginName;
+            Options = options;
+        }
 
         /// <summary>
-        /// Configuration for the step
+        /// Name of plugin
         /// </summary>
-        public IDictionary<string, object> Config { get; set; } = new Dictionary<string, Object>();
+        public string PluginName { get; set; }
+
+        /// <summary>
+        /// Raw config
+        /// </summary>
+        public IConfigurationSection Config { get; set; }
+
+        /// <summary>
+        /// Instantiated options
+        /// </summary>
+        public IPluginOptions Options { get; }
     }
 }
