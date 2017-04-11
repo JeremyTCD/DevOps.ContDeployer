@@ -20,7 +20,7 @@ namespace JeremyTCD.ContDeployer
             {
                 if (String.IsNullOrEmpty(step.PluginName))
                 {
-                    throw new Exception($"{nameof(PipelineOptions)}: Pipeline step must have plugin name");
+                    throw new Exception($"Pipeline step must have plugin name");
                 }
             }
         }
