@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>JeremyTCD.ContDeployer.PluginTools</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.24.7-g9fca61fdda" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
   </ItemGroup>
 
