@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.ContDeployer.PluginTools.LogMetadataFactory</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.ChangelogDeployer</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
     <ProjectReference Include="..\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj" />
   </ItemGroup>
