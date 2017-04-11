@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
     <ProjectReference Include="..\..\src\JeremyTCD.ContDeployer\JeremyTCD.ContDeployer.csproj" />
   </ItemGroup>
 
