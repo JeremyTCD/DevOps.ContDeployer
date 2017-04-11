@@ -28,8 +28,10 @@ namespace JeremyTCD.ContDeployer
             startup.ConfigureServices(services);
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
+            // TODO How does asp net core call Configure with variable types as parameters?
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            startup.Configure(loggerFactory);
+            PluginFactory pluginFactory = serviceProvider.GetService<PluginFactory>();
+            startup.Configure(loggerFactory, pluginFactory);
 
             Pipeline pipeline = serviceProvider.GetService<Pipeline>();
 

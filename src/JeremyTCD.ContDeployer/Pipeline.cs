@@ -1,27 +1,24 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using JeremyTCD.ContDeployer.PluginTools;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using JeremyTCD.ContDeployer.PluginTools;
 
 namespace JeremyTCD.ContDeployer
 {
     public class Pipeline
     {
-        public PipelineContext Context { get; }
         public ILogger<Pipeline> Logger { get; }
         public PipelineOptions Options { get; }
-        public ILoggerFactory LoggerFactory { get; }
+        public PluginFactory PluginFactory { get; }
 
-        public Pipeline(PipelineContext context, IOptions<PipelineOptions> optionsAccessor, 
+        public Pipeline(IOptions<PipelineOptions> optionsAccessor,
             ILogger<Pipeline> logger,
-            ILoggerFactory loggerFactory)
+            PluginFactory pluginFactory)
         {
-            Context = context;
             Logger = logger;
             Options = optionsAccessor.Value;
-            LoggerFactory = loggerFactory;
+            PluginFactory = pluginFactory;
         }
 
         /// <summary>
@@ -37,18 +34,13 @@ namespace JeremyTCD.ContDeployer
             while (steps.Count > 0)
             {
                 PipelineStep step = steps.First();
+
+                IPlugin plugin = PluginFactory.BuildPlugin(step.PluginName, (object) step.Config ?? step.Options);
+
                 steps.RemoveFirst();
 
-                types.TryGetValue(step.PluginName, out Type pluginType);
-                if (pluginType == null)
-                {
-                    throw new Exception($"{nameof(Pipeline)}: No plugin with name {step.PluginName} exists");
-                }
-
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
-                // TODO avoid creating logger if a logger with the same category already exists?
-                ILogger pluginLogger = LoggerFactory.CreateLogger(plugin.GetType().FullName);
-                //plugin.Run(step.Config, Context, pluginLogger, steps);
+                plugin.Run(steps);
                 Logger.LogInformation("Step complete");
             }
 

@@ -39,30 +39,43 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<Pipeline>();
             services.Configure<PipelineOptions>(pipelineOptions =>
             {
-                ConfigurationBinder.Bind(_configurationRoot.GetSection("Pipeline"), pipelineOptions);
+                ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), pipelineOptions);
                 pipelineOptions.Validate();
             });
+
+            services.AddSingleton<PluginFactory>();
 
             // Get plugin assemblies 
             AssemblyService assemblyService = new AssemblyService();
             assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);
             IEnumerable<Assembly> pluginAssemblies = assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
 
-            // Get plugin and plugin options types
-            IEnumerable<Type> types = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).
+            // Plugin types
+            IEnumerable<Type> pluginTypes = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).
                 Concat(assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginOptions)));
-
-            foreach (Type type in types)
+            foreach (Type pluginType in pluginTypes)
             {
-                services.AddTransient(type);
+                services.AddTransient(pluginType);
+            }
+
+            // Plugin options types
+            IEnumerable<Type> pluginOptionsTypes = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginOptions));
+            foreach (Type pluginOptionsType in pluginOptionsTypes)
+            {
+                services.AddTransient(pluginOptionsType, serviceProvider =>
+                {
+                    return serviceProvider.GetService<PluginFactory>().BuildOptions(pluginOptionsType.Name);
+                });
             }
         }
 
-        public void Configure(ILoggerFactory loggerFactory)
+        public void Configure(ILoggerFactory loggerFactory, PluginFactory pluginFactory)
         {
             loggerFactory.
                 AddConsole(_configurationRoot.GetValue("Logging:LogLevel:Console", Microsoft.Extensions.Logging.LogLevel.Information)).
                 AddDebug(_configurationRoot.GetValue("Logging:LogLevel:Debug", Microsoft.Extensions.Logging.LogLevel.Information));
+
+            pluginFactory.LoadTypes();
         }
     }
 }
