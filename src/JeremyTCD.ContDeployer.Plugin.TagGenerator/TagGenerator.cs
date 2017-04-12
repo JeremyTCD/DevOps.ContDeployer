@@ -18,7 +18,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
             Logger = logger;
         }
 
-        public override void Run(LinkedList<PipelineStep> steps)
+        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }

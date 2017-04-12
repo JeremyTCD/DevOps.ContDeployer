@@ -1,9 +1,5 @@
 ﻿using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
@@ -16,6 +12,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
             Repository = repository;
         }
 
-        public abstract void Run(LinkedList<PipelineStep> steps);
+        public abstract void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps);
     }
 }

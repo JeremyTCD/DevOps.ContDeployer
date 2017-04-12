@@ -1,11 +1,8 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using JeremyTCD.DotNetCore.Utils;
-using LibGit2Sharp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -46,11 +43,11 @@ namespace JeremyTCD.ContDeployer.Tests
 
             Mock<IPlugin> mockPlugin = new Mock<IPlugin>();
             mockPlugin.
-                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 2)));
+                Setup(m => m.Run(It.IsAny<Dictionary<string,object>>(), It.Is<LinkedList<PipelineStep>>(l => l.Count == 2)));
             mockPlugin.
-                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 1)));
+                Setup(m => m.Run(It.IsAny<Dictionary<string, object>>(), It.Is<LinkedList<PipelineStep>>(l => l.Count == 1)));
             mockPlugin.
-                Setup(m => m.Run(It.Is<LinkedList<PipelineStep>>(l => l.Count == 0)));
+                Setup(m => m.Run(It.IsAny<Dictionary<string, object>>(), It.Is<LinkedList<PipelineStep>>(l => l.Count == 0)));
 
             Mock<IPluginFactory> mockPluginFactory = new Mock<IPluginFactory>();
             mockPluginFactory.

@@ -42,7 +42,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
                 _repository);
 
             // Act and Assert
-            Assert.Throws<Exception>(() => logMetadataFactory.Run(null));
+            Assert.Throws<Exception>(() => logMetadataFactory.Run(null, null));
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(steps);
+            logMetadataFactory.Run(null, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -85,7 +85,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(steps);
+            logMetadataFactory.Run(null, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -132,7 +132,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(steps);
+            logMetadataFactory.Run(null, steps);
 
             // Assert
         }

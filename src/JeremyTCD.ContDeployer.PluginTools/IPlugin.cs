@@ -7,6 +7,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public interface IPlugin
     {
-        void Run(LinkedList<PipelineStep> steps);
+        void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps);
     }
 }

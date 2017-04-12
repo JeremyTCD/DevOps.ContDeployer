@@ -28,6 +28,7 @@ namespace JeremyTCD.ContDeployer
         {
             // Use linked list since steps will be added to and removed from start of list
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>(Options.PipelineSteps);
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
 
             Logger.LogInformation("=== Starting pipeline ===");
 
@@ -40,7 +41,7 @@ namespace JeremyTCD.ContDeployer
                 steps.RemoveFirst();
 
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
-                plugin.Run(steps);
+                plugin.Run(sharedData, steps);
                 Logger.LogInformation("Step complete");
             }
 

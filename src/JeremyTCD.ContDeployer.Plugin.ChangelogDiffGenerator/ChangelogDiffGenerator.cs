@@ -20,7 +20,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             Logger = logger;
         }
 
-        public override void Run(LinkedList<PipelineStep> steps)
+        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
         {
             Logger.LogInformation("=== Running LogMetadataFactory ===");
 
@@ -56,7 +56,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 
             if (diff.RemovedVersions.Count > 0)
             {
-                // TODO: Removal does not make sense since certain objects are permanent
+                // Removal does not make sense since certain objects are permanent
                 throw new Exception($"Cannot remove versions. Deploy manually.");
             }
 

@@ -17,7 +17,7 @@ namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
             Logger = logger;
         }
 
-        public override void Run(LinkedList<PipelineStep> steps)
+        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
         {
             throw new NotImplementedException();
         }
