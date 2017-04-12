@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer
 {
-    public class PluginFactory
+    public class PluginFactory : IPluginFactory
     {
         private object NextPluginConfigOrOptions { get; set; }
         public IAssemblyService AssemblyService { get; set; }

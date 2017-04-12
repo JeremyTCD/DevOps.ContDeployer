@@ -10,11 +10,11 @@ namespace JeremyTCD.ContDeployer
     {
         public ILogger<Pipeline> Logger { get; }
         public PipelineOptions Options { get; }
-        public PluginFactory PluginFactory { get; }
+        public IPluginFactory PluginFactory { get; }
 
         public Pipeline(IOptions<PipelineOptions> optionsAccessor,
             ILogger<Pipeline> logger,
-            PluginFactory pluginFactory)
+            IPluginFactory pluginFactory)
         {
             Logger = logger;
             Options = optionsAccessor.Value;

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer
 {
@@ -43,7 +42,7 @@ namespace JeremyTCD.ContDeployer
                 pipelineOptions.Validate();
             });
 
-            services.AddSingleton<PluginFactory>();
+            services.AddSingleton<IPluginFactory, PluginFactory>();
 
             // Get plugin assemblies 
             AssemblyService assemblyService = new AssemblyService();
@@ -64,12 +63,12 @@ namespace JeremyTCD.ContDeployer
             {
                 services.AddTransient(pluginOptionsType, serviceProvider =>
                 {
-                    return serviceProvider.GetService<PluginFactory>().BuildOptions(pluginOptionsType.Name);
+                    return serviceProvider.GetService<IPluginFactory>().BuildOptions(pluginOptionsType.Name);
                 });
             }
         }
 
-        public void Configure(ILoggerFactory loggerFactory, PluginFactory pluginFactory)
+        public void Configure(ILoggerFactory loggerFactory, IPluginFactory pluginFactory)
         {
             loggerFactory.
                 AddConsole(_configurationRoot.GetValue("Logging:LogLevel:Console", Microsoft.Extensions.Logging.LogLevel.Information)).
