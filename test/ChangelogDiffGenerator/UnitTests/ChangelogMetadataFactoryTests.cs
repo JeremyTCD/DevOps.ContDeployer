@@ -11,7 +11,6 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
         public void Build_CreatesChangelogMetadata()
         {
             // Arrange
-            // http://semver.org/
             string pattern = @"##[ \t]+(\d*\.\d*\.\d*(?:-[a-zA-Z0-9\.-]+)?(?:\+[a-zA-Z0-9\.-]+)?)(.*?)(?=##|$)";
             string version1 = "2.1.1";
             string notes1 = "Body211";
