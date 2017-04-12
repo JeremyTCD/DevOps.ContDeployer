@@ -52,7 +52,7 @@ namespace JeremyTCD.ContDeployer
             }
 
             // If no value is provided for config in json, its value property will be an empty string
-            if (step.Config != null && string.IsNullOrEmpty(step.Config.Value))
+            if (step.Config != null && !string.IsNullOrEmpty(step.Config.Value))
             {
                 NextPluginConfigOrOptions = step.Config;
             }
@@ -82,15 +82,15 @@ namespace JeremyTCD.ContDeployer
             {
                 return NextPluginConfigOrOptions as IPluginOptions;
             }
-            else if(NextPluginConfigOrOptions is IConfigurationSection)
-            {
-                IPluginOptions options = Activator.CreateInstance(PluginOptionsTypes[name]) as IPluginOptions;
-                (NextPluginConfigOrOptions as IConfigurationSection).Bind(options);
 
-                return options;
+            IPluginOptions options = Activator.CreateInstance(PluginOptionsTypes[name]) as IPluginOptions;
+
+            if (NextPluginConfigOrOptions is IConfigurationSection)
+            {
+                (NextPluginConfigOrOptions as IConfigurationSection).Bind(options);
             }
 
-            return null;
+            return options;
         }
     }
 }
