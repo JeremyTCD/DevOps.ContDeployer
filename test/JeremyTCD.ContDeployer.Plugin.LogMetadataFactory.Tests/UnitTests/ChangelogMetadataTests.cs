@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
 {
     public class ChangelogMetadataTests
     {
@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
                 });
 
             // Act
-            ChangelogMetadataDiff result = newMetadata.Diff(oldMetadata);
+            ChangelogDiff result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.AddedVersions);
@@ -62,7 +62,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
                 });
 
             // Act
-            ChangelogMetadataDiff result = newMetadata.Diff(oldMetadata);
+            ChangelogDiff result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.RemovedVersions);
@@ -93,7 +93,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
                 });
 
             // Act
-            ChangelogMetadataDiff result = newMetadata.Diff(oldMetadata);
+            ChangelogDiff result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.ModifiedVersions);
@@ -116,7 +116,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
                 });
 
             // Act
-            ChangelogMetadataDiff result = newMetadata.Diff(null);
+            ChangelogDiff result = newMetadata.Diff(null);
 
             // Assert 
             Assert.NotNull(result.AddedVersions);

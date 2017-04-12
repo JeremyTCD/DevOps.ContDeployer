@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
 {
     public class ChangelogMetadataFactoryTests
     {

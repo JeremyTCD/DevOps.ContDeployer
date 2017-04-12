@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
     public class ChangelogMetadataFactory
     {

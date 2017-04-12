@@ -4,17 +4,16 @@ using System.Collections.Generic;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using LibGit2Sharp.Extensions;
-using System.Text.RegularExpressions;
-using Semver;
+using JeremyTCD.ContDeployer.Plugin.TagGenerator;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
-    public class ChangelogDeployer : PluginBase
+    public class ChangelogDiffGenerator : PluginBase
     {
-        public ChangelogDeployerOptions Options { get; set; }
-        public ILogger<ChangelogDeployer> Logger { get; set; }
+        public ChangelogDiffGeneratorOptions Options { get; set; }
+        public ILogger<ChangelogDiffGenerator> Logger { get; set; }
 
-        public ChangelogDeployer(ChangelogDeployerOptions options, ILogger<ChangelogDeployer> logger, IRepository repository) :
+        public ChangelogDiffGenerator(ChangelogDiffGeneratorOptions options, ILogger<ChangelogDiffGenerator> logger, IRepository repository) :
             base(repository)
         {
             Options = options;
@@ -48,14 +47,20 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
                 changelogMetadataFactory.Build(Options.Pattern, previousChangelogText) : null;
 
             // Diff changelog metadata
-            ChangelogMetadataDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
+            ChangelogDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
 
-            // if new version added, add taggenerator, githubreleasepublisher and wtv publisher
-            // if tag incremented, add taggenerator, githubreleasepublisher and wtv publisher
-            // if changes made, add githubreleasepublisher
+            if (diff.AddedVersions.Count > 1)
+            {
+                throw new Exception($"Cannot add more than 1 version at a time. Deploy manually.");
+            }
 
+            if (diff.RemovedVersions.Count > 0)
+            {
+                // TODO: Removal does not make sense since certain objects are permanent
+                throw new Exception($"Cannot remove versions. Deploy manually.");
+            }
 
-            //Console.WriteLine(newTree.Id);
+            // TODO Add diff to global data
         }
 
         private string GetHeadChangelogText()

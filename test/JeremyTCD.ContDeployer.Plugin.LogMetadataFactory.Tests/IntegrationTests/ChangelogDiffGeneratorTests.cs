@@ -10,10 +10,10 @@ using LibGit2Sharp;
 using Moq;
 using Microsoft.Extensions.Logging;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
 {
     [Collection(nameof(LogMetadataFactoryCollection))]
-    public class ChangelogDeployerTests
+    public class ChangelogDiffGeneratorTests
     {
         private string _tempDir { get; }
         private string _tempPluginsDir { get; }
@@ -21,7 +21,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
         private Repository _repository { get; }
         private Signature _signature { get; }
 
-        public ChangelogDeployerTests(LogMetadataFactoryFixture fixture)
+        public ChangelogDiffGeneratorTests(LogMetadataFactoryFixture fixture)
         {
             fixture.ResetTempDir();
             _tempDir = fixture.TempDir;
@@ -35,9 +35,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            Mock<ILogger<ChangelogDeployer>> mockLogger = new Mock<ILogger<ChangelogDeployer>>();
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
-            ChangelogDeployer logMetadataFactory = new ChangelogDeployer(new ChangelogDeployerOptions(), 
+            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object, 
                 _repository);
 
@@ -53,8 +53,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Initial commit", _signature, _signature);
 
-            Mock<ILogger<ChangelogDeployer>> mockLogger = new Mock<ILogger<ChangelogDeployer>>();
-            ChangelogDeployer logMetadataFactory = new ChangelogDeployer(new ChangelogDeployerOptions(), 
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object,
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
@@ -78,8 +78,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 2", _signature, _signature);
 
-            Mock<ILogger<ChangelogDeployer>> mockLogger = new Mock<ILogger<ChangelogDeployer>>();
-            ChangelogDeployer logMetadataFactory = new ChangelogDeployer(new ChangelogDeployerOptions(), 
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object, 
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
@@ -99,9 +99,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Initial commit", _signature, _signature);
             
-            Mock<ILogger<ChangelogDeployer>> mockLogger = new Mock<ILogger<ChangelogDeployer>>();
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
         
-            ChangelogDeployer logMetadataFactory = new ChangelogDeployer(new ChangelogDeployerOptions(),
+            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
 
@@ -124,9 +124,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 3", _signature, _signature);
 
-            Mock<ILogger<ChangelogDeployer>> mockLogger = new Mock<ILogger<ChangelogDeployer>>();
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
-            ChangelogDeployer logMetadataFactory = new ChangelogDeployer(new ChangelogDeployerOptions(),
+            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();

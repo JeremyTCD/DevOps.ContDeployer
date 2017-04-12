@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDeployer
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
     public class Version : IComparable<Version>
     {
