@@ -28,7 +28,7 @@ namespace JeremyTCD.ContDeployer.Tests
                             PluginName = testPlugin1Name,
                             Config = mockConfigSection.Object
                         },
-                        new PipelineStep(testPlugin2Name , mockPluginOptions.Object),
+                        new PipelineStep(testPlugin2Name, mockPluginOptions.Object),
                         new PipelineStep()
                         {
                             PluginName = testPlugin3Name
@@ -51,16 +51,13 @@ namespace JeremyTCD.ContDeployer.Tests
 
             Mock<IPluginFactory> mockPluginFactory = new Mock<IPluginFactory>();
             mockPluginFactory.
-                Setup(p => p.BuildPlugin(It.Is<string>(s => s == testPlugin1Name), 
-                    It.Is<IConfigurationSection>(c => c == mockConfigSection.Object))).
+                Setup(p => p.BuildPluginForPipelineStep(It.Is<PipelineStep>(ps => ps.PluginName == testPlugin1Name && ps.Config == mockConfigSection.Object))).
                 Returns(mockPlugin.Object);
             mockPluginFactory.
-                Setup(p => p.BuildPlugin(It.Is<string>(s => s == testPlugin2Name),
-                    It.Is<IPluginOptions>(po => po == mockPluginOptions.Object))).
+                Setup(p => p.BuildPluginForPipelineStep(It.Is<PipelineStep>(ps => ps.PluginName == testPlugin2Name && ps.Options == mockPluginOptions.Object))).
                 Returns(mockPlugin.Object);
             mockPluginFactory.
-                Setup(p => p.BuildPlugin(It.Is<string>(s => s == testPlugin3Name),
-                    It.Is<object>(o => o == null))).
+                Setup(p => p.BuildPluginForPipelineStep(It.Is<PipelineStep>(ps => ps.PluginName == testPlugin3Name))).
                 Returns(mockPlugin.Object);
 
             Mock<ILogger<Pipeline>> mockLogger = new Mock<ILogger<Pipeline>>();

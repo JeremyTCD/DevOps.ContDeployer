@@ -36,10 +36,9 @@ namespace JeremyTCD.ContDeployer
             {
                 PipelineStep step = steps.First();
 
-                IPlugin plugin = PluginFactory.BuildPlugin(step.PluginName, (object) step.Config ?? step.Options);
+                IPlugin plugin = PluginFactory.BuildPluginForPipelineStep(step);
 
                 steps.RemoveFirst();
-
                 Logger.LogInformation($"Running step with plugin: {step.PluginName}");
                 plugin.Run(sharedData, steps);
                 Logger.LogInformation("Step complete");

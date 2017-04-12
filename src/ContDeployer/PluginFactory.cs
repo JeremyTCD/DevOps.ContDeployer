@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,13 +17,15 @@ namespace JeremyTCD.ContDeployer
         public IServiceProvider ServiceProvider { get; set; }
         public Dictionary<string, Type> PluginOptionsTypes { get; set; }
         public Dictionary<string, Type> PluginTypes { get; set; }
-
+        public ILogger<PluginFactory> Logger { get; set; }
 
         public PluginFactory(IServiceProvider serviceProvider,
-            IAssemblyService assemblyService)
+            IAssemblyService assemblyService,
+            ILogger<PluginFactory> logger)
         {
             ServiceProvider = serviceProvider;
             AssemblyService = assemblyService;
+            Logger = logger;
         }
 
         public void LoadTypes()
@@ -39,22 +42,35 @@ namespace JeremyTCD.ContDeployer
             PluginTypes = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).ToDictionary(type => type.Name);
         }
 
-        public IPlugin BuildPlugin(string name, object options)
+        public IPlugin BuildPluginForPipelineStep(PipelineStep step)
         {
-            PluginTypes.TryGetValue(name, out Type pluginType);
+            PluginTypes.TryGetValue(step.PluginName, out Type pluginType);
 
             if(pluginType == null)
             {
-                throw new Exception($"Plugin type with name: {name} does not exist");
+                throw new Exception($"Plugin type with name: {step.PluginName} does not exist");
             }
 
-            NextPluginConfigOrOptions = options;
+            // If no value is provided for config in json, its value property will be an empty string
+            if (step.Config != null && string.IsNullOrEmpty(step.Config.Value))
+            {
+                NextPluginConfigOrOptions = step.Config;
+            }
+            else if(step.Options != null)
+            {
+                NextPluginConfigOrOptions = step.Options;
+            }
+            else
+            {
+                NextPluginConfigOrOptions = null;
+                Logger.LogInformation($"No options provided for plugin: {step.PluginName}");
+            }
 
             IPlugin plugin = ServiceProvider.GetService(pluginType) as IPlugin;
 
             if(plugin == null)
             {
-                throw new Exception($"No service for type: {name}");
+                throw new Exception($"No service for type: {step.PluginName}");
             }
 
             return plugin;
