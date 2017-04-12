@@ -9,11 +9,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
     {
         public string FileName { get; set; } = "changelog.md";
         public string Branch { get; set; } = "master";
-        public string Pattern { get; set; } = @"##[ \t]+(\d*\.\d*\.\d*)(.*?)(?=##[ \t]+\d*\.\d*\.\d*|$)";
+        // http://semver.org/
+        public string Pattern { get; set; } = @"##[ \t]+(\d*\.\d*\.\d*(?:-[a-zA-Z0-9\.-]+)?(?:\+[a-zA-Z0-9\.-]+)?)(.*?)(?=##|$)";
 
         public void Validate()
         {
-            throw new NotImplementedException();
+            // Do nothing
         }
     }
 }
