@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer", "src\JeremyTCD.ContDeployer\JeremyTCD.ContDeployer.csproj", "{CC901030-1F1E-4BD6-AB42-661015DC47D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer", "src\ContDeployer\JeremyTCD.ContDeployer.csproj", "{CC901030-1F1E-4BD6-AB42-661015DC47D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Tests", "test\JeremyTCD.ContDeployer.Tests\JeremyTCD.ContDeployer.Tests.csproj", "{13B2F6EA-198E-419D-B372-0BF4BC2E155D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Tests", "test\ContDeployer\JeremyTCD.ContDeployer.Tests.csproj", "{13B2F6EA-198E-419D-B372-0BF4BC2E155D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AE15EEC-1FB4-4F99-B227-4F562A124E55}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,21 +17,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0C61E4F4-837
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{97A4254C-8D5D-4BE7-907A-18BD01E697D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.TestPlugin", "test\JeremyTCD.ContDeployer.TestPlugin\JeremyTCD.ContDeployer.TestPlugin.csproj", "{D67E8E26-CDDB-4635-8BC4-00F0DB74E75D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.TestPlugin", "test\TestPlugin\JeremyTCD.ContDeployer.TestPlugin.csproj", "{D67E8E26-CDDB-4635-8BC4-00F0DB74E75D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.PluginTools", "src\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.PluginTools", "src\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator", "src\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator", "src\ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher", "src\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj", "{A528121B-899B-46D7-A619-E5809BE983C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher", "src\AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj", "{A528121B-899B-46D7-A619-E5809BE983C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator", "src\JeremyTCD.ContDeployer.Plugin.TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator", "src\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\JeremyTCD.ContDeployer.PluginTools.Tests\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\PluginTools\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests", "test\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests", "test\ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
 EndProject

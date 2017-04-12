@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using LibGit2Sharp.Extensions;
-using JeremyTCD.ContDeployer.Plugin.TagGenerator;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
@@ -60,7 +59,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
                 throw new Exception($"Cannot remove versions. Deploy manually.");
             }
 
-            // TODO Add diff to global data
+            sharedData[nameof(ChangelogDiff)] = diff;
         }
 
         private string GetHeadChangelogText()

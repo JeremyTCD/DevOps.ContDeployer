@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.ContDeployer.Plugin.LogMetadataFactory.Tests</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj" />
+    <ProjectReference Include="..\..\src\ContDeployer\JeremyTCD.ContDeployer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

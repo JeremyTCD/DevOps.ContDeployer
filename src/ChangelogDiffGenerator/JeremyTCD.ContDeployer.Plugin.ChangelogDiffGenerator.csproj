@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
-    <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
+    <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
     <ProjectReference Include="..\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj" />
   </ItemGroup>
 
