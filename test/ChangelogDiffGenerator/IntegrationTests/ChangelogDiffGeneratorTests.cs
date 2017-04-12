@@ -40,11 +40,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
                 _repository);
 
             // Act and Assert
-            Assert.Throws<Exception>(() => changelogDiffGenerator.Run(null, null));
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(null, null));
         }
 
         [Fact]
-        public void Run_DoesNothingIfChangelogFileDoesNotExist()
+        public void Run_ThrowsExceptionIfChangelogFileDoesNotExist()
         {
             // Arrange
             File.WriteAllText("test.txt", "test");
@@ -55,13 +55,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object,
                 _repository);
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
-            // Act
-            changelogDiffGenerator.Run(null, steps);
-
-            // Assert
-            Assert.Equal(0, steps.Count);
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(null, null));
         }
 
         [Fact]
@@ -82,32 +78,91 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+
             // Act
-            changelogDiffGenerator.Run(null, steps);
+            changelogDiffGenerator.Run(sharedData, null);
 
             // Assert
-            Assert.Equal(0, steps.Count);
+            Assert.Equal(0, sharedData.Count);
         }
 
         [Fact]
-        public void Run_GeneratesPipelineIfFirstCommitAndChangelogHasBeenAdded()
+        public void Run_GeneratesDiffIfFirstCommitAndChangelogHasBeenAddedToIndex()
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
             Commands.Stage(_repository, "*");
             _repository.Commit("Initial commit", _signature, _signature);
-            
+                   
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
         
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
 
-            // Act and Assert
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+
+            // Act 
+            changelogDiffGenerator.Run(sharedData, null);
+
+            // Assert
+            sharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            Assert.NotNull(diff);
         }
 
         [Fact]
-        public void Run_GeneratesPipelineIfVersionHasBeenAdded()
+        public void Run_GeneratesDiffIfChangelogAddedToIndexInLastCommit()
+        {
+            // Arrange
+            File.WriteAllText("test.txt", "test");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Initial commit", _signature, _signature);
+
+            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Commit 2", _signature, _signature);
+
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
+                mockLogger.Object,
+                _repository);
+
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+
+            // Act 
+            changelogDiffGenerator.Run(sharedData, null);
+
+            // Assert
+            sharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            Assert.NotNull(diff);
+        }
+
+        [Fact]
+        public void Run_ThrowsExceptionIfMoreThanOneVersionAdded()
+        {
+            // Arrange
+            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Initial commit", _signature, _signature);
+
+            File.AppendAllText("changelog.md", "\n## 0.2.0\nBody\n## 0.3.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Commit 2", _signature, _signature);
+
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
+                mockLogger.Object,
+                _repository);
+
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(null, null));
+        }
+
+        [Fact]
+        public void Run_ThrowsExceptionIfVersionHasBeenRemoved()
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
@@ -118,7 +173,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 2", _signature, _signature);
 
-            File.AppendAllText("changelog.md", "\n## 0.3.0\nBody");
+            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 3", _signature, _signature);
 
@@ -127,12 +182,37 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
-            // Act
-            changelogDiffGenerator.Run(null, steps);
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(null, null));
+        }
+
+        [Fact]
+        public void Run_GeneratesDiffIfVersionAddedToChangelogInLastCommit()
+        {
+            // Arrange
+            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Initial commit", _signature, _signature);
+
+            File.AppendAllText("changelog.md", "## 0.2.0\nBody");
+            Commands.Stage(_repository, "*");
+            _repository.Commit("Commit 2", _signature, _signature);
+
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
+                mockLogger.Object,
+                _repository);
+
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+
+            // Act 
+            changelogDiffGenerator.Run(sharedData, null);
 
             // Assert
+            sharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            Assert.NotNull(diff);
         }
     }
 }

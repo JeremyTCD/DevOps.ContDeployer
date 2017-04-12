@@ -50,13 +50,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 
             if (diff.AddedVersions.Count > 1)
             {
-                throw new Exception($"Cannot add more than 1 version at a time. Deploy manually.");
+                throw new InvalidOperationException($"Cannot add more than 1 version at a time. Deploy manually.");
             }
 
             if (diff.RemovedVersions.Count > 0)
             {
                 // Removal does not make sense since certain objects are permanent
-                throw new Exception($"Cannot remove versions. Deploy manually.");
+                throw new InvalidOperationException($"Cannot remove versions. Deploy manually.");
             }
 
             sharedData[nameof(ChangelogDiff)] = diff;
@@ -67,12 +67,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             Commit head = Repository.Lookup<Commit>("HEAD");
             if (head == null)
             {
-                throw new Exception($"Repository has no commits");
+                throw new InvalidOperationException($"Repository has no commits");
             }
             GitObject headChangelogGitObject = head[Options.FileName]?.Target;
             if (headChangelogGitObject == null)
             {
-                throw new Exception($"No file with name: {Options.FileName}");
+                throw new InvalidOperationException($"No file with name: {Options.FileName}");
             }
 
             return ((Blob)headChangelogGitObject).ReadAsString();
@@ -87,7 +87,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
                 return null;
             }
             GitObject previousChangelogGitObject = previous[Options.FileName]?.Target;
-            if (previous == null)
+            if (previousChangelogGitObject == null)
             {
                 Logger.LogInformation($"First commit for: {Options.FileName}");
                 return null;
