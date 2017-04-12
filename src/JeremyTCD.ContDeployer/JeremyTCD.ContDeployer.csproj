@@ -31,7 +31,7 @@
     <!--https://github.com/dotnet/sdk/issues/1020-->
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj" />
-    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.LogMetadataFactory\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj" />
+    <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
     <ProjectReference Include="..\JeremyTCD.ContDeployer.Plugin.TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
   </ItemGroup>
