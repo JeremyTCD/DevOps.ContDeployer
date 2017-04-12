@@ -9,12 +9,12 @@ using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
 {
-    [CollectionDefinition(nameof(LogMetadataFactoryCollection))]
-    public class LogMetadataFactoryCollection : ICollectionFixture<LogMetadataFactoryFixture>
+    [CollectionDefinition(nameof(ChangelogDiffGeneratorCollection))]
+    public class ChangelogDiffGeneratorCollection : ICollectionFixture<ChangelogDiffGeneratorFixture>
     {
     }
 
-    public class LogMetadataFactoryFixture : IDisposable
+    public class ChangelogDiffGeneratorFixture : IDisposable
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
@@ -23,7 +23,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         public Repository Repository { get; set; }
         public Signature Signature { get; }
 
-        public LogMetadataFactoryFixture()
+        public ChangelogDiffGeneratorFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(ChangelogDiffGenerator)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");

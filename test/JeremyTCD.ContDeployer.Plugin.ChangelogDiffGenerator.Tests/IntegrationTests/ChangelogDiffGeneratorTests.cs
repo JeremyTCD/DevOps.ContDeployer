@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using JeremyTCD.ContDeployer.PluginTools;
-using Newtonsoft.Json;
-using System.IO;
-using Newtonsoft.Json.Serialization;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
-using Moq;
 using Microsoft.Extensions.Logging;
+using Moq;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
 {
-    [Collection(nameof(LogMetadataFactoryCollection))]
+    [Collection(nameof(ChangelogDiffGeneratorCollection))]
     public class ChangelogDiffGeneratorTests
     {
         private string _tempDir { get; }
@@ -21,7 +19,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         private Repository _repository { get; }
         private Signature _signature { get; }
 
-        public ChangelogDiffGeneratorTests(LogMetadataFactoryFixture fixture)
+        public ChangelogDiffGeneratorTests(ChangelogDiffGeneratorFixture fixture)
         {
             fixture.ResetTempDir();
             _tempDir = fixture.TempDir;
@@ -37,12 +35,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             // Arrange
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
-            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object, 
                 _repository);
 
             // Act and Assert
-            Assert.Throws<Exception>(() => logMetadataFactory.Run(null, null));
+            Assert.Throws<Exception>(() => changelogDiffGenerator.Run(null, null));
         }
 
         [Fact]
@@ -54,13 +52,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             _repository.Commit("Initial commit", _signature, _signature);
 
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
-            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object,
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(null, steps);
+            changelogDiffGenerator.Run(null, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -79,13 +77,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             _repository.Commit("Commit 2", _signature, _signature);
 
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
-            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(), 
                 mockLogger.Object, 
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(null, steps);
+            changelogDiffGenerator.Run(null, steps);
 
             // Assert
             Assert.Equal(0, steps.Count);
@@ -101,7 +99,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
         
-            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
 
@@ -126,13 +124,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
 
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
-            ChangelogDiffGenerator logMetadataFactory = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator(new ChangelogDiffGeneratorOptions(),
                 mockLogger.Object,
                 _repository);
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             // Act
-            logMetadataFactory.Run(null, steps);
+            changelogDiffGenerator.Run(null, steps);
 
             // Assert
         }
