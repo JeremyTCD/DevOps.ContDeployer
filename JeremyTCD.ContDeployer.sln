@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests", "test\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{14C9D89B-B773-4533-B9EE-D2F6D11823BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14C9D89B-B773-4533-B9EE-D2F6D11823BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14C9D89B-B773-4533-B9EE-D2F6D11823BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,5 +106,6 @@ Global
 		{4596FE1C-242D-4373-8529-C3D45F5E2FAB} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 		{A46A6337-4351-43C7-A8C2-EB45E12998E8} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 		{14C9D89B-B773-4533-B9EE-D2F6D11823BC} = {0C61E4F4-837A-41A8-A566-7244FEC812DA}
+		{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 	EndGlobalSection
 EndGlobal
