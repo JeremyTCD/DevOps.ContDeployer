@@ -11,9 +11,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
     public class ChangelogDiffAnalyzer : PluginBase
     {
-        ILogger<TagGenerator> Logger { get; set; }
+        ILogger<ChangelogDiffAnalyzer> Logger { get; set; }
 
-        public ChangelogDiffAnalyzer(ILogger<TagGenerator> logger, IRepository repository):
+        public ChangelogDiffAnalyzer(ILogger<ChangelogDiffAnalyzer> logger, IRepository repository):
             base(repository)
         {
             Logger = logger;
