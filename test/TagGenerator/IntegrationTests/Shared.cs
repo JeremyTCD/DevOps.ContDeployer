@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
 {
     [CollectionDefinition(nameof(TagGeneratorCollection))]
     public class TagGeneratorCollection : ICollectionFixture<TagGeneratorFixture>

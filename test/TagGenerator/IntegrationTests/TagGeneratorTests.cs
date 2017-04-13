@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
 {
     [Collection(nameof(TagGeneratorCollection))]
     public class TagGeneratorTests
