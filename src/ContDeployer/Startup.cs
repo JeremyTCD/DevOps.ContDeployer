@@ -26,23 +26,22 @@ namespace JeremyTCD.ContDeployer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Services for external types
             services.
                 AddLogging().
-                AddOptions();
-
-            services.
+                AddOptions().
                 AddSingleton<IAssemblyService, AssemblyService>().
                 AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory()));
 
             services.
-                AddSingleton<Pipeline>();
-            services.Configure<PipelineOptions>(pipelineOptions =>
-            {
-                ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), pipelineOptions);
-                pipelineOptions.Validate();
-            });
-
-            services.AddSingleton<IPluginFactory, PluginFactory>();
+                AddSingleton<IProcessManager, ProcessManager>().
+                AddSingleton<IPluginFactory, PluginFactory>().
+                AddSingleton<Pipeline>().
+                Configure<PipelineOptions>(pipelineOptions =>
+                {
+                    ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), pipelineOptions);
+                    pipelineOptions.Validate();
+                });
 
             // Get plugin assemblies 
             AssemblyService assemblyService = new AssemblyService();
