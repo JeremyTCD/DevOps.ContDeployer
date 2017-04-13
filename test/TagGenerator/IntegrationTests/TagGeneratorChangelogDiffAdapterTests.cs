@@ -12,7 +12,7 @@ using Xunit;
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
 {
     [Collection(nameof(TagGeneratorCollection))]
-    public class ChangelogDiffAnalyzerTests
+    public class TagGeneratorChangelogDiffAdapterTests
     {
         private string _tempDir { get; }
         private string _tempPluginsDir { get; }
@@ -20,7 +20,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         private Repository _repository { get; }
         private Signature _signature { get; }
 
-        public ChangelogDiffAnalyzerTests(TagGeneratorFixture fixture)
+        public TagGeneratorChangelogDiffAdapterTests(TagGeneratorFixture fixture)
         {
             fixture.ResetTempDir();
             _tempDir = fixture.TempDir;
@@ -34,9 +34,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelogDiff()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffAnalyzer>> mockLogger = new Mock<ILogger<ChangelogDiffAnalyzer>>();
+            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            ChangelogDiffAnalyzer changelogDiffGenerator = new ChangelogDiffAnalyzer(mockLogger.Object,
+            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
                 _repository);
 
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
@@ -49,9 +49,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_AddsTagGeneratorStepIfChangelogDiffContainsAnAddedVersion()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffAnalyzer>> mockLogger = new Mock<ILogger<ChangelogDiffAnalyzer>>();
+            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            ChangelogDiffAnalyzer changelogDiffGenerator = new ChangelogDiffAnalyzer(mockLogger.Object,
+            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
                 _repository);
 
             string testVersion = "1.0.0";
@@ -76,9 +76,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfChangelogDiffContainsMoreThanOneAddedVersions()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffAnalyzer>> mockLogger = new Mock<ILogger<ChangelogDiffAnalyzer>>();
+            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            ChangelogDiffAnalyzer changelogDiffGenerator = new ChangelogDiffAnalyzer(mockLogger.Object,
+            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
                 _repository);
 
             ChangelogDiff diff = new ChangelogDiff();
@@ -96,9 +96,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_DoesNothingIfChangelogDiffDoesNotContainAnyAddedVersions()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffAnalyzer>> mockLogger = new Mock<ILogger<ChangelogDiffAnalyzer>>();
+            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            ChangelogDiffAnalyzer changelogDiffGenerator = new ChangelogDiffAnalyzer(mockLogger.Object,
+            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
                 _repository);
 
             ChangelogDiff diff = new ChangelogDiff();

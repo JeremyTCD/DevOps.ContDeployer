@@ -9,11 +9,11 @@ using System.Text;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
-    public class ChangelogDiffAnalyzer : PluginBase
+    public class TagGeneratorChangelogDiffAdapter : PluginBase
     {
-        ILogger<ChangelogDiffAnalyzer> Logger { get; set; }
+        ILogger<TagGeneratorChangelogDiffAdapter> Logger { get; set; }
 
-        public ChangelogDiffAnalyzer(ILogger<ChangelogDiffAnalyzer> logger, IRepository repository):
+        public TagGeneratorChangelogDiffAdapter(ILogger<TagGeneratorChangelogDiffAdapter> logger, IRepository repository):
             base(repository)
         {
             Logger = logger;
