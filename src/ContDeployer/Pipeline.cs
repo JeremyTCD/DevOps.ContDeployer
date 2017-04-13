@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer
             LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>(Options.PipelineSteps);
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
 
-            Logger.LogInformation("=== Starting pipeline ===");
+            Logger.LogInformation("=== Running pipeline ===");
 
             while (steps.Count > 0)
             {
@@ -39,9 +39,9 @@ namespace JeremyTCD.ContDeployer
                 IPlugin plugin = PluginFactory.BuildPluginForPipelineStep(step);
 
                 steps.RemoveFirst();
-                Logger.LogInformation($"Running step with plugin: {step.PluginName}");
+                Logger.LogInformation($"== Running {plugin.GetType().Name} ==");
                 plugin.Run(sharedData, steps);
-                Logger.LogInformation("Step complete");
+                Logger.LogInformation($"== {plugin.GetType().Name} complete ==");
             }
 
             Logger.LogInformation("=== Pipeline complete ===");

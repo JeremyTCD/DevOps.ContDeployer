@@ -21,8 +21,6 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 
         public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
         {
-            Logger.LogInformation("=== Running LogMetadataFactory ===");
-
             // TODO what if you're working another branch
             // Get changelog text
             string headChangelogText = GetHeadChangelogText();
@@ -60,6 +58,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             }
 
             sharedData[nameof(ChangelogDiff)] = diff;
+            Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
         }
 
         private string GetHeadChangelogText()

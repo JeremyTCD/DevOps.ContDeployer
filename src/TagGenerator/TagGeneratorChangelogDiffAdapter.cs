@@ -37,8 +37,6 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 
             if (diff.AddedVersions.Count == 1)
             {
-                Logger.LogInformation($"Version added to changelog");
-
                 TagGeneratorOptions tagGeneratorOptions = new TagGeneratorOptions
                 {
                     TagName = diff.AddedVersions.First().SemVersion.ToString()
@@ -46,7 +44,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
                 PipelineStep tagGeneratorStep = new PipelineStep(nameof(TagGenerator), tagGeneratorOptions);
                 steps.AddFirst(tagGeneratorStep);
 
-                Logger.LogInformation($"Added {nameof(TagGenerator)} step");
+                Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
             }
             else if (diff.AddedVersions.Count > 1)
             {
@@ -54,7 +52,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
             }
             else
             {
-                Logger.LogInformation($"Version added to changelog");
+                Logger.LogInformation($"No versions added to changelog");
             }
         }
     }

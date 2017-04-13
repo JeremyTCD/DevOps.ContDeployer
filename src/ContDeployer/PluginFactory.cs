@@ -63,7 +63,7 @@ namespace JeremyTCD.ContDeployer
             else
             {
                 NextPluginConfigOrOptions = null;
-                Logger.LogInformation($"No options provided for plugin: {step.PluginName}");
+                Logger.LogInformation($"No options provided for plugin \"{step.PluginName}\"");
             }
 
             IPlugin plugin = ServiceProvider.GetService(pluginType) as IPlugin;
@@ -72,6 +72,8 @@ namespace JeremyTCD.ContDeployer
             {
                 throw new Exception($"No service for type: {step.PluginName}");
             }
+
+            Logger.LogInformation($"Plugin \"{step.PluginName}\" successfully built");
 
             return plugin;
         }
