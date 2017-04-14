@@ -37,6 +37,10 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
                                 new PipelineStep
                                 {
                                     PluginName = "ChangelogDiffGenerator"
+                                },
+                                new PipelineStep
+                                {
+                                    PluginName = "TagGeneratorChangelogDiffAdapter"
                                 }
                             }
                 }
