@@ -45,7 +45,7 @@ namespace JeremyTCD.ContDeployer
 
         public PipelineStepContext Build()
         {
-            _pluginOptionsTypes.TryGetValue(_step.PluginName, out Type pluginOptionsType);
+            _pluginOptionsTypes.TryGetValue($"{_step.PluginName}Options", out Type pluginOptionsType);
             IPluginOptions pluginOptions = null;
 
             if (pluginOptionsType == null)
@@ -59,7 +59,7 @@ namespace JeremyTCD.ContDeployer
                 _logger.LogInformation($"Plugin options for plugin with name \"{_step.PluginName}\" successfully built");
             }
 
-            ILogger logger = _loggerFactory.CreateLogger(pluginOptionsType.FullName);
+            ILogger logger = _loggerFactory.CreateLogger(_step.PluginName);
 
             PipelineStepContext pipelineStepContext = new PipelineStepContext
             {
