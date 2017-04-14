@@ -12,7 +12,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
-        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
+        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             // git tag Options.TagName
         }

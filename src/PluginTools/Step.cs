@@ -8,14 +8,14 @@ namespace JeremyTCD.ContDeployer.PluginTools
     /// <summary>
     /// A step in the pipeline. 
     /// </summary>
-    public class PipelineStep
+    public class Step
     {
-        public PipelineStep()
+        public Step()
         {
 
         }
 
-        public PipelineStep(string pluginName, IPluginOptions options)
+        public Step(string pluginName, IPluginOptions options)
         {
             PluginName = pluginName;
             Options = options;

@@ -9,14 +9,14 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
     public class ChangelogDiffGenerator : PluginBase
     {
         private PipelineContext _pipelineContext { get; set; }
-        private PipelineStepContext _pipelineStepContext { get; set; }
+        private StepContext _stepContext { get; set; }
         private ChangelogDiffGeneratorOptions _options { get; set; }
 
-        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
+        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            _options = pipelineStepContext.Options as ChangelogDiffGeneratorOptions;
+            _options = stepContext.Options as ChangelogDiffGeneratorOptions;
             _pipelineContext = pipelineContext;
-            _pipelineStepContext = pipelineStepContext;
+            _stepContext = stepContext;
 
             // TODO what if you're working another branch
             // Get changelog text
@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             // Check if changelog has changed
             if (headChangelogText == previousChangelogText)
             {
-                _pipelineStepContext.Logger.LogInformation($"No changes to changelog: {_options.FileName}");
+                _stepContext.Logger.LogInformation($"No changes to changelog: {_options.FileName}");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             }
 
             _pipelineContext.SharedData[nameof(ChangelogDiff)] = diff;
-            _pipelineStepContext.Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
+            _stepContext.Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
         }
 
         private string GetHeadChangelogText()
@@ -79,13 +79,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             Commit previous = _pipelineContext.Repository.Lookup<Commit>("HEAD^");
             if (previous == null)
             {
-                _pipelineStepContext.Logger.LogInformation($"First commit");
+                _stepContext.Logger.LogInformation($"First commit");
                 return null;
             }
             GitObject previousChangelogGitObject = previous[_options.FileName]?.Target;
             if (previousChangelogGitObject == null)
             {
-                _pipelineStepContext.Logger.LogInformation($"First commit for: {_options.FileName}");
+                _stepContext.Logger.LogInformation($"First commit for: {_options.FileName}");
                 return null;
             }
 

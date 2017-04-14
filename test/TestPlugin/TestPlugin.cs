@@ -5,7 +5,7 @@ namespace JeremyTCD.ContDeployer.TestPlugin
 {
     public class TestPlugin : PluginBase
     {
-        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
+        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             throw new NotImplementedException();
         }

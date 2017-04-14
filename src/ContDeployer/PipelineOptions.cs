@@ -7,16 +7,16 @@ namespace JeremyTCD.ContDeployer
 {
     public class PipelineOptions
     {
-        public List<PipelineStep> PipelineSteps { get; set; } = new List<PipelineStep>();
+        public List<Step> Steps { get; set; } = new List<Step>();
 
         public void Validate()
         {
-            if(PipelineSteps == null || !PipelineSteps.Any()) {
+            if(Steps == null || !Steps.Any()) {
                 throw new Exception($"{nameof(PipelineOptions)}: Pipeline steps required");
             }
 
-            PipelineStep[] pipelineSteps = PipelineSteps.ToArray();
-            foreach(PipelineStep step in pipelineSteps)
+            Step[] steps = Steps.ToArray();
+            foreach(Step step in steps)
             {
                 if (String.IsNullOrEmpty(step.PluginName))
                 {

@@ -33,7 +33,7 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<IProcessManager, ProcessManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
                 AddSingleton<PipelineContextFactory>().
-                AddSingleton<PipelineStepContextFactory>().
+                AddSingleton<StepContextFactory>().
                 AddSingleton<Pipeline>().
                 Configure<PipelineOptions>(pipelineOptions =>
                 {
@@ -43,14 +43,14 @@ namespace JeremyTCD.ContDeployer
         }
 
         public void Configure(ILoggerFactory loggerFactory, IPluginFactory pluginFactory, 
-            PipelineStepContextFactory pipelineStepContextFactory)
+            StepContextFactory stepContextFactory)
         {
             loggerFactory.
                 AddConsole(_configurationRoot.GetValue("Logging:LogLevel:Console", Microsoft.Extensions.Logging.LogLevel.Information)).
                 AddDebug(_configurationRoot.GetValue("Logging:LogLevel:Debug", Microsoft.Extensions.Logging.LogLevel.Information));
 
             pluginFactory.LoadTypes();
-            pipelineStepContextFactory.LoadTypes();
+            stepContextFactory.LoadTypes();
         }
     }
 }

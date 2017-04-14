@@ -8,6 +8,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
         public IProcessManager ProcessManager { get; set; }
         public IRepository Repository { get; set; }
         public Dictionary<string, object> SharedData { get; set; }
-        public LinkedList<PipelineStep> PipelineSteps { get; set; }
+        public LinkedList<Step> Steps { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public abstract class PluginBase : IPlugin
     {
-        public abstract void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext);
+        public abstract void Run(PipelineContext pipelineContext, StepContext stepContext);
     }
 }

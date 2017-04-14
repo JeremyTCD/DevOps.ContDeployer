@@ -57,17 +57,17 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             PipelineContext pipelineContext = CreatePipelineContext();
             pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
 
-            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+            StepContext stepsContext = CreateStepContext();
 
             TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act 
-            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext);
+            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, stepsContext);
 
             // Assert
-            Assert.Equal(1, pipelineContext.PipelineSteps.Count);
-            Assert.Equal(nameof(TagGenerator), pipelineContext.PipelineSteps.First.Value.PluginName);
-            Assert.Equal(testVersion, (pipelineContext.PipelineSteps.First.Value.Options as TagGeneratorOptions).TagName);
+            Assert.Equal(1, pipelineContext.Steps.Count);
+            Assert.Equal(nameof(TagGenerator), pipelineContext.Steps.First.Value.PluginName);
+            Assert.Equal(testVersion, (pipelineContext.Steps.First.Value.Options as TagGeneratorOptions).TagName);
         }
 
         [Fact]
@@ -81,12 +81,12 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             PipelineContext pipelineContext = CreatePipelineContext();
             pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
 
-            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+            StepContext stepsContext = CreateStepContext();
 
             TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext));
+            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogDiffAdapter.Run(pipelineContext, stepsContext));
         }
 
         [Fact]
@@ -98,35 +98,35 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             PipelineContext pipelineContext = CreatePipelineContext();
             pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
 
-            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+            StepContext stepsContext = CreateStepContext();
 
             TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act 
-            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext);
+            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, stepsContext);
 
             // Assert
-            Assert.Equal(0, pipelineContext.PipelineSteps.Count);
+            Assert.Equal(0, pipelineContext.Steps.Count);
         }
 
         private PipelineContext CreatePipelineContext()
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
+            LinkedList<Step> steps = new LinkedList<Step>();
 
             return new PipelineContext
             {
                 Repository = _repository,
                 SharedData = sharedData,
-                PipelineSteps = steps
+                Steps = steps
             };
         }
 
-        private PipelineStepContext CreatePipelineStepContext()
+        private StepContext CreateStepContext()
         {
             Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            return new PipelineStepContext
+            return new StepContext
             {
                 Logger = mockLogger.Object
             };

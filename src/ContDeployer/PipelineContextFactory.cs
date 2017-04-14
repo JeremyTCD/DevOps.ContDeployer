@@ -8,7 +8,7 @@ namespace JeremyTCD.ContDeployer
     {
         private IProcessManager _processManager { get; }
         private IRepository _repository { get; }
-        private LinkedList<PipelineStep> _steps { get; set; }
+        private LinkedList<Step> _steps { get; set; }
 
         public PipelineContextFactory(IProcessManager processManager, IRepository repository)
         {
@@ -16,10 +16,10 @@ namespace JeremyTCD.ContDeployer
             _repository = repository;
         }
 
-        public PipelineContextFactory AddPipelineSteps(List<PipelineStep> steps)
+        public PipelineContextFactory AddSteps(List<Step> steps)
         {
             // Use linked list since steps will be added to and removed from start of list
-            _steps = new LinkedList<PipelineStep>(steps);
+            _steps = new LinkedList<Step>(steps);
 
             return this;
         }
@@ -31,7 +31,7 @@ namespace JeremyTCD.ContDeployer
                 ProcessManager = _processManager,
                 Repository = _repository,
                 SharedData = new Dictionary<string, object>(),
-                PipelineSteps = _steps
+                Steps = _steps
             };
 
             return context;

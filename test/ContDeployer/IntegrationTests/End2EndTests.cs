@@ -33,12 +33,12 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             object options = new
             {
                 Pipeline = new PipelineOptions{
-                    PipelineSteps = new List<PipelineStep> {
-                                new PipelineStep
+                    Steps = new List<Step> {
+                                new Step
                                 {
                                     PluginName = "ChangelogDiffGenerator"
                                 },
-                                new PipelineStep
+                                new Step
                                 {
                                     PluginName = "TagGeneratorChangelogDiffAdapter"
                                 }

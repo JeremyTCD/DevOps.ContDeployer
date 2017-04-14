@@ -18,7 +18,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
-        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
+        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
             ChangelogDiff diff = diffObject as ChangelogDiff;
@@ -33,10 +33,10 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
                 {
                     TagName = diff.AddedVersions.First().SemVersion.ToString()
                 };
-                PipelineStep tagGeneratorStep = new PipelineStep(nameof(TagGenerator), tagGeneratorOptions);
-                pipelineContext.PipelineSteps.AddFirst(tagGeneratorStep);
+                Step tagGeneratorStep = new Step(nameof(TagGenerator), tagGeneratorOptions);
+                pipelineContext.Steps.AddFirst(tagGeneratorStep);
 
-                pipelineStepContext.Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
+                stepContext.Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
             }
             else if (diff.AddedVersions.Count > 1)
             {
@@ -44,7 +44,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
             }
             else
             {
-                pipelineStepContext.Logger.LogInformation($"No versions added to changelog");
+                stepContext.Logger.LogInformation($"No versions added to changelog");
             }
         }
     }
