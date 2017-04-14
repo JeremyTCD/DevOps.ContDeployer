@@ -112,11 +112,13 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         private PipelineContext CreatePipelineContext()
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
+            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             return new PipelineContext
             {
                 Repository = _repository,
-                SharedData = sharedData
+                SharedData = sharedData,
+                PipelineSteps = steps
             };
         }
 

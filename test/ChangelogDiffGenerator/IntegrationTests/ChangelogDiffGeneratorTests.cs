@@ -36,11 +36,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
             PipelineContext pipelineContext = CreatePipelineContext();
+            PipelineStepContext pipelineStepContext = CreatePipelineStepContext();
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(pipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.
+                Run(pipelineContext, pipelineStepContext));
         }
 
         [Fact]
@@ -52,11 +54,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             _repository.Commit("Initial commit", _signature, _signature);
 
             PipelineContext pipelineContext = CreatePipelineContext();
+            PipelineStepContext pipelineStepContext = CreatePipelineStepContext();
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(pipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.
+                Run(pipelineContext, pipelineStepContext));
         }
 
         [Fact]
@@ -203,10 +207,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         private PipelineContext CreatePipelineContext()
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
+            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
 
             return new PipelineContext {
                 Repository = _repository,
-                SharedData = sharedData
+                SharedData = sharedData,
+                PipelineSteps = steps
             };
         }
 
