@@ -6,8 +6,8 @@ namespace JeremyTCD.ContDeployer
     {
         void LoadTypes();
 
-        IPlugin BuildPluginForPipelineStep(PipelineStep step);
+        IPluginFactory SetPluginName(string pluginName);
 
-        IPluginOptions BuildOptions(string name);
+        IPlugin Build();
     }
 }

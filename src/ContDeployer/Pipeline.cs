@@ -41,7 +41,10 @@ namespace JeremyTCD.ContDeployer
             {
                 PipelineStep step = pipelineContext.PipelineSteps.First();
 
-                IPlugin plugin = PluginFactory.BuildPluginForPipelineStep(step);
+                IPlugin plugin = PluginFactory.
+                    SetPluginName(step.PluginName).
+                    Build();
+
                 PipelineStepContext pipelineStepContext = PipelineStepContextFactory.
                     AddPipelineStep(step).
                     Build();
