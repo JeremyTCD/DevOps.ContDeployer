@@ -31,7 +31,8 @@ namespace JeremyTCD.ContDeployer
             // TODO How does asp net core call Configure with variable types as parameters?
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             IPluginFactory pluginFactory = serviceProvider.GetService<IPluginFactory>();
-            startup.Configure(loggerFactory, pluginFactory);
+            PipelineStepContextFactory pipelineStepContextFactory = serviceProvider.GetService<PipelineStepContextFactory>();
+            startup.Configure(loggerFactory, pluginFactory, pipelineStepContextFactory);
 
             Pipeline pipeline = serviceProvider.GetService<Pipeline>();
 
