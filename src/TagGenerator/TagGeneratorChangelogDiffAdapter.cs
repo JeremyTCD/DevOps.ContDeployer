@@ -11,28 +11,20 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
     public class TagGeneratorChangelogDiffAdapter : PluginBase
     {
-        ILogger<TagGeneratorChangelogDiffAdapter> Logger { get; set; }
 
-        public TagGeneratorChangelogDiffAdapter(ILogger<TagGeneratorChangelogDiffAdapter> logger, IRepository repository):
-            base(repository)
-        {
-            Logger = logger;
-        }
-
-        // TODO test this
         /// <summary>
         /// If <see cref="ChangelogDiff.AddedVersions"/> contains a <see cref="Version"/>,
         /// adds a <see cref="TagGenerator"/> pipeline step.
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
-        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
+        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
         {
-            sharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
+            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
             ChangelogDiff diff = diffObject as ChangelogDiff;
             if(diff == null)
             {
-                throw new InvalidOperationException($"No {nameof(ChangelogDiff)} in {nameof(sharedData)}");
+                throw new InvalidOperationException($"No {nameof(ChangelogDiff)} in {nameof(pipelineContext.SharedData)}");
             }
 
             if (diff.AddedVersions.Count == 1)
@@ -42,9 +34,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
                     TagName = diff.AddedVersions.First().SemVersion.ToString()
                 };
                 PipelineStep tagGeneratorStep = new PipelineStep(nameof(TagGenerator), tagGeneratorOptions);
-                steps.AddFirst(tagGeneratorStep);
+                pipelineContext.PipelineSteps.AddFirst(tagGeneratorStep);
 
-                Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
+                pipelineStepContext.Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
             }
             else if (diff.AddedVersions.Count > 1)
             {
@@ -52,7 +44,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
             }
             else
             {
-                Logger.LogInformation($"No versions added to changelog");
+                pipelineStepContext.Logger.LogInformation($"No versions added to changelog");
             }
         }
     }

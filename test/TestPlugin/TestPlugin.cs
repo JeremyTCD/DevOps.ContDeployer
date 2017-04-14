@@ -1,19 +1,11 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Composition;
 
 namespace JeremyTCD.ContDeployer.TestPlugin
 {
     public class TestPlugin : PluginBase
     {
-        public TestPlugin(IRepository repository):base(repository)
-        {
-        }
-
-        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
+        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
         {
             throw new NotImplementedException();
         }

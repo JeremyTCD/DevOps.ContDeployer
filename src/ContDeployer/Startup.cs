@@ -36,6 +36,8 @@ namespace JeremyTCD.ContDeployer
             services.
                 AddSingleton<IProcessManager, ProcessManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
+                AddSingleton<PipelineContextFactory>().
+                AddSingleton<PipelineStepContextFactory>().
                 AddSingleton<Pipeline>().
                 Configure<PipelineOptions>(pipelineOptions =>
                 {

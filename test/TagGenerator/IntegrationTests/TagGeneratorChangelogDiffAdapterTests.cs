@@ -36,13 +36,12 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             // Arrange
             Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
-                _repository);
+            PipelineContext pipelineContext = CreatePipelineContext();
 
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+            TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(sharedData, null));
+            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogDiffAdapter.Run(pipelineContext, null));
         }
 
         [Fact]
@@ -51,68 +50,84 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             // Arrange
             Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
 
-            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
-                _repository);
-
             string testVersion = "1.0.0";
             ChangelogDiff diff = new ChangelogDiff();
             diff.AddedVersions.Add(new ChangelogDiffGenerator.Version { SemVersion = SemVersion.Parse(testVersion) });
 
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            sharedData.Add(nameof(ChangelogDiff), diff);
+            PipelineContext pipelineContext = CreatePipelineContext();
+            pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
 
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
+            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+
+            TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act 
-            changelogDiffGenerator.Run(sharedData, steps);
+            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext);
 
             // Assert
-            Assert.Equal(1, steps.Count);
-            Assert.Equal(nameof(TagGenerator), steps.First.Value.PluginName);
-            Assert.Equal(testVersion, (steps.First.Value.Options as TagGeneratorOptions).TagName);
+            Assert.Equal(1, pipelineContext.PipelineSteps.Count);
+            Assert.Equal(nameof(TagGenerator), pipelineContext.PipelineSteps.First.Value.PluginName);
+            Assert.Equal(testVersion, (pipelineContext.PipelineSteps.First.Value.Options as TagGeneratorOptions).TagName);
         }
 
         [Fact]
         public void Run_ThrowsExceptionIfChangelogDiffContainsMoreThanOneAddedVersions()
         {
             // Arrange
-            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
-
-            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
-                _repository);
-
             ChangelogDiff diff = new ChangelogDiff();
             diff.AddedVersions.Add(new ChangelogDiffGenerator.Version());
             diff.AddedVersions.Add(new ChangelogDiffGenerator.Version());
 
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            sharedData.Add(nameof(ChangelogDiff), diff);
+            PipelineContext pipelineContext = CreatePipelineContext();
+            pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
+
+            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+
+            TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(sharedData, null));
+            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext));
         }
 
         [Fact]
         public void Run_DoesNothingIfChangelogDiffDoesNotContainAnyAddedVersions()
         {
             // Arrange
-            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
-
-            TagGeneratorChangelogDiffAdapter changelogDiffGenerator = new TagGeneratorChangelogDiffAdapter(mockLogger.Object,
-                _repository);
-
             ChangelogDiff diff = new ChangelogDiff();
 
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            sharedData.Add(nameof(ChangelogDiff), diff);
+            PipelineContext pipelineContext = CreatePipelineContext();
+            pipelineContext.SharedData.Add(nameof(ChangelogDiff), diff);
 
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>();
+            PipelineStepContext pipelineStepsContext = CreatePipelineStepContext();
+
+            TagGeneratorChangelogDiffAdapter tagGeneratorChangelogDiffAdapter = new TagGeneratorChangelogDiffAdapter();
 
             // Act 
-            changelogDiffGenerator.Run(sharedData, steps);
+            tagGeneratorChangelogDiffAdapter.Run(pipelineContext, pipelineStepsContext);
 
             // Assert
-            Assert.Equal(0, steps.Count);
+            Assert.Equal(0, pipelineContext.PipelineSteps.Count);
+        }
+
+        private PipelineContext CreatePipelineContext()
+        {
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+
+            return new PipelineContext
+            {
+                Repository = _repository,
+                SharedData = sharedData
+            };
+        }
+
+        private PipelineStepContext CreatePipelineStepContext()
+        {
+            Mock<ILogger<TagGeneratorChangelogDiffAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogDiffAdapter>>();
+
+            return new PipelineStepContext
+            {
+                Logger = mockLogger.Object
+            };
         }
     }
 }

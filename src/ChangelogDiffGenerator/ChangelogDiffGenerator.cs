@@ -1,26 +1,23 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using System;
-using System.Collections.Generic;
 using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
 using LibGit2Sharp.Extensions;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
     public class ChangelogDiffGenerator : PluginBase
     {
-        public ChangelogDiffGeneratorOptions Options { get; set; }
-        public ILogger<ChangelogDiffGenerator> Logger { get; set; }
+        private PipelineContext _pipelineContext { get; set; }
+        private PipelineStepContext _pipelineStepContext { get; set; }
+        private ChangelogDiffGeneratorOptions _options { get; set; }
 
-        public ChangelogDiffGenerator(ChangelogDiffGeneratorOptions options, ILogger<ChangelogDiffGenerator> logger, IRepository repository) :
-            base(repository)
+        public override void Run(PipelineContext pipelineContext, PipelineStepContext pipelineStepContext)
         {
-            Options = options;
-            Logger = logger;
-        }
+            _options = pipelineStepContext.Options as ChangelogDiffGeneratorOptions;
+            _pipelineContext = pipelineContext;
+            _pipelineStepContext = pipelineStepContext;
 
-        public override void Run(Dictionary<string, object> sharedData, LinkedList<PipelineStep> steps)
-        {
             // TODO what if you're working another branch
             // Get changelog text
             string headChangelogText = GetHeadChangelogText();
@@ -33,15 +30,15 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             // Check if changelog has changed
             if (headChangelogText == previousChangelogText)
             {
-                Logger.LogInformation($"No changes to changelog: {Options.FileName}");
+                _pipelineStepContext.Logger.LogInformation($"No changes to changelog: {_options.FileName}");
                 return;
             }
 
             // Build changelog metadata
             ChangelogMetadataFactory changelogMetadataFactory = new ChangelogMetadataFactory();
-            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(Options.Pattern, headChangelogText);
+            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(_options.Pattern, headChangelogText);
             ChangelogMetadata previousChangelogMetadata = previousChangelogText != null ?
-                changelogMetadataFactory.Build(Options.Pattern, previousChangelogText) : null;
+                changelogMetadataFactory.Build(_options.Pattern, previousChangelogText) : null;
 
             // Diff changelog metadata
             ChangelogDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
@@ -57,21 +54,21 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
                 throw new InvalidOperationException($"Cannot remove versions. Deploy manually.");
             }
 
-            sharedData[nameof(ChangelogDiff)] = diff;
-            Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
+            _pipelineContext.SharedData[nameof(ChangelogDiff)] = diff;
+            _pipelineStepContext.Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
         }
 
         private string GetHeadChangelogText()
         {
-            Commit head = Repository.Lookup<Commit>("HEAD");
+            Commit head = _pipelineContext.Repository.Lookup<Commit>("HEAD");
             if (head == null)
             {
                 throw new InvalidOperationException($"Repository has no commits");
             }
-            GitObject headChangelogGitObject = head[Options.FileName]?.Target;
+            GitObject headChangelogGitObject = head[_options.FileName]?.Target;
             if (headChangelogGitObject == null)
             {
-                throw new InvalidOperationException($"No file with name: {Options.FileName}");
+                throw new InvalidOperationException($"No file with name: {_options.FileName}");
             }
 
             return ((Blob)headChangelogGitObject).ReadAsString();
@@ -79,16 +76,16 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 
         private string GetPreviousChangelogText()
         {
-            Commit previous = Repository.Lookup<Commit>("HEAD^");
+            Commit previous = _pipelineContext.Repository.Lookup<Commit>("HEAD^");
             if (previous == null)
             {
-                Logger.LogInformation($"First commit");
+                _pipelineStepContext.Logger.LogInformation($"First commit");
                 return null;
             }
-            GitObject previousChangelogGitObject = previous[Options.FileName]?.Target;
+            GitObject previousChangelogGitObject = previous[_options.FileName]?.Target;
             if (previousChangelogGitObject == null)
             {
-                Logger.LogInformation($"First commit for: {Options.FileName}");
+                _pipelineStepContext.Logger.LogInformation($"First commit for: {_options.FileName}");
                 return null;
             }
 

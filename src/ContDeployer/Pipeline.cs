@@ -1,7 +1,6 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace JeremyTCD.ContDeployer
@@ -11,14 +10,20 @@ namespace JeremyTCD.ContDeployer
         public ILogger<Pipeline> Logger { get; }
         public PipelineOptions Options { get; }
         public IPluginFactory PluginFactory { get; }
+        public PipelineContextFactory PipelineContextFactory { get; }
+        public PipelineStepContextFactory PipelineStepContextFactory { get; }
 
         public Pipeline(IOptions<PipelineOptions> optionsAccessor,
             ILogger<Pipeline> logger,
-            IPluginFactory pluginFactory)
+            IPluginFactory pluginFactory,
+            PipelineContextFactory pipelineContextFactory,
+            PipelineStepContextFactory pipelineStepContextFactory)
         {
             Logger = logger;
             Options = optionsAccessor.Value;
             PluginFactory = pluginFactory;
+            PipelineContextFactory = pipelineContextFactory;
+            PipelineStepContextFactory = pipelineStepContextFactory;
         }
 
         /// <summary>
@@ -26,21 +31,24 @@ namespace JeremyTCD.ContDeployer
         /// </summary>
         public void Run()
         {
-            // Use linked list since steps will be added to and removed from start of list
-            LinkedList<PipelineStep> steps = new LinkedList<PipelineStep>(Options.PipelineSteps);
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+            PipelineContext pipelineContext = PipelineContextFactory.
+                AddPipelineSteps(Options.PipelineSteps).
+                Build();
 
             Logger.LogInformation("=== Running pipeline ===");
 
-            while (steps.Count > 0)
+            while (pipelineContext.PipelineSteps.Count > 0)
             {
-                PipelineStep step = steps.First();
+                PipelineStep step = pipelineContext.PipelineSteps.First();
 
                 IPlugin plugin = PluginFactory.BuildPluginForPipelineStep(step);
+                PipelineStepContext pipelineStepContext = PipelineStepContextFactory.
+                    AddPipelineStep(step).
+                    Build();
 
-                steps.RemoveFirst();
+                pipelineContext.PipelineSteps.RemoveFirst();
                 Logger.LogInformation($"== Running {plugin.GetType().Name} ==");
-                plugin.Run(sharedData, steps);
+                plugin.Run(pipelineContext, pipelineStepContext);
                 Logger.LogInformation($"== {plugin.GetType().Name} complete ==");
             }
 
