@@ -29,7 +29,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 
             int exitCode = pipelineContext.
                             ProcessManager.
-                            Execute("git.exe", $"tag {options.TagName}");
+                            Execute("git.exe", $"tag {options.TagName}", 1000);
 
             if(exitCode == 0)
             {

@@ -13,7 +13,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
         /// <returns>
         /// Exit code
         /// </returns>
-        public int Execute(string fileName, string arguments)
+        public int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -28,7 +28,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
             using (Process process = new Process { StartInfo = startInfo })
             {
                 process.Start();
-                process.WaitForExit();
+                process.WaitForExit(timeoutMillis);
 
                 return process.ExitCode;
             }

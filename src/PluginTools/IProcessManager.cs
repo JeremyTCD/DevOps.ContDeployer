@@ -2,6 +2,6 @@
 {
     public interface IProcessManager
     {
-        int Execute(string fileName, string arguments);
+        int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue);
     }
 }
