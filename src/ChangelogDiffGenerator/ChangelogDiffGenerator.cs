@@ -15,6 +15,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             _options = stepContext.Options as ChangelogDiffGeneratorOptions;
+
+            if(_options == null)
+            {
+                throw new InvalidOperationException($"{nameof(ChangelogDiffGeneratorOptions)} required");
+            }
+
             _pipelineContext = pipelineContext;
             _stepContext = stepContext;
 

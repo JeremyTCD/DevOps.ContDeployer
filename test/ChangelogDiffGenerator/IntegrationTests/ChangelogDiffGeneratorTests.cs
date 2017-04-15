@@ -1,4 +1,5 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿
+using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -26,6 +27,21 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             _stepContext = fixture.
                 CreateStepContext((new Mock<ILogger>()).Object, // TODO Create a dummy logger
                     new ChangelogDiffGeneratorOptions());
+        }
+
+        [Fact]
+        public void Run_ThrowsExceptionIfOptionsIsNull()
+        {
+            // Arrange
+            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
+
+            _stepContext.Options = null;
+
+            ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
+
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.
+                Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
