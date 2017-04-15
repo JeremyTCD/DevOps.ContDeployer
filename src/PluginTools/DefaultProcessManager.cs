@@ -1,10 +1,18 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     // TODO ExecuteAsync
     public class DefaultProcessManager : IProcessManager
     {
+        private ILogger<DefaultProcessManager> _logger { get; }
+
+        public DefaultProcessManager(ILogger<DefaultProcessManager> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Runs process synchronously
         /// </summary>
@@ -30,6 +38,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
                 process.Start();
                 process.WaitForExit(timeoutMillis);
 
+                _logger.LogInformation($"Successfully executed \"{fileName} {arguments}\"");
                 return process.ExitCode;
             }
         }

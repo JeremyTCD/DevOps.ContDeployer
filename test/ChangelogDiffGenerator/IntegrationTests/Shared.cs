@@ -67,12 +67,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
             LinkedList<Step> steps = new LinkedList<Step>();
-            DefaultProcessManager processManager = new DefaultProcessManager();
 
             return new PipelineContext
             {
                 Repository = Repository,
-                ProcessManager = processManager,
                 SharedData = sharedData,
                 Steps = steps
             };
