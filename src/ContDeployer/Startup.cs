@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory()));
 
             services.
-                AddSingleton<IProcessManager, DefaultProcessManager>().
+                AddSingleton<IProcessManager, ProcessManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
                 AddSingleton<PipelineContextFactory>().
                 AddSingleton<StepContextFactory>().

@@ -67,8 +67,8 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
             LinkedList<Step> steps = new LinkedList<Step>();
-            Mock<ILogger<DefaultProcessManager>> mockLogger = new Mock<ILogger<DefaultProcessManager>>();
-            DefaultProcessManager processManager = new DefaultProcessManager(mockLogger.Object);
+            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
+            ProcessManager processManager = new ProcessManager(mockLogger.Object);
 
             return new PipelineContext
             {

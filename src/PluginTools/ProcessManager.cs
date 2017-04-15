@@ -4,11 +4,11 @@ using System.Diagnostics;
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     // TODO ExecuteAsync
-    public class DefaultProcessManager : IProcessManager
+    public class ProcessManager : IProcessManager
     {
-        private ILogger<DefaultProcessManager> _logger { get; }
+        private ILogger<ProcessManager> _logger { get; }
 
-        public DefaultProcessManager(ILogger<DefaultProcessManager> logger)
+        public ProcessManager(ILogger<ProcessManager> logger)
         {
             _logger = logger;
         }
