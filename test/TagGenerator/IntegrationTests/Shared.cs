@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -68,7 +69,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
             LinkedList<Step> steps = new LinkedList<Step>();
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            ProcessManager processManager = new ProcessManager(mockLogger.Object);
+            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
+            mockOptions.Setup(o => o.Value).Returns(new SharedOptions());
+            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
 
             return new PipelineContext
             {
