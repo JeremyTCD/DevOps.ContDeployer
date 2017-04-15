@@ -55,6 +55,7 @@ namespace JeremyTCD.ContDeployer
             else
             {
                 pluginOptions = Activator.CreateInstance(pluginOptionsType) as IPluginOptions;
+                pluginOptions.Validate();
 
                 _logger.LogInformation($"Plugin options for plugin with name \"{_step.PluginName}\" successfully built");
             }
