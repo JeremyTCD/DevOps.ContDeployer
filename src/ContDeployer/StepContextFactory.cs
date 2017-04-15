@@ -1,5 +1,6 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -45,18 +46,30 @@ namespace JeremyTCD.ContDeployer
 
         public StepContext Build()
         {
-            _pluginOptionsTypes.TryGetValue($"{_step.PluginName}Options", out Type pluginOptionsType);
+            // Plugin options
             IPluginOptions pluginOptions = null;
-
+            _pluginOptionsTypes.TryGetValue($"{_step.PluginName}Options", out Type pluginOptionsType);
             if (pluginOptionsType == null)
             {
                 _logger.LogInformation($"No options type for plugin with name \"{_step.PluginName}\"");
             }
             else
             {
-                pluginOptions = Activator.CreateInstance(pluginOptionsType) as IPluginOptions;
-                pluginOptions.Validate();
+                if (_step.Options != null && _step.Options.GetType().Equals(pluginOptionsType))
+                {
+                    pluginOptions = _step.Options;
+                }
+                else
+                {
+                    pluginOptions = Activator.CreateInstance(pluginOptionsType) as IPluginOptions;
 
+                    if (_step.Config != null && !string.IsNullOrEmpty(_step.Config.Value))
+                    {
+                        _step.Config.Bind(pluginOptions);
+                    }
+                }
+
+                pluginOptions.Validate();
                 _logger.LogInformation($"Plugin options for plugin with name \"{_step.PluginName}\" successfully built");
             }
 
