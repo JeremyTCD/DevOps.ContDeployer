@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
@@ -13,7 +14,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         private string _tempDir { get; }
         private string _tempPluginsDir { get; }
         private JsonSerializerSettings _serializerSettings { get; }
-        private Repository _repository { get; }
+        private Repository _repository { get; set; }
         private Signature _signature { get; }
 
         public End2EndTests(E2EFixture fixture)
@@ -32,7 +33,8 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             // Arrange
             object options = new
             {
-                Pipeline = new PipelineOptions{
+                Pipeline = new PipelineOptions
+                {
                     Steps = new List<Step> {
                                 new Step
                                 {
@@ -60,10 +62,16 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             Commands.Stage(_repository, "*");
             _repository.Commit("Commit 3", _signature, _signature);
 
+            _repository.Dispose();
+
             // Act
             ContDeployer.Main(null);
 
             // Assert
+            // Reload repository so changes are available
+            _repository = new Repository(_tempDir);
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            Assert.NotNull(_repository.Tags["0.3.0"]);
         }
-}
+    }
 }

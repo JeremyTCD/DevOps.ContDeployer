@@ -1,7 +1,10 @@
-﻿using LibGit2Sharp;
+﻿using JeremyTCD.ContDeployer.PluginTools;
+using LibGit2Sharp;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -23,7 +26,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
 
         public TagGeneratorFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(ChangelogDiffGenerator)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(TagGenerator)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();
@@ -57,6 +60,30 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             Repository = new Repository(TempDir);
 
             Directory.SetCurrentDirectory(TempDir);
+        }
+
+        public PipelineContext CreatePipelineContext()
+        {
+            Dictionary<string, object> sharedData = new Dictionary<string, object>();
+            LinkedList<Step> steps = new LinkedList<Step>();
+            DefaultProcessManager processManager = new DefaultProcessManager();
+
+            return new PipelineContext
+            {
+                Repository = Repository,
+                ProcessManager = processManager,
+                SharedData = sharedData,
+                Steps = steps
+            };
+        }
+
+        public StepContext CreateStepContext(ILogger logger, IPluginOptions options)
+        {
+            return new StepContext
+            {
+                Logger = logger,
+                Options = options
+            };
         }
 
         public void Dispose()

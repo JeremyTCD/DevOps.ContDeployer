@@ -38,7 +38,6 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         {
             Directory.SetCurrentDirectory("\\");
 
-
             if (Directory.Exists(TempDir))
             {
                 if (Directory.Exists(TempGitDir))

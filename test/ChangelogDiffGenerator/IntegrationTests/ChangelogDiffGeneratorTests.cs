@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -13,20 +12,20 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
     [Collection(nameof(ChangelogDiffGeneratorCollection))]
     public class ChangelogDiffGeneratorTests
     {
-        private string _tempDir { get; }
-        private string _tempPluginsDir { get; }
         private JsonSerializerSettings _serializerSettings { get; }
-        private Repository _repository { get; }
         private Signature _signature { get; }
+        private PipelineContext _pipelineContext { get; }
+        private StepContext _stepContext { get; }
 
         public ChangelogDiffGeneratorTests(ChangelogDiffGeneratorFixture fixture)
         {
             fixture.ResetTempDir();
-            _tempDir = fixture.TempDir;
-            _tempPluginsDir = fixture.TempPluginsDir;
             _serializerSettings = fixture.SerializerSettings;
-            _repository = fixture.Repository;
             _signature = fixture.Signature;
+            _pipelineContext = fixture.CreatePipelineContext();
+            _stepContext = fixture.
+                CreateStepContext((new Mock<ILogger>()).Object, // TODO Create a dummy logger
+                    new ChangelogDiffGeneratorOptions());
         }
 
         [Fact]
@@ -35,14 +34,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             // Arrange
             Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
 
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
-
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.
-                Run(pipelineContext, stepContext));
+                Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
@@ -50,17 +46,14 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("test.txt", "test");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.
-                Run(pipelineContext, stepContext));
+                Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
@@ -68,23 +61,20 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             File.WriteAllText("test.txt", "test");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 2", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act
-            changelogDiffGenerator.Run(pipelineContext, stepContext);
+            changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-            Assert.Equal(0, pipelineContext.Steps.Count);
+            Assert.Equal(0, _pipelineContext.Steps.Count);
         }
 
         [Fact]
@@ -92,19 +82,16 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act 
-            changelogDiffGenerator.Run(pipelineContext, stepContext);
+            changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
@@ -113,23 +100,20 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("test.txt", "test");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 2", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act 
-            changelogDiffGenerator.Run(pipelineContext, stepContext);
+            changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
@@ -138,20 +122,17 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             File.AppendAllText("changelog.md", "\n## 0.2.0\nBody\n## 0.3.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 2", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(pipelineContext, stepContext));
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
@@ -159,24 +140,21 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             File.AppendAllText("changelog.md", "\n## 0.2.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 2", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
 
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 3", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 3", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(pipelineContext, stepContext));
+            Assert.Throws<InvalidOperationException>(() => changelogDiffGenerator.Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
@@ -184,48 +162,23 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         {
             // Arrange
             File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             File.AppendAllText("changelog.md", "## 0.2.0\nBody");
-            Commands.Stage(_repository, "*");
-            _repository.Commit("Commit 2", _signature, _signature);
-
-            PipelineContext pipelineContext = CreatePipelineContext();
-            StepContext stepContext = CreateStepContext();
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act 
-            changelogDiffGenerator.Run(pipelineContext, stepContext);
+            changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
-        private PipelineContext CreatePipelineContext()
-        {
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<Step> steps = new LinkedList<Step>();
 
-            return new PipelineContext {
-                Repository = _repository,
-                SharedData = sharedData,
-                Steps = steps
-            };
-        }
-
-        private StepContext CreateStepContext()
-        {
-            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
-            ChangelogDiffGeneratorOptions options = new ChangelogDiffGeneratorOptions();
-
-            return new StepContext
-            {
-                Logger = mockLogger.Object,
-                Options = options
-            };
-        }
     }
 }
