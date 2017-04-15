@@ -2,6 +2,6 @@
 {
     public interface IProcessManager
     {
-        void Execute(string fileName, string arguments);
+        int Execute(string fileName, string arguments);
     }
 }

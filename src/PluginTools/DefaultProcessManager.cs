@@ -2,9 +2,18 @@
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
+    // TODO ExecuteAsync
     public class DefaultProcessManager : IProcessManager
     {
-        public void Execute(string fileName, string arguments)
+        /// <summary>
+        /// Runs process synchronously
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="arguments"></param>
+        /// <returns>
+        /// Exit code
+        /// </returns>
+        public int Execute(string fileName, string arguments)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -19,6 +28,9 @@ namespace JeremyTCD.ContDeployer.PluginTools
             using (Process process = new Process { StartInfo = startInfo })
             {
                 process.Start();
+                process.WaitForExit();
+
+                return process.ExitCode;
             }
         }
     }
