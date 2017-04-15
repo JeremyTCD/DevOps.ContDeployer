@@ -1,7 +1,6 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
@@ -68,9 +67,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             ContDeployer.Main(null);
 
             // Assert
-            // Reload repository so changes are available
             _repository = new Repository(_tempDir);
-            Console.WriteLine(Directory.GetCurrentDirectory());
             Assert.NotNull(_repository.Tags["0.3.0"]);
         }
     }
