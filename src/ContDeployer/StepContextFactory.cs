@@ -17,6 +17,7 @@ namespace JeremyTCD.ContDeployer
         private ILoggerFactory _loggerFactory { get; }
         private Dictionary<string, Type> _pluginOptionsTypes { get; set; }
         private Step _step { get; set; }
+        private string _pluginTypeFullName { get; set; }
 
         public StepContextFactory(IAssemblyService assemblyService,
             ILoggerFactory loggerFactory,
@@ -37,9 +38,10 @@ namespace JeremyTCD.ContDeployer
                 ToDictionary(type => type.Name);
         }
 
-        public StepContextFactory AddStep(Step step)
+        public StepContextFactory AddStep(Step step, string pluginTypeFullName)
         {
             _step = step;
+            _pluginTypeFullName = pluginTypeFullName;
 
             return this;
         }
@@ -73,7 +75,7 @@ namespace JeremyTCD.ContDeployer
                 _logger.LogInformation($"Plugin options for plugin with name \"{_step.PluginName}\" successfully built");
             }
 
-            ILogger logger = _loggerFactory.CreateLogger(_step.PluginName);
+            ILogger logger = _loggerFactory.CreateLogger(_pluginTypeFullName);
 
             StepContext stepContext = new StepContext
             {

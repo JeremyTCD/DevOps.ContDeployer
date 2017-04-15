@@ -46,7 +46,7 @@ namespace JeremyTCD.ContDeployer
                     Build();
 
                 StepContext stepContext = StepContextFactory.
-                    AddStep(step).
+                    AddStep(step, plugin.GetType().FullName).
                     Build();
 
                 pipelineContext.Steps.RemoveFirst();
