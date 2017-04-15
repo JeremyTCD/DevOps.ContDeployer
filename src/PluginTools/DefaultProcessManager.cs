@@ -2,7 +2,7 @@
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
-    public class ProcessManager : IProcessManager
+    public class DefaultProcessManager : IProcessManager
     {
         public void Execute(string fileName, string arguments)
         {
