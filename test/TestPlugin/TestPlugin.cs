@@ -3,9 +3,9 @@ using System;
 
 namespace JeremyTCD.ContDeployer.TestPlugin
 {
-    public class TestPlugin : PluginBase
+    public class TestPlugin : IPlugin
     {
-        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             throw new NotImplementedException();
         }

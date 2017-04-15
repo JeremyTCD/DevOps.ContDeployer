@@ -1,24 +1,20 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
-using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
-    public class TagGeneratorChangelogDiffAdapter : PluginBase
+    public class TagGeneratorChangelogDiffAdapter : IPlugin
     {
-
         /// <summary>
         /// If <see cref="ChangelogDiff.AddedVersions"/> contains a <see cref="Version"/>,
         /// adds a <see cref="TagGenerator"/> pipeline step.
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
-        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
             ChangelogDiff diff = diffObject as ChangelogDiff;

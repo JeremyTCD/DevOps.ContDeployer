@@ -6,13 +6,13 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 {
-    public class ChangelogDiffGenerator : PluginBase
+    public class ChangelogDiffGenerator : IPlugin
     {
         private PipelineContext _pipelineContext { get; set; }
         private StepContext _stepContext { get; set; }
         private ChangelogDiffGeneratorOptions _options { get; set; }
 
-        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             _options = stepContext.Options as ChangelogDiffGeneratorOptions;
             _pipelineContext = pipelineContext;
@@ -50,7 +50,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
 
             if (diff.RemovedVersions.Count > 0)
             {
-                // Removal does not make sense since certain objects are permanent
+                // Removal does not make sense since certain operations (like publishing
+                // to a package manager) have permanent side effects
                 throw new InvalidOperationException($"Cannot remove versions. Deploy manually.");
             }
 

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
-    public class TagGenerator : PluginBase
+    public class TagGenerator : IPlugin
     {
         /// <summary>
         /// Tags head
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
-        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             // git tag Options.TagName
         }

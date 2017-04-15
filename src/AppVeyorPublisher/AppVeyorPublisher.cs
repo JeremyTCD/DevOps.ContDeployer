@@ -3,9 +3,9 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
 {
-    public class AppVeyorPublisher : PluginBase
+    public class AppVeyorPublisher : IPlugin
     {
-        public override void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             throw new NotImplementedException();
         }
