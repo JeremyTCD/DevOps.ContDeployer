@@ -39,7 +39,8 @@ namespace JeremyTCD.ContDeployer
                 {
                     ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), pipelineOptions);
                     pipelineOptions.Validate();
-                });
+                }).
+                Configure<SharedOptions>(_configurationRoot.GetSection("shared"));
         }
 
         public void Configure(ILoggerFactory loggerFactory, IPluginFactory pluginFactory, 
