@@ -26,7 +26,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             _pipelineContext = fixture.CreatePipelineContext();
             _stepContext = fixture.
                 CreateStepContext((new Mock<ILogger>()).Object, // TODO Create a dummy logger
-                    new ChangelogDiffGeneratorOptions());
+                    null);
         }
 
         [Fact]
