@@ -1,13 +1,11 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
     public class TagGeneratorOptions : IPluginOptions
     {
-        public string TagName { get; set; }
+        public string TagName { get; set; } = null;
 
         public void Validate()
         {
