@@ -47,8 +47,10 @@ namespace JeremyTCD.ContDeployer
             StepContextFactory stepContextFactory)
         {
             loggerFactory.
-                AddConsole(_configurationRoot.GetValue("Logging:LogLevel:Console", Microsoft.Extensions.Logging.LogLevel.Information)).
-                AddDebug(_configurationRoot.GetValue("Logging:LogLevel:Debug", Microsoft.Extensions.Logging.LogLevel.Information));
+                AddFile(_configurationRoot.GetValue("Logging:File:LogFile", "log.txt"),
+                    (_configurationRoot.GetValue("Logging:File:LogLevel", Microsoft.Extensions.Logging.LogLevel.Information))).
+                AddConsole(_configurationRoot.GetValue("Logging:Console:LogLevel", Microsoft.Extensions.Logging.LogLevel.Information)).
+                AddDebug(_configurationRoot.GetValue("Logging:Debug:LogLevel", Microsoft.Extensions.Logging.LogLevel.Information));
 
             pluginFactory.LoadTypes();
             stepContextFactory.LoadTypes();
