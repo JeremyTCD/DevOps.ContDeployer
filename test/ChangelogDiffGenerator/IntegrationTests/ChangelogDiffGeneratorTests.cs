@@ -1,5 +1,4 @@
-﻿
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -33,8 +32,6 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
-
             _stepContext.Options = null;
 
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
@@ -48,8 +45,6 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            Mock<ILogger<ChangelogDiffGenerator>> mockLogger = new Mock<ILogger<ChangelogDiffGenerator>>();
-
             ChangelogDiffGenerator changelogDiffGenerator = new ChangelogDiffGenerator();
 
             // Act and Assert
@@ -107,7 +102,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
@@ -129,7 +124,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
@@ -191,7 +186,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
             changelogDiffGenerator.Run(_pipelineContext, _stepContext);
 
             // Assert
-           _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
+            _pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diff);
             Assert.NotNull(diff);
         }
 
