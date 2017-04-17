@@ -15,31 +15,32 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
     {
         private JsonSerializerSettings _serializerSettings { get; }
         private Signature _signature { get; }
-        private PipelineContext _pipelineContext { get; }
-        private StepContext _stepContext { get; }
+        private TagGeneratorFixture _fixture { get; }
 
         public TagGeneratorTests(TagGeneratorFixture fixture)
         {
             fixture.ResetTempDir();
+            _fixture = fixture;
             _serializerSettings = fixture.SerializerSettings;
             _signature = fixture.Signature;
-            _pipelineContext = fixture.CreatePipelineContext();
-            _stepContext = fixture.
-                CreateStepContext((new Mock<ILogger>()).Object, // TODO Create a dummy logger
-                    new TagGeneratorOptions());
         }
 
         [Fact]
         public void Run_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            _stepContext.Options = null;
+            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
+            StepContext stepContext = _fixture.
+                CreateStepContext((new Mock<ILogger>()).Object,
+                    new TagGeneratorOptions());
+
+            stepContext.Options = null;
 
             TagGenerator tagGenerator = new TagGenerator();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => tagGenerator.
-                Run(_pipelineContext, _stepContext));
+                Run(pipelineContext, stepContext));
         }
 
         [Theory]
@@ -47,13 +48,18 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfTagNameIsNullOrEmpty(string testTagName)
         {
             // Arrange
-            ((TagGeneratorOptions)_stepContext.Options).TagName = testTagName;
+            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
+            StepContext stepContext = _fixture.
+                CreateStepContext((new Mock<ILogger>()).Object,
+                    new TagGeneratorOptions());
+
+            ((TagGeneratorOptions)stepContext.Options).TagName = testTagName;
 
             TagGenerator tagGenerator = new TagGenerator();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => tagGenerator.
-                Run(_pipelineContext, _stepContext));
+                Run(pipelineContext, stepContext));
         }
 
         public static IEnumerable<object[]> RunThrowsExceptionIfTagNameIsNullOrEmptyData()
@@ -66,41 +72,77 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_CreatesTagWithSpecifiedName()
         {
             // Arrange
+            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
+            StepContext stepContext = _fixture.
+                CreateStepContext((new Mock<ILogger>()).Object,
+                    new TagGeneratorOptions());
+
             string testTagName = "0.1.0";
-            ((TagGeneratorOptions)_stepContext.Options).TagName = testTagName;
+            ((TagGeneratorOptions)stepContext.Options).TagName = testTagName;
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(pipelineContext.Repository, "*");
+            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             TagGenerator tagGenerator = new TagGenerator();
 
             // Act
-            tagGenerator.Run(_pipelineContext, _stepContext);
+            tagGenerator.Run(pipelineContext, stepContext);
 
             // Assert
-            Assert.NotNull(_pipelineContext.Repository.Tags[testTagName]);
+            Assert.NotNull(pipelineContext.Repository.Tags[testTagName]);
+        }
+
+        [Fact]
+        public void Run_DoesNothingOnDryRun()
+        {
+            // Arrange
+            PipelineContext pipelineContext = _fixture.CreatePipelineContext(new SharedOptions { DryRun = true });
+            StepContext stepContext = _fixture.
+                CreateStepContext((new Mock<ILogger>()).Object,
+                    new TagGeneratorOptions());
+
+            string testTagName = "0.1.0";
+            ((TagGeneratorOptions)stepContext.Options).TagName = testTagName;
+
+            // Test commit for tag to point to
+            File.WriteAllText("test.txt", "test");
+            Commands.Stage(pipelineContext.Repository, "*");
+            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
+
+            TagGenerator tagGenerator = new TagGenerator();
+
+            // Act
+            tagGenerator.Run(pipelineContext, stepContext);
+
+            // Assert
+            Assert.Null(pipelineContext.Repository.Tags[testTagName]);
         }
 
         [Fact]
         public void Run_ThrowsExceptionIfGitTagFails()
         {
             // Arrange
+            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
+            StepContext stepContext = _fixture.
+                CreateStepContext((new Mock<ILogger>()).Object,
+                    new TagGeneratorOptions());
+
             string testTagName = "0.1.0";
-            ((TagGeneratorOptions)_stepContext.Options).TagName = testTagName;
+            ((TagGeneratorOptions)stepContext.Options).TagName = testTagName;
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
+            Commands.Stage(pipelineContext.Repository, "*");
+            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            _pipelineContext.Repository.ApplyTag(testTagName);
+            pipelineContext.Repository.ApplyTag(testTagName);
 
             TagGenerator tagGenerator = new TagGenerator();
 
             // Act
-            Assert.Throws<Exception>(() => tagGenerator.Run(_pipelineContext, _stepContext));
+            Assert.Throws<Exception>(() => tagGenerator.Run(pipelineContext, stepContext));
         }
     }
 }

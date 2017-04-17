@@ -64,13 +64,13 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             Directory.SetCurrentDirectory(TempDir);
         }
 
-        public PipelineContext CreatePipelineContext()
+        public PipelineContext CreatePipelineContext(SharedOptions sharedOptions = new SharedOptions())
         {
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
             LinkedList<Step> steps = new LinkedList<Step>();
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
             Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(new SharedOptions());
+            mockOptions.Setup(o => o.Value).Returns(sharedOptions);
             ProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
 
             return new PipelineContext
