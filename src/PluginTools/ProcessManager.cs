@@ -24,7 +24,8 @@ namespace JeremyTCD.ContDeployer.PluginTools
         /// <returns>
         /// Exit code
         /// </returns>
-        public int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue, bool executeOnDryRun = false)
+        public int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue, 
+            bool executeOnDryRun = false)
         {
             if (_sharedOptions.DryRun && !executeOnDryRun)
             {
