@@ -3,33 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogMetadata
+    public class Changelog
     {
         /// <summary>
         /// List of Versions contained in a changelog
         /// </summary>
         public List<Version> Versions { get; }
 
-        public ChangelogMetadata(List<Version> versions)
+        public Changelog(List<Version> versions)
         {
             Versions = versions;
         }
 
         /// <summary>
-        /// Creates a <see cref="ChangelogDiff"/> between this instance and another <see cref="ChangelogMetadata"/> instance.
-        /// <see cref="ChangelogMetadata.Versions"/> of both instances must be in descending <see cref="Version.SemVersion"/> order.
+        /// Creates a <see cref="Changelog"/> between this instance and another <see cref="Changelog"/> instance.
+        /// <see cref="Changelog.Versions"/> of both instances must be in descending <see cref="Version.SemVersion"/> order.
         /// </summary>
         /// <param name="otherChangelogMetadata">
         /// If null, all versions in this instance are considered to be newly added.
         /// </param>
         /// <returns>
-        /// <see cref="ChangelogDiff"/>
+        /// <see cref="Changelog"/>
         /// </returns>
-        public ChangelogDiff Diff(ChangelogMetadata otherChangelogMetadata)
+        public Changelog Diff(Changelog otherChangelogMetadata)
         {
-            ChangelogDiff result = new ChangelogDiff();
+            Changelog result = new Changelog();
 
             if (otherChangelogMetadata == null)
             {

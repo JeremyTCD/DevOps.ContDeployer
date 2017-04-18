@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,21 +6,21 @@ using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 {
-    public class TagGeneratorChangelogDiffAdapter : IPlugin
+    public class TagGeneratorChangelogAdapter : IPlugin
     {
         /// <summary>
-        /// If <see cref="ChangelogDiff.AddedVersions"/> contains a <see cref="Version"/>,
+        /// If <see cref="Changelog.AddedVersions"/> contains a <see cref="Version"/>,
         /// adds a <see cref="TagGenerator"/> pipeline step.
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
-            ChangelogDiff diff = diffObject as ChangelogDiff;
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diffObject);
+            Changelog diff = diffObject as Changelog;
             if(diff == null)
             {
-                throw new InvalidOperationException($"No {nameof(ChangelogDiff)} in {nameof(pipelineContext.SharedData)}");
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
             }
 
             if (diff.AddedVersions.Count == 1)
@@ -36,7 +36,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
             }
             else if (diff.AddedVersions.Count > 1)
             {
-                throw new InvalidOperationException($"{nameof(ChangelogDiff)} should not have more than 1 added versions");
+                throw new InvalidOperationException($"{nameof(Changelog)} should not have more than 1 added versions");
             }
             else
             {

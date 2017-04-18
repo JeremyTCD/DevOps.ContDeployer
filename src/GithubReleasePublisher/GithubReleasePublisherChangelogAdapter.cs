@@ -1,10 +1,10 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
 using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher
 {
-    public class GithubReleasePublisherChangelogDiffAdapter : IPlugin
+    public class GithubReleasePublisherChangelogAdapter : IPlugin
     {
         /// <summary>
         /// Tags head
@@ -13,14 +13,14 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher
         /// <param name="steps"></param>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            pipelineContext.SharedData.TryGetValue(nameof(ChangelogDiff), out object diffObject);
-            ChangelogDiff diff = diffObject as ChangelogDiff;
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diffObject);
+            Changelog diff = diffObject as Changelog;
             if (diff == null)
             {
-                throw new InvalidOperationException($"No {nameof(ChangelogDiff)} in {nameof(pipelineContext.SharedData)}");
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
             }
 
-            foreach(ChangelogDiffGenerator.Version version in diff.AddedVersions)
+            foreach(ChangelogGenerator.Version version in diff.AddedVersions)
             {
                 // Add GithubReleasePublisher to create release
             }
@@ -29,7 +29,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher
             //   - tag field must be used to create tag on head
             //      - dont forget to push to origin
             //   - tag must be provided as tag_name 
-            foreach(ChangelogDiffGenerator.Version version in diff.ModifiedVersions)
+            foreach(ChangelogGenerator.Version version in diff.ModifiedVersions)
             {
                 // Add GithubReleasePublisher to edit release
             }

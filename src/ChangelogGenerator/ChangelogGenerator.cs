@@ -4,21 +4,21 @@ using LibGit2Sharp.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogDiffGenerator : IPlugin
+    public class ChangelogGenerator : IPlugin
     {
         private PipelineContext _pipelineContext { get; set; }
         private StepContext _stepContext { get; set; }
-        private ChangelogDiffGeneratorOptions _options { get; set; }
+        private ChangelogGeneratorOptions _options { get; set; }
 
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            _options = stepContext.Options as ChangelogDiffGeneratorOptions;
+            _options = stepContext.Options as ChangelogGeneratorOptions;
 
             if(_options == null)
             {
-                throw new InvalidOperationException($"{nameof(ChangelogDiffGeneratorOptions)} required");
+                throw new InvalidOperationException($"{nameof(ChangelogGeneratorOptions)} required");
             }
 
             _pipelineContext = pipelineContext;
@@ -41,13 +41,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             }
 
             // Build changelog metadata
-            ChangelogMetadataFactory changelogMetadataFactory = new ChangelogMetadataFactory();
-            ChangelogMetadata headChangelogMetadata = changelogMetadataFactory.Build(_options.Pattern, headChangelogText);
-            ChangelogMetadata previousChangelogMetadata = previousChangelogText != null ?
+            ChangelogFactory changelogMetadataFactory = new ChangelogFactory();
+            Changelog headChangelogMetadata = changelogMetadataFactory.Build(_options.Pattern, headChangelogText);
+            Changelog previousChangelogMetadata = previousChangelogText != null ?
                 changelogMetadataFactory.Build(_options.Pattern, previousChangelogText) : null;
 
             // Diff changelog metadata
-            ChangelogDiff diff = headChangelogMetadata.Diff(previousChangelogMetadata);
+            Changelog diff = headChangelogMetadata.Diff(previousChangelogMetadata);
 
             if (diff.AddedVersions.Count > 1)
             {
@@ -61,8 +61,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
                 throw new InvalidOperationException($"Cannot remove versions. Deploy manually.");
             }
 
-            _pipelineContext.SharedData[nameof(ChangelogDiff)] = diff;
-            _stepContext.Logger.LogInformation($"{nameof(ChangelogDiff)} generated");
+            _pipelineContext.SharedData[nameof(Changelog)] = diff;
+            _stepContext.Logger.LogInformation($"{nameof(Changelog)} generated");
         }
 
         private string GetHeadChangelogText()

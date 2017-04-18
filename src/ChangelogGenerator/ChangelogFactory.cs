@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogMetadataFactory
+    public class ChangelogFactory
     {
         /// <summary>
-        /// Creates a <see cref="ChangelogMetadata"/> instance. <see cref="ChangelogMetadata.Versions"/>
+        /// Creates a <see cref="Changelog"/> instance. <see cref="Changelog.Versions"/>
         /// of returned instance are sorted by <see cref="Version.SemVersion"/> in descending order.
         /// </summary>
         /// <param name="pattern">
@@ -18,9 +18,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
         /// </param>
         /// <param name="changelogText"></param>
         /// <returns>
-        /// <see cref="ChangelogMetadata"/>
+        /// <see cref="Changelog"/>
         /// </returns>
-        public ChangelogMetadata Build(string pattern, string changelogText)
+        public Changelog Build(string pattern, string changelogText)
         {
             MatchCollection matches = Regex.Matches(changelogText, pattern, RegexOptions.Singleline);
             List<Version> versions = new List<Version>();
@@ -39,7 +39,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
             // Descending order
             versions.Reverse();
 
-            return new ChangelogMetadata(versions);
+            return new Changelog(versions);
         }
     }
 }

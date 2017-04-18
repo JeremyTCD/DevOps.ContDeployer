@@ -9,14 +9,14 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
 {
-    [CollectionDefinition(nameof(ChangelogDiffGeneratorCollection))]
-    public class ChangelogDiffGeneratorCollection : ICollectionFixture<ChangelogDiffGeneratorFixture>
+    [CollectionDefinition(nameof(ChangelogGeneratorCollection))]
+    public class ChangelogGeneratorCollection : ICollectionFixture<ChangelogGeneratorFixture>
     {
     }
 
-    public class ChangelogDiffGeneratorFixture : IDisposable
+    public class ChangelogGeneratorFixture : IDisposable
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
@@ -25,9 +25,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.IntegrationTests
         public Repository Repository { get; set; }
         public Signature Signature { get; }
 
-        public ChangelogDiffGeneratorFixture()
+        public ChangelogGeneratorFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(ChangelogDiffGenerator)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(ChangelogGenerator)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();

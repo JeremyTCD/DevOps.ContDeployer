@@ -1,7 +1,7 @@
 ﻿using Semver;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
     public class Version : IComparable<Version>
     {

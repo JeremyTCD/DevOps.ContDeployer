@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.PluginTools", "src\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator", "src\ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.ChangelogGenerator", "src\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher", "src\AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj", "{A528121B-899B-46D7-A619-E5809BE983C6}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.PluginTools.Tests", "test\PluginTools\JeremyTCD.ContDeployer.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests", "test\ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests", "test\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
 EndProject

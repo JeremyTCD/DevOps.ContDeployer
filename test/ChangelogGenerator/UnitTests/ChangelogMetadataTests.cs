@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
 {
     public class ChangelogMetadataTests
     {
@@ -12,14 +12,14 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
         public void Diff_AccountsForAddedVersions()
         {
             // Arrange
-            ChangelogMetadata oldMetadata = new ChangelogMetadata(
+            Changelog oldMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("1.1.0")},
                     new Version(){SemVersion = SemVersion.Parse("1.0.0")}
                 });
 
-            ChangelogMetadata newMetadata = new ChangelogMetadata(
+            Changelog newMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("2.1.1")}, // Add Version to start of list
@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                 });
 
             // Act
-            ChangelogDiff result = newMetadata.Diff(oldMetadata);
+            Changelog result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.AddedVersions);
@@ -44,7 +44,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
         public void Diff_AccountsForRemovedVersions()
         {
             // Arrange
-            ChangelogMetadata oldMetadata = new ChangelogMetadata(
+            Changelog oldMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("2.1.1")}, // Remove Version from start of list
@@ -54,7 +54,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                     new Version(){SemVersion = SemVersion.Parse("1.0.0-alpha")} // Remove Version from end of list
                 });
 
-            ChangelogMetadata newMetadata = new ChangelogMetadata(
+            Changelog newMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("1.1.0")},
@@ -62,7 +62,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                 });
 
             // Act
-            ChangelogDiff result = newMetadata.Diff(oldMetadata);
+            Changelog result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.RemovedVersions);
@@ -76,7 +76,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
         public void Diff_AccountsForModifiedVersions()
         {
             // Arrange
-            ChangelogMetadata oldMetadata = new ChangelogMetadata(
+            Changelog oldMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("1.1.1"), Raw = "## 1.1.1\nOld"},
@@ -84,7 +84,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                     new Version(){SemVersion = SemVersion.Parse("1.0.0"), Raw = "## 1.0.0\nOld"}
                 });
 
-            ChangelogMetadata newMetadata = new ChangelogMetadata(
+            Changelog newMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("1.1.1"), Raw = "## 1.1.1\nNew"},
@@ -93,7 +93,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                 });
 
             // Act
-            ChangelogDiff result = newMetadata.Diff(oldMetadata);
+            Changelog result = newMetadata.Diff(oldMetadata);
 
             // Assert 
             Assert.NotNull(result.ModifiedVersions);
@@ -107,7 +107,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
         public void Diff_ConsidersAllVersionsAsAddedIfOtherIsNull()
         {
             // Arrange
-            ChangelogMetadata newMetadata = new ChangelogMetadata(
+            Changelog newMetadata = new Changelog(
                 new List<Version>
                 {
                     new Version(){SemVersion = SemVersion.Parse("1.1.1")},
@@ -116,7 +116,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                 });
 
             // Act
-            ChangelogDiff result = newMetadata.Diff(null);
+            Changelog result = newMetadata.Diff(null);
 
             // Assert 
             Assert.NotNull(result.AddedVersions);

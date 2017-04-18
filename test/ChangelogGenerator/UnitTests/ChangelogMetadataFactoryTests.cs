@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
 {
     public class ChangelogMetadataFactoryTests
     {
@@ -29,10 +29,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.Tests.UnitTests
                 $"## {version4}\n{notes4}\n" +
                 $"## {version5}\n{notes5}\n";
 
-            ChangelogMetadataFactory factory = new ChangelogMetadataFactory();
+            ChangelogFactory factory = new ChangelogFactory();
 
             // Act
-            ChangelogMetadata result = factory.Build(pattern, changelogText);
+            Changelog result = factory.Build(pattern, changelogText);
 
             // Assert
             Assert.NotNull(result.Versions);

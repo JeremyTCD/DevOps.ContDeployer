@@ -1,8 +1,8 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogDiffGeneratorOptions : IPluginOptions
+    public class ChangelogGeneratorOptions : IPluginOptions
     {
         public string FileName { get; set; } = "changelog.md";
         public string Branch { get; set; } = "master";

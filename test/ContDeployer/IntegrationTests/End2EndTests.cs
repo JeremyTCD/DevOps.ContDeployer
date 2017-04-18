@@ -37,11 +37,11 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
                     Steps = new List<Step> {
                                 new Step
                                 {
-                                    PluginName = "ChangelogDiffGenerator"
+                                    PluginName = "ChangelogGenerator"
                                 },
                                 new Step
                                 {
-                                    PluginName = "TagGeneratorChangelogDiffAdapter"
+                                    PluginName = "TagGeneratorChangelogAdapter"
                                 }
                             }
                 }
