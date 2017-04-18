@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Net.Http;
 
 namespace JeremyTCD.ContDeployer
 {
@@ -27,10 +28,12 @@ namespace JeremyTCD.ContDeployer
                 AddLogging().
                 AddOptions().
                 AddSingleton<IAssemblyService, AssemblyService>().
-                AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory()));
+                AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory())).
+                AddSingleton<HttpClient>();
 
             services.
                 AddSingleton<IProcessManager, ProcessManager>().
+                AddSingleton<IHttpManager, HttpManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
                 AddSingleton<PipelineContextFactory>().
                 AddSingleton<StepContextFactory>().
