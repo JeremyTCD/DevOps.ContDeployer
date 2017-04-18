@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -37,16 +38,17 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             // Assert
             Assert.NotNull(result.Versions);
             Assert.Equal(5, result.Versions.Count);
-            Assert.Equal(version1, result.Versions[0].SemVersion);
-            Assert.Equal(notes1, result.Versions[0].Notes);
-            Assert.Equal(version2, result.Versions[1].SemVersion);
-            Assert.Equal(notes2, result.Versions[1].Notes);
-            Assert.Equal(version3, result.Versions[2].SemVersion);
-            Assert.Equal(notes3, result.Versions[2].Notes);
-            Assert.Equal(version4, result.Versions[3].SemVersion);
-            Assert.Equal(notes4, result.Versions[3].Notes);
-            Assert.Equal(version5, result.Versions[4].SemVersion);
-            Assert.Equal(notes5, result.Versions[4].Notes);
+            List<Version> versions = result.Versions.ToList();
+            Assert.Equal(version1, versions[0].SemVersion);
+            Assert.Equal(notes1, versions[0].Notes);
+            Assert.Equal(version2, versions[1].SemVersion);
+            Assert.Equal(notes2, versions[1].Notes);
+            Assert.Equal(version3, versions[2].SemVersion);
+            Assert.Equal(notes3, versions[2].Notes);
+            Assert.Equal(version4, versions[3].SemVersion);
+            Assert.Equal(notes4, versions[3].Notes);
+            Assert.Equal(version5, versions[4].SemVersion);
+            Assert.Equal(notes5, versions[4].Notes);
         }
     }
 }

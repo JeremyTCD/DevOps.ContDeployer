@@ -1,18 +1,15 @@
-﻿using Semver;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
     public class Changelog
     {
         /// <summary>
-        /// List of Versions contained in a changelog
+        /// Set of versions ordered in descending semver order (latest first)
         /// </summary>
-        public List<Version> Versions { get; }
+        public SortedSet<Version> Versions { get; }
 
-        public Changelog(List<Version> versions)
+        public Changelog(SortedSet<Version> versions)
         {
             Versions = versions;
         }

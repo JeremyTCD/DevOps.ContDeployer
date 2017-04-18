@@ -1,7 +1,5 @@
 ﻿using Semver;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
@@ -23,21 +21,17 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         public Changelog Build(string pattern, string changelogText)
         {
             MatchCollection matches = Regex.Matches(changelogText, pattern, RegexOptions.Singleline);
-            List<Version> versions = new List<Version>();
+            SortedSet<Version> versions = new SortedSet<Version>();
 
             foreach (Match match in matches)
             {
-                versions.Add(new Version()
+                versions.Add(new Version
                 {
                     Raw = match.Groups[0].Value,
                     SemVersion = SemVersion.Parse(match.Groups[1].Value),
                     Notes = match.Groups[2].Value.Trim()
                 });
             }
-
-            versions.Sort();
-            // Descending order
-            versions.Reverse();
 
             return new Changelog(versions);
         }
