@@ -11,7 +11,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 
         public int CompareTo(Version other)
         {
-            return SemVersion.CompareTo(other.SemVersion);
+            int compareResult = SemVersion.CompareTo(other.SemVersion);
+
+            return compareResult == 0 ? 0 : 
+                compareResult == -1 ? 1 : -1;
         }
     }
 }
