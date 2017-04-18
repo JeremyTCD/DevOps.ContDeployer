@@ -5,7 +5,7 @@ using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
 {
-    public class ChangelogMetadataFactoryTests
+    public class ChangelogFactoryTests
     {
         [Fact]
         public void Build_CreatesChangelogMetadata()
