@@ -6,6 +6,8 @@ using Moq;
 using Newtonsoft.Json;
 using Semver;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
@@ -42,15 +44,16 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         }
 
         [Fact]
-        public void Run_AddsTagGeneratorStepIfChangelogContainsAnAddedVersion()
+        public void Run_AddsTagGeneratorStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
-            Mock<ILogger<TagGeneratorChangelogAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogAdapter>>();
-
             string testVersion = "1.0.0";
-            Changelog diff = new Changelog();
-            diff.AddedVersions.Add(new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) });
-            _pipelineContext.SharedData.Add(nameof(Changelog), diff);
+            SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
+            {
+                new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
+            };
+            Changelog changelog = new Changelog(versions);
+            _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
             TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
 
@@ -64,26 +67,22 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfChangelogContainsMoreThanOneAddedVersions()
+        public void Run_DoesNothingIfChangelogVersionsAllHaveCorrespondingTags()
         {
             // Arrange
-            Changelog diff = new Changelog();
-            diff.AddedVersions.Add(new ChangelogGenerator.Version());
-            diff.AddedVersions.Add(new ChangelogGenerator.Version());
-            _pipelineContext.SharedData.Add(nameof(Changelog), diff);
+            File.WriteAllText("test.txt", "test");
+            Commands.Stage(_pipelineContext.Repository, "*");
+            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
+            string testVersion = "1.0.0";
+            SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
+            {
+                new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
+            };
+            Changelog changelog = new Changelog(versions);
+            _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogAdapter.Run(_pipelineContext, _stepContext));
-        }
-
-        [Fact]
-        public void Run_DoesNothingIfChangelogDoesNotContainAnyAddedVersions()
-        {
-            // Arrange
-            Changelog diff = new Changelog();
-            _pipelineContext.SharedData.Add(nameof(Changelog), diff);
+            _pipelineContext.Repository.ApplyTag(testVersion);
 
             TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
 

@@ -2,6 +2,7 @@
 using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
@@ -9,38 +10,47 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
     public class TagGeneratorChangelogAdapter : IPlugin
     {
         /// <summary>
-        /// If <see cref="Changelog.AddedVersions"/> contains a <see cref="Version"/>,
-        /// adds a <see cref="TagGenerator"/> pipeline step.
+        /// Compares <see cref="Changelog"/> and git tags. If latest version has no corresponding tag (new version), 
+        /// adds <see cref="TagGenerator"/> step to tag head.
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diffObject);
-            Changelog diff = diffObject as Changelog;
-            if(diff == null)
+            Changelog changelog = diffObject as Changelog;
+            if (changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
             }
 
-            if (diff.AddedVersions.Count == 1)
-            {
-                TagGeneratorOptions tagGeneratorOptions = new TagGeneratorOptions
-                {
-                    TagName = diff.AddedVersions.First().SemVersion.ToString()
-                };
-                Step tagGeneratorStep = new Step(nameof(TagGenerator), tagGeneratorOptions);
-                pipelineContext.Steps.AddFirst(tagGeneratorStep);
+            List<ChangelogGenerator.Version> versions = changelog.Versions.ToList();
 
-                stepContext.Logger.LogInformation($"Version added to changelog, added {nameof(TagGenerator)} step");
-            }
-            else if (diff.AddedVersions.Count > 1)
+            for (int i = 0; i < versions.Count; i++)
             {
-                throw new InvalidOperationException($"{nameof(Changelog)} should not have more than 1 added versions");
-            }
-            else
-            {
-                stepContext.Logger.LogInformation($"No versions added to changelog");
+                ChangelogGenerator.Version version = versions[i];
+
+                if (pipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
+                {
+                    if (i == 0)
+                    {
+                        TagGeneratorOptions tagGeneratorOptions = new TagGeneratorOptions
+                        {
+                            TagName = version.SemVersion.ToString()
+                        };
+                        Step tagGeneratorStep = new Step(nameof(TagGenerator), tagGeneratorOptions);
+                        pipelineContext.Steps.AddFirst(tagGeneratorStep);
+
+                        stepContext.Logger.LogInformation($"Version \"{version.SemVersion.ToString()}\"" +
+                            $"added to changelog, added {nameof(TagGenerator)} step");
+                    }
+                    else
+                    {
+                        // TODO Each version should point to a commit, corresponding commits should be
+                        // tagged
+                        stepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
+                    }
+                }
             }
         }
     }
