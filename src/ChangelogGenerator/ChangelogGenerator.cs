@@ -12,11 +12,22 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         private StepContext _stepContext { get; set; }
         private ChangelogGeneratorOptions _options { get; set; }
 
+        /// <summary>
+        /// Generates <see cref="Changelog"/> and inserts it into <see cref="PipelineContext.SharedData"/>.
+        /// </summary>
+        /// <param name="pipelineContext"></param>
+        /// <param name="stepContext"></param>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="StepContext.Options"/> is null
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="_options.Filename"/> is an empty 
+        /// </exception>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             _options = stepContext.Options as ChangelogGeneratorOptions;
 
-            if(_options == null)
+            if (_options == null)
             {
                 throw new InvalidOperationException($"{nameof(ChangelogGeneratorOptions)} required");
             }
@@ -24,48 +35,35 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             _pipelineContext = pipelineContext;
             _stepContext = stepContext;
 
-            // TODO what if you're working another branch
+            // TODO checkout branch specified in options
             // Get changelog text
-            string headChangelogText = GetHeadChangelogText();
-            if (headChangelogText == null)
+            string changelogText = GetChangelogText();
+            if (string.IsNullOrEmpty(changelogText))
             {
-                return;
-            }
-            string previousChangelogText = GetPreviousChangelogText();
-
-            // Check if changelog has changed
-            if (headChangelogText == previousChangelogText)
-            {
-                _stepContext.Logger.LogInformation($"No changes to changelog: {_options.FileName}");
-                return;
+                throw new InvalidOperationException($"File with name \"{_options.FileName}\" is empty");
             }
 
-            // Build changelog metadata
-            ChangelogFactory changelogMetadataFactory = new ChangelogFactory();
-            Changelog headChangelogMetadata = changelogMetadataFactory.Build(_options.Pattern, headChangelogText);
-            Changelog previousChangelogMetadata = previousChangelogText != null ?
-                changelogMetadataFactory.Build(_options.Pattern, previousChangelogText) : null;
+            // Build changelog
+            ChangelogFactory changelogFactory = new ChangelogFactory();
+            Changelog changelog = changelogFactory.Build(_options.Pattern, changelogText);
 
-            // Diff changelog metadata
-            Changelog diff = headChangelogMetadata.Diff(previousChangelogMetadata);
-
-            if (diff.AddedVersions.Count > 1)
-            {
-                throw new InvalidOperationException($"Cannot add more than 1 version at a time. Deploy manually.");
-            }
-
-            if (diff.RemovedVersions.Count > 0)
-            {
-                // Removal does not make sense since certain operations (like publishing
-                // to a package manager) have permanent side effects
-                throw new InvalidOperationException($"Cannot remove versions. Deploy manually.");
-            }
-
-            _pipelineContext.SharedData[nameof(Changelog)] = diff;
+            _pipelineContext.SharedData[nameof(Changelog)] = changelog;
             _stepContext.Logger.LogInformation($"{nameof(Changelog)} generated");
         }
 
-        private string GetHeadChangelogText()
+        /// <summary>
+        /// Gets contents of <see cref="_options.Filename"/> from latest commit 
+        /// </summary>
+        /// <returns>
+        /// File contents as a string
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// If repository has no commits
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// If no file with name <see cref="_options.Filename"/> is not in the latest commit's tree
+        /// </exception>
+        private string GetChangelogText()
         {
             Commit head = _pipelineContext.Repository.Lookup<Commit>("HEAD");
             if (head == null)
@@ -75,28 +73,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             GitObject headChangelogGitObject = head[_options.FileName]?.Target;
             if (headChangelogGitObject == null)
             {
-                throw new InvalidOperationException($"No file with name: {_options.FileName}");
+                throw new InvalidOperationException($"No file with name \"{_options.FileName}\"");
             }
 
             return ((Blob)headChangelogGitObject).ReadAsString();
-        }
-
-        private string GetPreviousChangelogText()
-        {
-            Commit previous = _pipelineContext.Repository.Lookup<Commit>("HEAD^");
-            if (previous == null)
-            {
-                _stepContext.Logger.LogInformation($"First commit");
-                return null;
-            }
-            GitObject previousChangelogGitObject = previous[_options.FileName]?.Target;
-            if (previousChangelogGitObject == null)
-            {
-                _stepContext.Logger.LogInformation($"First commit for: {_options.FileName}");
-                return null;
-            }
-
-            return ((Blob)previousChangelogGitObject).ReadAsString();
         }
     }
 }

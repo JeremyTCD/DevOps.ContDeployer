@@ -68,46 +68,22 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         }
 
         [Fact]
-        public void Run_DoesNothingIfChangelogHasNotChanged()
+        public void Run_ThrowsExceptionIfChangelogFileIsEmpty()
         {
             // Arrange
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            File.WriteAllText("test.txt", "test");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
-
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
-            // Act
-            changelogGenerator.Run(_pipelineContext, _stepContext);
-
-            // Assert
-            Assert.Equal(0, _pipelineContext.Steps.Count);
-        }
-
-        [Fact]
-        public void Run_GeneratesDiffIfFirstCommitAndChangelogHasBeenAddedToIndex()
-        {
-            // Arrange
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
+            File.WriteAllText("changelog.md", "");
             Commands.Stage(_pipelineContext.Repository, "*");
             _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator();
 
-            // Act 
-            changelogGenerator.Run(_pipelineContext, _stepContext);
-
-            // Assert
-            _pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diff);
-            Assert.NotNull(diff);
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => changelogGenerator.
+                Run(_pipelineContext, _stepContext));
         }
 
         [Fact]
-        public void Run_GeneratesDiffIfChangelogAddedToIndexInLastCommit()
+        public void Run_GeneratesChangelogAndInsertsItIntoSharedDataIfSuccessful()
         {
             // Arrange
             File.WriteAllText("test.txt", "test");
@@ -127,69 +103,5 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
             _pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diff);
             Assert.NotNull(diff);
         }
-
-        [Fact]
-        public void Run_ThrowsExceptionIfMoreThanOneVersionAdded()
-        {
-            // Arrange
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            File.AppendAllText("changelog.md", "\n## 0.2.0\nBody\n## 0.3.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
-
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run(_pipelineContext, _stepContext));
-        }
-
-        [Fact]
-        public void Run_ThrowsExceptionIfVersionHasBeenRemoved()
-        {
-            // Arrange
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            File.AppendAllText("changelog.md", "\n## 0.2.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
-
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Commit 3", _signature, _signature);
-
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run(_pipelineContext, _stepContext));
-        }
-
-        [Fact]
-        public void Run_GeneratesDiffIfVersionAddedToChangelogInLastCommit()
-        {
-            // Arrange
-            File.WriteAllText("changelog.md", "## 0.1.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            File.AppendAllText("changelog.md", "## 0.2.0\nBody");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Commit 2", _signature, _signature);
-
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
-            // Act 
-            changelogGenerator.Run(_pipelineContext, _stepContext);
-
-            // Assert
-            _pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diff);
-            Assert.NotNull(diff);
-        }
-
-
     }
 }
