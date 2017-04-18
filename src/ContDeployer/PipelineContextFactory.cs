@@ -7,11 +7,13 @@ namespace JeremyTCD.ContDeployer
     public class PipelineContextFactory
     {
         private IProcessManager _processManager { get; }
+        private IHttpManager _httpManager { get; }
         private IRepository _repository { get; }
         private LinkedList<Step> _steps { get; set; }
 
-        public PipelineContextFactory(IProcessManager processManager, IRepository repository)
+        public PipelineContextFactory(IHttpManager httpManager, IProcessManager processManager, IRepository repository)
         {
+            _httpManager = httpManager;
             _processManager = processManager;
             _repository = repository;
         }
@@ -28,6 +30,7 @@ namespace JeremyTCD.ContDeployer
         {
             PipelineContext context = new PipelineContext
             {
+                HttpManager = _httpManager,
                 ProcessManager = _processManager,
                 Repository = _repository,
                 SharedData = new Dictionary<string, object>(),

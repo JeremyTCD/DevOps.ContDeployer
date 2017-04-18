@@ -5,6 +5,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContext
     {
+        public IHttpManager HttpManager { get; set; }
         public IProcessManager ProcessManager { get; set; }
         public IRepository Repository { get; set; }
         public Dictionary<string, object> SharedData { get; set; }
