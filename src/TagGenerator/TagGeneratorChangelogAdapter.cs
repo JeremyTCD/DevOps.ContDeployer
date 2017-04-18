@@ -17,8 +17,8 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
         /// <param name="steps"></param>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object diffObject);
-            Changelog changelog = diffObject as Changelog;
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            Changelog changelog = changelogObject as Changelog;
             if (changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
