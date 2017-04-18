@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.0.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChangelogDiffGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogDiffGenerator.csproj" />
+    <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
+  </ItemGroup>
+
+</Project>
