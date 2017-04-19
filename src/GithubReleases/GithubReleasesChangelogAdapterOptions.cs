@@ -1,9 +1,9 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
+namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
 {
-    public class GithubReleaseChangelogAdapterOptions : IPluginOptions
+    public class GithubReleasesChangelogAdapterOptions : IPluginOptions
     {
         public string Token { get; set; }
         public string Owner { get; set; }

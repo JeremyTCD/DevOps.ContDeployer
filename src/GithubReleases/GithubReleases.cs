@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
+namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
 {
     public class GithubReleases //: IPlugin
     {

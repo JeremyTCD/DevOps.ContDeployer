@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
+namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
 {
-    public class GithubReleaseChangelogAdapter : IPlugin
+    public class GithubReleasesChangelogAdapter : IPlugin
     {
         private PipelineContext _pipelineContext { get; set; }
-        private GithubReleaseChangelogAdapterOptions _options { get; set; }
+        private GithubReleasesChangelogAdapterOptions _options { get; set; }
 
         /// <summary>
         /// Compares <see cref="Changelog"/> and github releases. Creates releases for versions with no corresponding 
@@ -19,13 +19,19 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="StepContext.Options"/> is null
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
+        /// </exception>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            _options = stepContext.Options as GithubReleaseChangelogAdapterOptions;
+            _options = stepContext.Options as GithubReleasesChangelogAdapterOptions;
 
             if (_options == null)
             {
-                throw new InvalidOperationException($"{nameof(GithubReleaseChangelogAdapterOptions)} required");
+                throw new InvalidOperationException($"{nameof(GithubReleasesChangelogAdapterOptions)} required");
             }
 
             _pipelineContext = pipelineContext;
@@ -71,7 +77,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
                 }
                 else if (release.Body != version.Notes)
                 {
-                    // GithubRelease with edit options
+                    // GithubReleases with edit options
                     githubReleasesOptions.ReleaseUpdates.Add(new ReleaseUpdate()
                     {
                         Body = version.Notes,
@@ -112,6 +118,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
         /// </returns>
         private Dictionary<string, Release> GetGithubReleases()
         {
+            // TODO inject this, expose iservicecollection and iserviceprovider in pipelinecontext,
+            // register services for plugins.
             GitHubClient client = new GitHubClient(new ProductHeaderValue(nameof(ContDeployer)));
             Credentials credentials = new Credentials(_options.Token);
             client.Credentials = credentials;

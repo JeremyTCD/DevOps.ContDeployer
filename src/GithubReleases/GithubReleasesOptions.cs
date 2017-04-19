@@ -3,7 +3,7 @@ using JeremyTCD.ContDeployer.PluginTools;
 using Octokit;
 using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
+namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
 {
     public class GithubReleasesOptions : IPluginOptions
     {
