@@ -1,4 +1,4 @@
-using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;

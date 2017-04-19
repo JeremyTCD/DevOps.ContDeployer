@@ -10,17 +10,17 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 {
-    [Collection(nameof(TagGeneratorCollection))]
-    public class TagGeneratorChangelogAdapterTests
+    [Collection(nameof(GitTagsCollection))]
+    public class GitTagsChangelogAdapterTests
     {
         private JsonSerializerSettings _serializerSettings { get; }
         private Signature _signature { get; }
         private PipelineContext _pipelineContext { get; }
         private StepContext _stepContext { get; }
 
-        public TagGeneratorChangelogAdapterTests(TagGeneratorFixture fixture)
+        public GitTagsChangelogAdapterTests(GitTagsFixture fixture)
         {
             fixture.ResetTempDir();
             _serializerSettings = fixture.SerializerSettings;
@@ -35,16 +35,16 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            Mock<ILogger<TagGeneratorChangelogAdapter>> mockLogger = new Mock<ILogger<TagGeneratorChangelogAdapter>>();
+            Mock<ILogger<GitTagsChangelogAdapter>> mockLogger = new Mock<ILogger<GitTagsChangelogAdapter>>();
 
-            TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => tagGeneratorChangelogAdapter.Run(_pipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => gitTagsChangelogAdapter.Run(_pipelineContext, null));
         }
 
         [Fact]
-        public void Run_AddsTagGeneratorStepIfChangelogsLastestVersionHasNoCorrespondingTag()
+        public void Run_AddsGitTagsStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
             string testVersion = "1.0.0";
@@ -55,15 +55,15 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
             Changelog changelog = new Changelog(versions);
             _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
-            TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act 
-            tagGeneratorChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
 
             // Assert
             Assert.Equal(1, _pipelineContext.Steps.Count);
-            Assert.Equal(nameof(TagGenerator), _pipelineContext.Steps.First.Value.PluginName);
-            Assert.Equal(testVersion, (_pipelineContext.Steps.First.Value.Options as TagGeneratorOptions).TagName);
+            Assert.Equal(nameof(GitTags), _pipelineContext.Steps.First.Value.PluginName);
+            Assert.Equal(testVersion, (_pipelineContext.Steps.First.Value.Options as GitTagsOptions).TagName);
         }
 
         [Fact]
@@ -84,10 +84,10 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
 
             _pipelineContext.Repository.ApplyTag(testVersion);
 
-            TagGeneratorChangelogAdapter tagGeneratorChangelogAdapter = new TagGeneratorChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act 
-            tagGeneratorChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
 
             // Assert
             Assert.Equal(0, _pipelineContext.Steps.Count);

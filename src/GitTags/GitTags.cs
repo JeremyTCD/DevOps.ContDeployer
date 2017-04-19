@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
+namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
-    public class TagGenerator : IPlugin
+    public class GitTags : IPlugin
     {
         /// <summary>
         /// Tags head
@@ -13,18 +13,18 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
         /// <param name="steps"></param>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
-            TagGeneratorOptions options = stepContext.Options as TagGeneratorOptions;
+            GitTagsOptions options = stepContext.Options as GitTagsOptions;
 
             if (options == null)
             {
-                throw new InvalidOperationException($"{nameof(TagGeneratorOptions)} required");
+                throw new InvalidOperationException($"{nameof(GitTagsOptions)} required");
             }
 
             string tagName = options.TagName;
 
             if (string.IsNullOrEmpty(tagName))
             {
-                throw new InvalidOperationException($"{nameof(TagGeneratorOptions.TagName)} cannot be null or empty");
+                throw new InvalidOperationException($"{nameof(GitTagsOptions.TagName)} cannot be null or empty");
             }
 
             int exitCode = pipelineContext.

@@ -1,4 +1,4 @@
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Moq;

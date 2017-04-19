@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plug
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher", "src\AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj", "{A528121B-899B-46D7-A619-E5809BE983C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator", "src\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GitTags", "src\GitTags\JeremyTCD.ContDeployer.Plugin.GitTags.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests", "test\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GitTags.Tests", "test\GitTags\JeremyTCD.ContDeployer.Plugin.GitTags.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GithubReleases", "src\GithubReleases\JeremyTCD.ContDeployer.Plugin.GithubReleases.csproj", "{EF5B2A02-AFD3-4BE6-8032-F690763B1538}"
 EndProject

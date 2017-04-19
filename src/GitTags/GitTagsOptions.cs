@@ -1,9 +1,9 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
+namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
-    public class TagGeneratorOptions : IPluginOptions
+    public class GitTagsOptions : IPluginOptions
     {
         public string TagName { get; set; } = null;
 
@@ -11,7 +11,7 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
         {
             if (string.IsNullOrEmpty(TagName))
             {
-                throw new Exception($"{nameof(TagGeneratorOptions)}: {nameof(TagName)} cannot be null or empty");
+                throw new Exception($"{nameof(GitTagsOptions)}: {nameof(TagName)} cannot be null or empty");
             }
         }
     }

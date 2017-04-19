@@ -41,7 +41,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
                                 },
                                 new Step
                                 {
-                                    PluginName = "TagGeneratorChangelogAdapter"
+                                    PluginName = "GitTagsChangelogAdapter"
                                 }
                             }
                 }

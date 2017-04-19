@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.ContDeployer.Plugin.TagGenerator</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.GitTags</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

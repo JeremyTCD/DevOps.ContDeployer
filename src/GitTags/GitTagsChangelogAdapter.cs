@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
+namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
-    public class TagGeneratorChangelogAdapter : IPlugin
+    public class GitTagsChangelogAdapter : IPlugin
     {
         /// <summary>
         /// Compares <see cref="Changelog"/> and git tags. If latest version has no corresponding tag (new version), 
-        /// adds <see cref="TagGenerator"/> step to tag head.
+        /// adds <see cref="GitTags"/> step to tag head.
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
@@ -38,15 +38,15 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 
                     if (i == 0)
                     {
-                        TagGeneratorOptions tagGeneratorOptions = new TagGeneratorOptions
+                        GitTagsOptions gitTagsOptions = new GitTagsOptions
                         {
                             TagName = version.SemVersion.ToString()
                         };
-                        Step tagGeneratorStep = new Step(nameof(TagGenerator), tagGeneratorOptions);
-                        pipelineContext.Steps.AddFirst(tagGeneratorStep);
+                        Step gitTagsStep = new Step(nameof(GitTags), gitTagsOptions);
+                        pipelineContext.Steps.AddFirst(gitTagsStep);
 
                         stepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
-                            $"has no corresponding tag, added {nameof(TagGenerator)} step");
+                            $"has no corresponding tag, added {nameof(GitTags)} step");
                     }
                     else
                     {

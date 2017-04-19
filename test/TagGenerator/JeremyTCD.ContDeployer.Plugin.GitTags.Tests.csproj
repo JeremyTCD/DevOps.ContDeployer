@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.GitTags.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.csproj" />
+    <ProjectReference Include="..\..\src\GitTags\JeremyTCD.ContDeployer.Plugin.GitTags.csproj" />
   </ItemGroup>
 
   <ItemGroup>

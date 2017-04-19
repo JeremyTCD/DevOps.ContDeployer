@@ -10,14 +10,14 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 {
-    [CollectionDefinition(nameof(TagGeneratorCollection))]
-    public class TagGeneratorCollection : ICollectionFixture<TagGeneratorFixture>
+    [CollectionDefinition(nameof(GitTagsCollection))]
+    public class GitTagsCollection : ICollectionFixture<GitTagsFixture>
     {
     }
 
-    public class TagGeneratorFixture : IDisposable
+    public class GitTagsFixture : IDisposable
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
@@ -26,9 +26,9 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator.IntegrationTests
         public Repository Repository { get; set; }
         public Signature Signature { get; }
 
-        public TagGeneratorFixture()
+        public GitTagsFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(TagGenerator)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(GitTags)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();
