@@ -26,12 +26,16 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
 
             List<ChangelogGenerator.Version> versions = changelog.Versions.ToList();
 
+            bool tagsConsistentWithChangelog = true;
+
             for (int i = 0; i < versions.Count; i++)
             {
                 ChangelogGenerator.Version version = versions[i];
 
                 if (pipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
                 {
+                    tagsConsistentWithChangelog = false;
+
                     if (i == 0)
                     {
                         TagGeneratorOptions tagGeneratorOptions = new TagGeneratorOptions
@@ -51,6 +55,13 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
                         stepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
                     }
                 }
+            }
+
+            if (tagsConsistentWithChangelog)
+            {
+                stepContext.
+                    Logger.
+                    LogInformation("Tags consistent with changelog");
             }
         }
     }
