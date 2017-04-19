@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.GithubReleases</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

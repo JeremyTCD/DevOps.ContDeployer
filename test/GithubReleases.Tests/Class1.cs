@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GithubReleasePublisher.Tests
+namespace GithubRelease.Tests
 {
     public class Class1
     {

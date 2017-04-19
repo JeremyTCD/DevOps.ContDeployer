@@ -1,13 +1,17 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
-using System;
+﻿using System;
+using JeremyTCD.ContDeployer.PluginTools;
+using Octokit;
+using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher
+namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
 {
-    public class GithubReleasePublisherChangelogAdapterOptions : IPluginOptions
+    public class GithubReleasesOptions : IPluginOptions
     {
         public string Token { get; set; }
         public string Owner { get; set; }
         public string Repository { get; set; }
+        public List<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
+        public List<ReleaseUpdate> ReleaseUpdates { get; set; } = new List<ReleaseUpdate>();
 
         public void Validate()
         {

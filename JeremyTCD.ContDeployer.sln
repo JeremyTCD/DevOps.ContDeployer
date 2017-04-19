@@ -37,9 +37,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Exte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests", "test\TagGenerator\JeremyTCD.ContDeployer.Plugin.TagGenerator.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher", "src\GithubReleasePublisher\JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher.csproj", "{EF5B2A02-AFD3-4BE6-8032-F690763B1538}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GithubReleases", "src\GithubReleases\JeremyTCD.ContDeployer.Plugin.GithubReleases.csproj", "{EF5B2A02-AFD3-4BE6-8032-F690763B1538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher.Tests", "test\GithubReleasePublisher.Tests\JeremyTCD.ContDeployer.Plugin.GithubReleasePublisher.Tests.csproj", "{E4BC721A-0E8B-48E5-9436-E1F9F943ECB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.ContDeployer.Plugin.GithubReleases.Tests", "test\GithubReleases.Tests\JeremyTCD.ContDeployer.Plugin.GithubReleases.Tests.csproj", "{E4BC721A-0E8B-48E5-9436-E1F9F943ECB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
