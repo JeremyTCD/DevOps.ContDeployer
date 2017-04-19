@@ -41,8 +41,8 @@ namespace JeremyTCD.ContDeployer.Plugin.TagGenerator
                         Step tagGeneratorStep = new Step(nameof(TagGenerator), tagGeneratorOptions);
                         pipelineContext.Steps.AddFirst(tagGeneratorStep);
 
-                        stepContext.Logger.LogInformation($"Version \"{version.SemVersion.ToString()}\"" +
-                            $"added to changelog, added {nameof(TagGenerator)} step");
+                        stepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
+                            $"has no corresponding tag, added {nameof(TagGenerator)} step");
                     }
                     else
                     {
