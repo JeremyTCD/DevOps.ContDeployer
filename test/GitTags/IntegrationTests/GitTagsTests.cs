@@ -36,10 +36,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             stepContext.Options = null;
 
-            GitTags GitTags = new GitTags();
+            GitTags gitTags = new GitTags();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => GitTags.
+            Assert.Throws<InvalidOperationException>(() => gitTags.
                 Run(pipelineContext, stepContext));
         }
 
@@ -55,10 +55,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             ((GitTagsOptions)stepContext.Options).TagName = testTagName;
 
-            GitTags GitTags = new GitTags();
+            GitTags gitTags = new GitTags();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => GitTags.
+            Assert.Throws<InvalidOperationException>(() => gitTags.
                 Run(pipelineContext, stepContext));
         }
 
@@ -85,10 +85,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
             Commands.Stage(pipelineContext.Repository, "*");
             pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            GitTags GitTags = new GitTags();
+            GitTags gitTags = new GitTags();
 
             // Act
-            GitTags.Run(pipelineContext, stepContext);
+            gitTags.Run(pipelineContext, stepContext);
 
             // Assert
             Assert.NotNull(pipelineContext.Repository.Tags[testTagName]);
@@ -111,10 +111,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
             Commands.Stage(pipelineContext.Repository, "*");
             pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            GitTags GitTags = new GitTags();
+            GitTags gitTags = new GitTags();
 
             // Act
-            GitTags.Run(pipelineContext, stepContext);
+            gitTags.Run(pipelineContext, stepContext);
 
             // Assert
             Assert.Null(pipelineContext.Repository.Tags[testTagName]);
@@ -139,10 +139,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             pipelineContext.Repository.ApplyTag(testTagName);
 
-            GitTags GitTags = new GitTags();
+            GitTags gitTags = new GitTags();
 
             // Act
-            Assert.Throws<Exception>(() => GitTags.Run(pipelineContext, stepContext));
+            Assert.Throws<Exception>(() => gitTags.Run(pipelineContext, stepContext));
         }
     }
 }

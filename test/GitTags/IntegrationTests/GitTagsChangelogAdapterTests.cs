@@ -35,12 +35,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            Mock<ILogger<GitTagsChangelogAdapter>> mockLogger = new Mock<ILogger<GitTagsChangelogAdapter>>();
-
-            GitTagsChangelogAdapter GitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => GitTagsChangelogAdapter.Run(_pipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => gitTagsChangelogAdapter.Run(_pipelineContext, null));
         }
 
         [Fact]
@@ -55,10 +53,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
             Changelog changelog = new Changelog(versions);
             _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
-            GitTagsChangelogAdapter GitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act 
-            GitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
 
             // Assert
             Assert.Equal(1, _pipelineContext.Steps.Count);
@@ -84,10 +82,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             _pipelineContext.Repository.ApplyTag(testVersion);
 
-            GitTagsChangelogAdapter GitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
 
             // Act 
-            GitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
 
             // Assert
             Assert.Equal(0, _pipelineContext.Steps.Count);
