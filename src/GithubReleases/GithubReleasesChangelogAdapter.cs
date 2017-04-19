@@ -41,7 +41,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
 
             Dictionary<string, Release> releases = GetGithubReleases();
 
-            GithubReleasesOptions options = new GithubReleasesOptions
+            GithubReleasesOptions githubReleasesOptions = new GithubReleasesOptions
             {
                 Owner = _options.Owner,
                 Repository = _options.Repository,
@@ -56,7 +56,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
 
                 if (release == null)
                 {
-                    options.NewReleases.Add(new NewRelease(name)
+                    githubReleasesOptions.NewReleases.Add(new NewRelease(name)
                     {
                         Body = version.Notes,
                         Name = name,
@@ -72,7 +72,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
                 else if (release.Body != version.Notes)
                 {
                     // GithubRelease with edit options
-                    options.ReleaseUpdates.Add(new ReleaseUpdate()
+                    githubReleasesOptions.ReleaseUpdates.Add(new ReleaseUpdate()
                     {
                         Body = version.Notes,
                         Name = name,
@@ -87,18 +87,30 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubRelease
                 }
             }
 
-            if (options.NewReleases.Count > 0 || options.ReleaseUpdates.Count > 0)
+            if (githubReleasesOptions.NewReleases.Count > 0 || githubReleasesOptions.ReleaseUpdates.Count > 0)
             {
-                Step githubReleasesStep = new Step(nameof(GithubReleases), options);
+                Step githubReleasesStep = new Step(nameof(GithubReleases), githubReleasesOptions);
                 pipelineContext.Steps.AddFirst(githubReleasesStep);
 
                 stepContext.
                     Logger.
                     LogInformation($"Added {nameof(GithubReleases)} step");
             }
+            else
+            {
+                stepContext.
+                    Logger.
+                    LogInformation("Github releases consistent with changelog");
+            }
         }
 
-        public Dictionary<string, Release> GetGithubReleases()
+        /// <summary>
+        /// Retrieves github <see cref="Release"/>s for specified repository
+        /// </summary>
+        /// <returns>
+        /// <see cref="Dictionary{String, Release}"/>
+        /// </returns>
+        private Dictionary<string, Release> GetGithubReleases()
         {
             GitHubClient client = new GitHubClient(new ProductHeaderValue(nameof(ContDeployer)));
             Credentials credentials = new Credentials(_options.Token);
