@@ -15,6 +15,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
+        /// </exception>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);

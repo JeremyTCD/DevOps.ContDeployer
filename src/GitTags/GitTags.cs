@@ -11,6 +11,15 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="StepContext.Options"/> is null
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="GitTagsOptions.TagName"/> is null or empty
+        /// </exception>
+        /// <exception cref="Exception">
+        /// Thrown if git.exe fails 
+        /// </exception>
         public void Run(PipelineContext pipelineContext, StepContext stepContext)
         {
             GitTagsOptions options = stepContext.Options as GitTagsOptions;
