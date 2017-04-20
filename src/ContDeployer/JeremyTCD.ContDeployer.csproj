@@ -23,6 +23,8 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.0.1" />
+    <PackageReference Include="StructureMap" Version="4.4.5" />
+    <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
@@ -33,6 +35,7 @@
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\AppVeyorPublisher\JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher.csproj" />
     <ProjectReference Include="..\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.csproj" />
+    <ProjectReference Include="..\GithubReleases\JeremyTCD.ContDeployer.Plugin.GithubReleases.csproj" />
     <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
     <ProjectReference Include="..\GitTags\JeremyTCD.ContDeployer.Plugin.GitTags.csproj" />
   </ItemGroup>
