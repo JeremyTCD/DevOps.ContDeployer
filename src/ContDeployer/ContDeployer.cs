@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StructureMap;
 using System;
 
 namespace JeremyTCD.ContDeployer
@@ -23,18 +24,15 @@ namespace JeremyTCD.ContDeployer
             // perhaps run / testrun
 
             Startup startup = new Startup();
-
-            ServiceCollection services = new ServiceCollection();
-            startup.ConfigureServices(services);
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            Container container = startup.ConfigureServices();
 
             // TODO How does asp net core call Configure with variable types as parameters?
-            ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            IPluginFactory pluginFactory = serviceProvider.GetService<IPluginFactory>();
-            StepContextFactory stepContextFactory = serviceProvider.GetService<StepContextFactory>();
+            ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
+            IPluginFactory pluginFactory = container.GetInstance<IPluginFactory>();
+            StepContextFactory stepContextFactory = container.GetInstance<StepContextFactory>();
             startup.Configure(loggerFactory, pluginFactory, stepContextFactory);
 
-            Pipeline pipeline = serviceProvider.GetService<Pipeline>();
+            Pipeline pipeline = container.GetInstance<Pipeline>();
 
             pipeline.Run();
         }
