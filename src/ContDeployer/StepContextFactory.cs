@@ -30,11 +30,9 @@ namespace JeremyTCD.ContDeployer
 
         public void LoadTypes()
         {
-            AssemblyService assemblyService = new AssemblyService();
-            assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);
-            IEnumerable<Assembly> pluginIOptionsAssemblies = assemblyService.GetReferencingAssemblies(typeof(IPluginOptions).GetTypeInfo().Assembly);
+            IEnumerable<Assembly> pluginAssemblies = _assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
 
-            _pluginOptionsTypes = assemblyService.GetAssignableTypes(pluginIOptionsAssemblies, typeof(IPluginOptions)).
+            _pluginOptionsTypes = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginOptions)).
                 ToDictionary(type => type.Name);
         }
 

@@ -3,7 +3,6 @@ using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -25,11 +24,9 @@ namespace JeremyTCD.ContDeployer
 
         public void LoadTypes()
         {
-            AssemblyService assemblyService = new AssemblyService();
-            assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);
-            IEnumerable<Assembly> pluginAssemblies = assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
+            IEnumerable<Assembly> pluginAssemblies = _assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
 
-            _pluginTypes = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).ToDictionary(type => type.Name);
+            _pluginTypes = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).ToDictionary(type => type.Name);
         }
 
         public IPluginFactory SetPluginName (string pluginName)
