@@ -12,7 +12,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
     {
         private GithubReleasesChangelogAdapterOptions _options { get; }
         private Changelog _changelog { get; }
-
+        private GitHubClient _githubClient { get; }
+        
         /// <summary>
         /// Creates a <see cref="GithubReleasesChangelogAdapter"/> instance
         /// </summary>
@@ -22,7 +23,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
         /// </exception>
-        public GithubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext) : 
+        public GithubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext, GitHubClient githubClient) : 
             base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as GithubReleasesChangelogAdapterOptions;
@@ -33,11 +34,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
             }
 
             PipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            Changelog _changelog = changelogObject as Changelog;
+            _changelog = changelogObject as Changelog;
             if (_changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(PipelineContext.SharedData)}");
             }
+
+            _githubClient = githubClient;
         }
 
         /// <summary>
@@ -80,7 +83,6 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
                 }
                 else if (release.Body != version.Notes)
                 {
-                    // GithubReleases with edit options
                     githubReleasesOptions.ReleaseUpdates.Add(new ReleaseUpdate()
                     {
                         Body = version.Notes,
@@ -121,13 +123,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
         /// </returns>
         private Dictionary<string, Release> GetGithubReleases()
         {
-            // TODO inject this, expose iservicecollection and iserviceprovider in pipelinecontext,
-            // register services for plugins.
-            GitHubClient client = new GitHubClient(new ProductHeaderValue(nameof(ContDeployer)));
             Credentials credentials = new Credentials(_options.Token);
-            client.Credentials = credentials;
+            _githubClient.Credentials = credentials;
 
-            return client.
+            // TODO dry run mode
+            return _githubClient.
                 Repository.
                 Release.
                 GetAll(_options.Owner, _options.Repository).

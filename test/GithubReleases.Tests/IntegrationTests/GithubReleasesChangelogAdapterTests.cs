@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases.IntegrationTests
             StepContext stepContext = PluginTestHelpers.CreateStepContext();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GithubReleasesChangelogAdapter(null, stepContext));
+            Assert.Throws<InvalidOperationException>(() => new GithubReleasesChangelogAdapter(null, stepContext, null));
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases.IntegrationTests
             StepContext stepContext = PluginTestHelpers.CreateStepContext(new GithubReleasesChangelogAdapterOptions());
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GithubReleasesChangelogAdapter(pipelineContext, stepContext));
+            Assert.Throws<InvalidOperationException>(() => new GithubReleasesChangelogAdapter(pipelineContext, stepContext, null));
         }
     }
 }
