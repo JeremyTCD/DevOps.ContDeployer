@@ -6,24 +6,18 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogGenerator : IPlugin
+    public class ChangelogGenerator : PluginBase
     {
-        private PipelineContext _pipelineContext { get; set; }
-        private StepContext _stepContext { get; set; }
         private ChangelogGeneratorOptions _options { get; set; }
 
         /// <summary>
-        /// Generates <see cref="Changelog"/> and inserts it into <see cref="PipelineContext.SharedData"/>.
+        /// Creates a <see cref="ChangelogGenerator"/> instance
         /// </summary>
-        /// <param name="pipelineContext"></param>
-        /// <param name="stepContext"></param>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="StepContext.Options"/> is null
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// If <see cref="_options.Filename"/> is an empty 
-        /// </exception>
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public ChangelogGenerator(PipelineContext pipelineContext, StepContext stepContext) : 
+            base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as ChangelogGeneratorOptions;
 
@@ -31,10 +25,16 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             {
                 throw new InvalidOperationException($"{nameof(ChangelogGeneratorOptions)} required");
             }
+        }
 
-            _pipelineContext = pipelineContext;
-            _stepContext = stepContext;
-
+        /// <summary>
+        /// Generates <see cref="Changelog"/> and inserts it into <see cref="PipelineContext.SharedData"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="_options.Filename"/> is an empty 
+        /// </exception>
+        public override void Run()
+        {
             // TODO checkout branch specified in options
             // Get changelog text
             string changelogText = GetChangelogText();
@@ -47,8 +47,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             ChangelogFactory changelogFactory = new ChangelogFactory();
             Changelog changelog = changelogFactory.Build(_options.Pattern, changelogText);
 
-            _pipelineContext.SharedData[nameof(Changelog)] = changelog;
-            _stepContext.Logger.LogInformation($"{nameof(Changelog)} generated");
+            PipelineContext.SharedData[nameof(Changelog)] = changelog;
+            StepContext.Logger.LogInformation($"{nameof(Changelog)} generated");
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         /// </exception>
         private string GetChangelogText()
         {
-            Commit head = _pipelineContext.Repository.Lookup<Commit>("HEAD");
+            Commit head = PipelineContext.Repository.Lookup<Commit>("HEAD");
             if (head == null)
             {
                 throw new InvalidOperationException($"Repository has no commits");

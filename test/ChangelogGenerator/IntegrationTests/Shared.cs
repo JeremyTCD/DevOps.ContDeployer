@@ -16,13 +16,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
     {
     }
 
-    public class ChangelogGeneratorFixture : IDisposable
+    public class ChangelogGeneratorFixture
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
         public string TempGitDir { get; }
         public JsonSerializerSettings SerializerSettings { get; }
-        public Repository Repository { get; set; }
         public Signature Signature { get; }
 
         public ChangelogGeneratorFixture()
@@ -58,36 +57,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
 
             Repository.Init(TempDir);
 
-            Repository = new Repository(TempDir);
-
             Directory.SetCurrentDirectory(TempDir);
-        }
-
-        public PipelineContext CreatePipelineContext()
-        {
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<Step> steps = new LinkedList<Step>();
-
-            return new PipelineContext
-            {
-                Repository = Repository,
-                SharedData = sharedData,
-                Steps = steps
-            };
-        }
-
-        public StepContext CreateStepContext(ILogger logger, IPluginOptions options)
-        {
-            return new StepContext
-            {
-                Logger = logger,
-                Options = options
-            };
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
     }
 }

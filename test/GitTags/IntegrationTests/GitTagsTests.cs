@@ -1,8 +1,6 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,34 +11,22 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
     [Collection(nameof(GitTagsCollection))]
     public class GitTagsTests
     {
-        private JsonSerializerSettings _serializerSettings { get; }
         private Signature _signature { get; }
-        private GitTagsFixture _fixture { get; }
 
         public GitTagsTests(GitTagsFixture fixture)
         {
             fixture.ResetTempDir();
-            _fixture = fixture;
-            _serializerSettings = fixture.SerializerSettings;
             _signature = fixture.Signature;
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfOptionsIsNull()
+        public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
-            StepContext stepContext = _fixture.
-                CreateStepContext((new Mock<ILogger>()).Object,
-                    new GitTagsOptions());
-
-            stepContext.Options = null;
-
-            GitTags gitTags = new GitTags();
+            StepContext stepContext = PluginTestHelpers.CreateStepContext();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => gitTags.
-                Run(pipelineContext, stepContext));
+            Assert.Throws<InvalidOperationException>(() => new GitTags(null, stepContext));
         }
 
         [Theory]
@@ -48,18 +34,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_ThrowsExceptionIfTagNameIsNullOrEmpty(string testTagName)
         {
             // Arrange
-            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
-            StepContext stepContext = _fixture.
-                CreateStepContext((new Mock<ILogger>()).Object,
-                    new GitTagsOptions());
+            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
-            ((GitTagsOptions)stepContext.Options).TagName = testTagName;
-
-            GitTags gitTags = new GitTags();
+            GitTags gitTags = new GitTags(null, stepContext);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => gitTags.
-                Run(pipelineContext, stepContext));
+            Assert.Throws<InvalidOperationException>(() => gitTags.Run());
         }
 
         public static IEnumerable<object[]> RunThrowsExceptionIfTagNameIsNullOrEmptyData()
@@ -72,23 +52,19 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_CreatesTagWithSpecifiedName()
         {
             // Arrange
-            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
-            StepContext stepContext = _fixture.
-                CreateStepContext((new Mock<ILogger>()).Object,
-                    new GitTagsOptions());
-
             string testTagName = "0.1.0";
-            ((GitTagsOptions)stepContext.Options).TagName = testTagName;
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
             Commands.Stage(pipelineContext.Repository, "*");
             pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            GitTags gitTags = new GitTags();
+            GitTags gitTags = new GitTags(pipelineContext, stepContext);
 
             // Act
-            gitTags.Run(pipelineContext, stepContext);
+            gitTags.Run();
 
             // Assert
             Assert.NotNull(pipelineContext.Repository.Tags[testTagName]);
@@ -98,23 +74,19 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_DoesNothingOnDryRun()
         {
             // Arrange
-            PipelineContext pipelineContext = _fixture.CreatePipelineContext(new SharedOptions { DryRun = true });
-            StepContext stepContext = _fixture.
-                CreateStepContext((new Mock<ILogger>()).Object,
-                    new GitTagsOptions());
-
             string testTagName = "0.1.0";
-            ((GitTagsOptions)stepContext.Options).TagName = testTagName;
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(true);
+            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
             Commands.Stage(pipelineContext.Repository, "*");
             pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
 
-            GitTags gitTags = new GitTags();
+            GitTags gitTags = new GitTags(pipelineContext, stepContext);
 
             // Act
-            gitTags.Run(pipelineContext, stepContext);
+            gitTags.Run();
 
             // Assert
             Assert.Null(pipelineContext.Repository.Tags[testTagName]);
@@ -124,13 +96,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_ThrowsExceptionIfGitTagFails()
         {
             // Arrange
-            PipelineContext pipelineContext = _fixture.CreatePipelineContext();
-            StepContext stepContext = _fixture.
-                CreateStepContext((new Mock<ILogger>()).Object,
-                    new GitTagsOptions());
-
             string testTagName = "0.1.0";
-            ((GitTagsOptions)stepContext.Options).TagName = testTagName;
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
@@ -139,10 +107,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             pipelineContext.Repository.ApplyTag(testTagName);
 
-            GitTags gitTags = new GitTags();
+            GitTags gitTags = new GitTags(pipelineContext, stepContext);
 
             // Act
-            Assert.Throws<Exception>(() => gitTags.Run(pipelineContext, stepContext));
+            Assert.Throws<Exception>(() => gitTags.Run());
         }
     }
 }

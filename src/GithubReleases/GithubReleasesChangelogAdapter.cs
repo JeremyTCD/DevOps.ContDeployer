@@ -8,24 +8,22 @@ using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
 {
-    public class GithubReleasesChangelogAdapter : IPlugin
+    public class GithubReleasesChangelogAdapter : PluginBase
     {
-        private PipelineContext _pipelineContext { get; set; }
-        private GithubReleasesChangelogAdapterOptions _options { get; set; }
+        private GithubReleasesChangelogAdapterOptions _options { get; }
+        private Changelog _changelog { get; }
 
         /// <summary>
-        /// Compares <see cref="Changelog"/> and github releases. Creates releases for versions with no corresponding 
-        /// release. Edits releases for versions that have been modified.
+        /// Creates a <see cref="GithubReleasesChangelogAdapter"/> instance
         /// </summary>
-        /// <param name="sharedData"></param>
-        /// <param name="steps"></param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="StepContext.Options"/> is null
+        /// If <see cref="StepContext.Options"/> is null
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
         /// </exception>
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public GithubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext) : 
+            base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as GithubReleasesChangelogAdapterOptions;
 
@@ -34,16 +32,21 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
                 throw new InvalidOperationException($"{nameof(GithubReleasesChangelogAdapterOptions)} required");
             }
 
-            _pipelineContext = pipelineContext;
-
-            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            Changelog changelog = changelogObject as Changelog;
-            if (changelog == null)
+            PipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            Changelog _changelog = changelogObject as Changelog;
+            if (_changelog == null)
             {
-                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(PipelineContext.SharedData)}");
             }
+        }
 
-            List<ChangelogGenerator.Version> versions = changelog.Versions.ToList();
+        /// <summary>
+        /// Compares <see cref="_changelog"/> and github releases. Adds <see cref="GithubReleases"/> step if a version
+        /// has no corresponding release or if a version's notes are inconsistent with its release.
+        /// </summary>
+        public override void Run()
+        {
+            List<ChangelogGenerator.Version> versions = _changelog.Versions.ToList();
 
             Dictionary<string, Release> releases = GetGithubReleases();
 
@@ -71,7 +74,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
                         TargetCommitish = _options.Commitish // Ignored by github api if tag already exists, otherwise creates a tag pointing to commitish
                     });
 
-                    stepContext.
+                    StepContext.
                         Logger.
                         LogInformation($"Version \"{name}\" has no corresponding github release");
                 }
@@ -87,7 +90,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
                         TargetCommitish = _options.Commitish
                     });
 
-                    stepContext.
+                    StepContext.
                         Logger.
                         LogInformation($"Version \"{name}\" has been updated");
                 }
@@ -96,15 +99,15 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
             if (githubReleasesOptions.NewReleases.Count > 0 || githubReleasesOptions.ReleaseUpdates.Count > 0)
             {
                 Step githubReleasesStep = new Step(nameof(GithubReleases), githubReleasesOptions);
-                pipelineContext.Steps.AddFirst(githubReleasesStep);
+                PipelineContext.Steps.AddFirst(githubReleasesStep);
 
-                stepContext.
+                StepContext.
                     Logger.
                     LogInformation($"Added {nameof(GithubReleases)} step");
             }
             else
             {
-                stepContext.
+                StepContext.
                     Logger.
                     LogInformation("Github releases consistent with changelog");
             }

@@ -3,9 +3,13 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
 {
-    public class AppVeyorPublisher : IPlugin
+    public class AppVeyorPublisher : PluginBase
     {
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public AppVeyorPublisher(PipelineContext pipelineContext, StepContext stepContext) : base(pipelineContext, stepContext)
+        {
+        }
+
+        public override void Run()
         {
             throw new NotImplementedException();
         }

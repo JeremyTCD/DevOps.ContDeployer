@@ -3,9 +3,13 @@ using System;
 
 namespace JeremyTCD.ContDeployer.TestPlugin
 {
-    public class TestPlugin : IPlugin
+    public class TestPlugin : PluginBase
     {
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public TestPlugin(PipelineContext pipelineContext, StepContext stepContext) : base(pipelineContext, stepContext)
+        {
+        }
+
+        public override void Run()
         {
             throw new NotImplementedException();
         }

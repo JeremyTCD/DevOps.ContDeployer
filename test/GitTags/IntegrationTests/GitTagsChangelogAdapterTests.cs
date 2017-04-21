@@ -1,9 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
 using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Newtonsoft.Json;
 using Semver;
 using System;
 using System.Collections.Generic;
@@ -15,80 +13,76 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
     [Collection(nameof(GitTagsCollection))]
     public class GitTagsChangelogAdapterTests
     {
-        private JsonSerializerSettings _serializerSettings { get; }
         private Signature _signature { get; }
-        private PipelineContext _pipelineContext { get; }
-        private StepContext _stepContext { get; }
 
         public GitTagsChangelogAdapterTests(GitTagsFixture fixture)
         {
             fixture.ResetTempDir();
-            _serializerSettings = fixture.SerializerSettings;
             _signature = fixture.Signature;
-            _pipelineContext = fixture.CreatePipelineContext();
-            _stepContext = fixture.
-                CreateStepContext((new Mock<ILogger>()).Object, // TODO Create a dummy logger
-                    null);
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
+        public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => gitTagsChangelogAdapter.Run(_pipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(pipelineContext, null));
         }
 
         [Fact]
         public void Run_AddsGitTagsStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
             SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };
             Changelog changelog = new Changelog(versions);
-            _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
+            pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(pipelineContext, 
+                PluginTestHelpers.CreateStepContext());
 
             // Act 
-            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run();
 
             // Assert
-            Assert.Equal(1, _pipelineContext.Steps.Count);
-            Assert.Equal(nameof(GitTags), _pipelineContext.Steps.First.Value.PluginName);
-            Assert.Equal(testVersion, (_pipelineContext.Steps.First.Value.Options as GitTagsOptions).TagName);
+            Assert.Equal(1, pipelineContext.Steps.Count);
+            Assert.Equal(nameof(GitTags), pipelineContext.Steps.First.Value.PluginName);
+            Assert.Equal(testVersion, (pipelineContext.Steps.First.Value.Options as GitTagsOptions).TagName);
         }
 
         [Fact]
         public void Run_DoesNothingIfChangelogVersionsAllHaveCorrespondingTags()
         {
             // Arrange
-            File.WriteAllText("test.txt", "test");
-            Commands.Stage(_pipelineContext.Repository, "*");
-            _pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
+            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
+            // Create tag
+            File.WriteAllText("test.txt", "test");
+            Commands.Stage(pipelineContext.Repository, "*");
+            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
+            pipelineContext.Repository.ApplyTag(testVersion);
+
             SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };
             Changelog changelog = new Changelog(versions);
-            _pipelineContext.SharedData.Add(nameof(Changelog), changelog);
+            pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
-            _pipelineContext.Repository.ApplyTag(testVersion);
-
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter();
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(pipelineContext,
+                PluginTestHelpers.CreateStepContext());
 
             // Act 
-            gitTagsChangelogAdapter.Run(_pipelineContext, _stepContext);
+            gitTagsChangelogAdapter.Run();
 
             // Assert
-            Assert.Equal(0, _pipelineContext.Steps.Count);
+            Assert.Equal(0, pipelineContext.Steps.Count);
         }
     }
 }

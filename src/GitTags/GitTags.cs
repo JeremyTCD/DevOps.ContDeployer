@@ -4,51 +4,59 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
-    public class GitTags : IPlugin
+    public class GitTags : PluginBase
     {
+        private GitTagsOptions _options { get; }
+
+        /// <summary>
+        /// Creates a <see cref="GitTags"/> instance
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="StepContext.Options"/> is null
+        /// </exception>
+        public GitTags(PipelineContext pipelineContext, StepContext stepContext) : base(pipelineContext, stepContext)
+        {
+            _options = stepContext.Options as GitTagsOptions;
+
+            if (_options == null)
+            {
+                throw new InvalidOperationException($"{nameof(GitTagsOptions)} required");
+            }
+        }
+
         /// <summary>
         /// Tags head
         /// </summary>
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="StepContext.Options"/> is null
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="GitTagsOptions.TagName"/> is null or empty
         /// </exception>
         /// <exception cref="Exception">
         /// Thrown if git.exe fails 
         /// </exception>
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public override void Run()
         {
-            GitTagsOptions options = stepContext.Options as GitTagsOptions;
-
-            if (options == null)
-            {
-                throw new InvalidOperationException($"{nameof(GitTagsOptions)} required");
-            }
-
-            string tagName = options.TagName;
+            string tagName = _options.TagName;
 
             if (string.IsNullOrEmpty(tagName))
             {
                 throw new InvalidOperationException($"{nameof(GitTagsOptions.TagName)} cannot be null or empty");
             }
 
-            int exitCode = pipelineContext.
+            int exitCode = PipelineContext.
                             ProcessManager.
-                            Execute("git.exe", $"tag {options.TagName}", 1000);
+                            Execute("git.exe", $"tag {_options.TagName}", 1000);
 
             if(exitCode == 0)
             {
-                stepContext.
+                StepContext.
                     Logger.
-                    LogInformation($"Lightweight tag with name \"{options.TagName}\" created");
+                    LogInformation($"Lightweight tag with name \"{_options.TagName}\" created");
             }
             else
             {
-                throw new Exception($"Failed to create tag with name \"{options.TagName}\"");
+                throw new Exception($"Failed to create tag with name \"{_options.TagName}\"");
             }
         }
     }

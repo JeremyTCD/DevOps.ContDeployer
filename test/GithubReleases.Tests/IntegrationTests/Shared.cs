@@ -17,13 +17,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases.IntegrationTests
     {
     }
 
-    public class GithubReleasesFixture : IDisposable
+    public class GithubReleasesFixture
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
         public string TempGitDir { get; }
         public JsonSerializerSettings SerializerSettings { get; }
-        public Repository Repository { get; set; }
         public Signature Signature { get; }
 
         public GithubReleasesFixture()
@@ -59,41 +58,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases.IntegrationTests
 
             Repository.Init(TempDir);
 
-            Repository = new Repository(TempDir);
-
             Directory.SetCurrentDirectory(TempDir);
-        }
-
-        public PipelineContext CreatePipelineContext(SharedOptions sharedOptions = null)
-        {
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<Step> steps = new LinkedList<Step>();
-            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(sharedOptions == null ? new SharedOptions() : sharedOptions);
-            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
-
-            return new PipelineContext
-            {
-                Repository = Repository,
-                ProcessManager = processManager,
-                SharedData = sharedData,
-                Steps = steps
-            };
-        }
-
-        public StepContext CreateStepContext(ILogger logger, IPluginOptions options)
-        {
-            return new StepContext
-            {
-                Logger = logger,
-                Options = options
-            };
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
     }
 }

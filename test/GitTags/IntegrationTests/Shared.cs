@@ -1,12 +1,7 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
-using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using LibGit2Sharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -17,13 +12,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
     {
     }
 
-    public class GitTagsFixture : IDisposable
+    public class GitTagsFixture
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
         public string TempGitDir { get; }
         public JsonSerializerSettings SerializerSettings { get; }
-        public Repository Repository { get; set; }
         public Signature Signature { get; }
 
         public GitTagsFixture()
@@ -59,41 +53,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
 
             Repository.Init(TempDir);
 
-            Repository = new Repository(TempDir);
-
             Directory.SetCurrentDirectory(TempDir);
-        }
-
-        public PipelineContext CreatePipelineContext(SharedOptions sharedOptions = null)
-        {
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<Step> steps = new LinkedList<Step>();
-            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(sharedOptions == null ? new SharedOptions() : sharedOptions);
-            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
-
-            return new PipelineContext
-            {
-                Repository = Repository,
-                ProcessManager = processManager,
-                SharedData = sharedData,
-                Steps = steps
-            };
-        }
-
-        public StepContext CreateStepContext(ILogger logger, IPluginOptions options)
-        {
-            return new StepContext
-            {
-                Logger = logger,
-                Options = options
-            };
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
     }
 }

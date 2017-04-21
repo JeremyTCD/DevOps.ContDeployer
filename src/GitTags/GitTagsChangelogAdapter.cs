@@ -7,27 +7,34 @@ using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
-    public class GitTagsChangelogAdapter : IPlugin
+    public class GitTagsChangelogAdapter : PluginBase
     {
+        private Changelog _changelog { get; }
+
+        /// <summary>
+        /// Creates a <see cref="GitTagsChangelogAdapter"/> instance
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
+        /// </exception>
+        public GitTagsChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext) : 
+            base(pipelineContext, stepContext)
+        {
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            _changelog = changelogObject as Changelog;
+            if (_changelog == null)
+            {
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
+            }
+        }
+
         /// <summary>
         /// Compares <see cref="Changelog"/> and git tags. If latest version has no corresponding tag (new version), 
         /// adds <see cref="GitTags"/> step to tag head.
         /// </summary>
-        /// <param name="sharedData"></param>
-        /// <param name="steps"></param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
-        /// </exception>
-        public void Run(PipelineContext pipelineContext, StepContext stepContext)
+        public override void Run()
         {
-            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            Changelog changelog = changelogObject as Changelog;
-            if (changelog == null)
-            {
-                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
-            }
-
-            List<ChangelogGenerator.Version> versions = changelog.Versions.ToList();
+            List<ChangelogGenerator.Version> versions = _changelog.Versions.ToList();
 
             bool tagsConsistentWithChangelog = true;
 
@@ -35,7 +42,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
             {
                 ChangelogGenerator.Version version = versions[i];
 
-                if (pipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
+                if (PipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
                 {
                     tagsConsistentWithChangelog = false;
 
@@ -46,23 +53,23 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
                             TagName = version.SemVersion.ToString()
                         };
                         Step gitTagsStep = new Step(nameof(GitTags), gitTagsOptions);
-                        pipelineContext.Steps.AddFirst(gitTagsStep);
+                        PipelineContext.Steps.AddFirst(gitTagsStep);
 
-                        stepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
+                        StepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
                             $"has no corresponding tag, added {nameof(GitTags)} step");
                     }
                     else
                     {
                         // TODO Each version should point to a commit, corresponding commits should be
                         // tagged
-                        stepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
+                        StepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
                     }
                 }
             }
 
             if (tagsConsistentWithChangelog)
             {
-                stepContext.
+                StepContext.
                     Logger.
                     LogInformation("Tags consistent with changelog");
             }

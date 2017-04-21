@@ -51,7 +51,7 @@ namespace JeremyTCD.ContDeployer
 
                 pipelineContext.Steps.RemoveFirst();
                 Logger.LogInformation($"== Running {plugin.GetType().Name} ==");
-                plugin.Run(pipelineContext, stepContext);
+                plugin.Run();
                 Logger.LogInformation($"== {plugin.GetType().Name} complete ==");
             }
 
