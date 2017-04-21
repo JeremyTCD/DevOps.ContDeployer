@@ -62,7 +62,7 @@ namespace JeremyTCD.ContDeployer
                 {
                     pluginOptions = Activator.CreateInstance(pluginOptionsType) as IPluginOptions;
 
-                    if (step.Config != null && !string.IsNullOrEmpty(step.Config.Value))
+                    if (step.Config != null && step.Config.GetChildren().Count() > 0)
                     {
                         step.Config.Bind(pluginOptions);
                     }
