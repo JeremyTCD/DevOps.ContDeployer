@@ -32,7 +32,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             // Arrange
             object options = new
             {
-                Pipeline = new PipelineOptions
+                Pipeline = new PipelineContextOptions
                 {
                     Steps = new List<Step> {
                                 new Step

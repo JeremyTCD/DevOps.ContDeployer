@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.ContDeployer
+namespace JeremyTCD.ContDeployer.PluginTools
 {
-    public class PipelineOptions
+    public class PipelineContextOptions
     {
         public List<Step> Steps { get; set; } = new List<Step>();
 
         public void Validate()
         {
             if(Steps == null || !Steps.Any()) {
-                throw new Exception($"{nameof(PipelineOptions)}: Pipeline steps required");
+                throw new Exception($"{nameof(PipelineContextOptions)}: Pipeline steps required");
             }
 
             Step[] steps = Steps.ToArray();
