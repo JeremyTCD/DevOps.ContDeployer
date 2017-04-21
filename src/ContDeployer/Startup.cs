@@ -17,7 +17,8 @@ namespace JeremyTCD.ContDeployer
 {
     public class Startup
     {
-        public static IConfigurationRoot _configurationRoot { get; set; }
+        private IConfigurationRoot _configurationRoot { get; set; }
+        private IAssemblyService _assemblyService { get; set; }
 
         public Startup()
         {
@@ -25,54 +26,67 @@ namespace JeremyTCD.ContDeployer
                 SetBasePath(Directory.GetCurrentDirectory()).
                 AddJsonFile("cd.json", false);
             _configurationRoot = builder.Build();
+
+            _assemblyService = new AssemblyService();
         }
 
         public Container ConfigureServices()
         {
+            Container main = new Container();
             ServiceCollection services = new ServiceCollection();
-
             // Services for external types
             services.
                 AddLogging().
                 AddOptions().
                 AddSingleton<IAssemblyService, AssemblyService>().
                 AddSingleton<IRepository>(provider => new LibGit2Sharp.Repository(Directory.GetCurrentDirectory())).
-                AddSingleton<HttpClient>();
+                AddSingleton<HttpClient>().
+                AddSingleton<IContainer>(main);
 
             services.
                 AddSingleton<IProcessManager, ProcessManager>().
                 AddSingleton<IHttpManager, HttpManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
-                AddSingleton<PipelineContextFactory>().
-                AddSingleton<StepContextFactory>().
                 AddSingleton<Pipeline>().
-                Configure<PipelineOptions>(pipelineOptions =>
+                AddSingleton<PipelineContext>().
+                Configure<PipelineContextOptions>(options =>
                 {
-                    ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), pipelineOptions);
-                    pipelineOptions.Validate();
+                    ConfigurationBinder.Bind(_configurationRoot.GetSection("pipeline"), options);
+                    options.Validate();
                 }).
+                AddSingleton<StepContextFactory>().
+                AddTransient(provider => provider.GetService<StepContextFactory>().Build()).
                 Configure<SharedOptions>(_configurationRoot.GetSection("shared"));
-
-            Container main = new Container();
+            ConfigurePluginServices(services);
             main.Populate(services);
 
-            ConfigureChildContainers(main);
+            // Load assemblies in plugins directory
+            _assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);
+            ConfigurePluginContainers(main);
 
             return main;
         }
 
+        /// <summary>
+        /// Adds services for plugins. Adds to main service collection since some plugins may not have their own containers.
+        /// </summary>
+        /// <param name="services"></param>
         private void ConfigurePluginServices(ServiceCollection services)
         {
-            // Add services for plugins
+            // Plugins
+            IEnumerable<Assembly> pluginAssemblies = _assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
+            List<Type> pluginTypes = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).ToList();
+
+            foreach (Type pluginType in pluginTypes)
+            {
+                services.AddTransient(pluginType);
+            }
         }
 
-        private void ConfigureChildContainers(Container main)
+        private void ConfigurePluginContainers(Container main)
         {
-            IAssemblyService assemblyService = main.GetInstance<IAssemblyService>();
-            // Load assemblies in plugins directory
-            assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);
-            IEnumerable<Assembly> pluginAssemblies = assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
-            List<Type> pluginStartupTypes = assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginStartup)).ToList();
+            IEnumerable<Assembly> pluginAssemblies = _assemblyService.GetReferencingAssemblies(typeof(IPlugin).GetTypeInfo().Assembly);
+            List<Type> pluginStartupTypes = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginStartup)).ToList();
             Dictionary<string, IContainer> children = new Dictionary<string, IContainer>();
 
             foreach (Type pluginStartupType in pluginStartupTypes)
