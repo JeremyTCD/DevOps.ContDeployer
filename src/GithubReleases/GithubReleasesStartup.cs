@@ -8,7 +8,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IGitHubClient>(provider => new GitHubClient(new ProductHeaderValue(nameof(ContDeployer))));
+            services.AddSingleton(provider => new GitHubClient(new ProductHeaderValue(nameof(ContDeployer))));
         }
     }
 }
