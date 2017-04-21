@@ -7,23 +7,17 @@ namespace JeremyTCD.ContDeployer
 {
     public class Pipeline
     {
-        public ILogger<Pipeline> Logger { get; }
-        public PipelineOptions Options { get; }
-        public IPluginFactory PluginFactory { get; }
-        public PipelineContextFactory PipelineContextFactory { get; }
-        public StepContextFactory StepContextFactory { get; }
+        private ILogger<Pipeline> _logger { get; }
+        private IPluginFactory _pluginFactory { get; }
+        private PipelineContext _pipelineContext { get; }
 
-        public Pipeline(IOptions<PipelineOptions> optionsAccessor,
-            ILogger<Pipeline> logger,
+        public Pipeline(ILogger<Pipeline> logger,
             IPluginFactory pluginFactory,
-            PipelineContextFactory pipelineContextFactory,
-            StepContextFactory stepContextFactory)
+            PipelineContext pipelineContext)
         {
-            Logger = logger;
-            Options = optionsAccessor.Value;
-            PluginFactory = pluginFactory;
-            PipelineContextFactory = pipelineContextFactory;
-            StepContextFactory = stepContextFactory;
+            _pipelineContext = pipelineContext;
+            _logger = logger;
+            _pluginFactory = pluginFactory;
         }
 
         /// <summary>
@@ -31,31 +25,23 @@ namespace JeremyTCD.ContDeployer
         /// </summary>
         public void Run()
         {
-            PipelineContext pipelineContext = PipelineContextFactory.
-                AddSteps(Options.Steps).
-                Build();
+            _logger.LogInformation("=== Running pipeline ===");
 
-            Logger.LogInformation("=== Running pipeline ===");
-
-            while (pipelineContext.Steps.Count > 0)
+            while (_pipelineContext.Steps.Count > 0)
             {
-                Step step = pipelineContext.Steps.First();
+                Step step = _pipelineContext.Steps.First();
 
-                IPlugin plugin = PluginFactory.
+                IPlugin plugin = _pluginFactory.
                     SetPluginName(step.PluginName).
                     Build();
 
-                StepContext stepContext = StepContextFactory.
-                    AddStep(step, plugin.GetType().FullName).
-                    Build();
-
-                pipelineContext.Steps.RemoveFirst();
-                Logger.LogInformation($"== Running {plugin.GetType().Name} ==");
+                _pipelineContext.Steps.RemoveFirst();
+                _logger.LogInformation($"== Running {plugin.GetType().Name} ==");
                 plugin.Run();
-                Logger.LogInformation($"== {plugin.GetType().Name} complete ==");
+                _logger.LogInformation($"== {plugin.GetType().Name} complete ==");
             }
 
-            Logger.LogInformation("=== Pipeline complete ===");
+            _logger.LogInformation("=== Pipeline complete ===");
         }
     }
 }
