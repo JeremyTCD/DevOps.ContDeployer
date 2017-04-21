@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
@@ -29,7 +27,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
         /// <summary>
         /// Raw config
         /// </summary>
-        public IConfigurationSection Config { get; set; }
+        public IConfigurationSection Config { get; set; } 
 
         /// <summary>
         /// Instantiated options
