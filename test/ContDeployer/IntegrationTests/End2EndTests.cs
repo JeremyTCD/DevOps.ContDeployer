@@ -1,4 +1,5 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.Plugin.GithubReleases;
+using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -30,18 +31,29 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         public void DefaultPipline_GeneratesTagGithubReleaseAndPublishesIfNewVersionHasBeenAdded()
         {
             // Arrange
+            // TODO run in dry run mode so no side effects
             object options = new
             {
-                Pipeline = new PipelineContextOptions
+                Pipeline = new 
                 {
-                    Steps = new List<Step> {
-                                new Step
+                    Steps = new List<object> {
+                                new 
                                 {
                                     PluginName = "ChangelogGenerator"
                                 },
-                                new Step
+                                new 
                                 {
                                     PluginName = "GitTagsChangelogAdapter"
+                                },
+                                new 
+                                {
+                                    PluginName = "GithubReleasesChangelogAdapter",
+                                    Config = new 
+                                    {
+                                        Owner = "testOwner",
+                                        Repository = "testRepository",
+                                        Token = "testToken"
+                                    }
                                 }
                             }
                 }
