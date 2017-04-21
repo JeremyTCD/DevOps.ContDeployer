@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.Logging;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,22 @@ namespace JeremyTCD.ContDeployer
     public class PluginFactory : IPluginFactory
     {
         private IAssemblyService _assemblyService { get; }
-        private Dictionary<string, Type> _pluginTypes { get; set; }
         private ILogger<PluginFactory> _logger { get; }
+        private IContainer _mainContainer { get; }
+        private IDictionary<string, IContainer> _pluginContainers { get; }
+
         private string _pluginName { get; set; }
+        private Dictionary<string, Type> _pluginTypes { get; set; }
 
         public PluginFactory(IAssemblyService assemblyService,
-            ILogger<PluginFactory> logger)
+            ILogger<PluginFactory> logger,
+            IContainer mainContainer,
+            IDictionary<string, IContainer> pluginContainers)
         {
             _assemblyService = assemblyService;
             _logger = logger;
+            _mainContainer = mainContainer;
+            _pluginContainers = pluginContainers;
         }
 
         public void LoadTypes()
@@ -45,7 +53,14 @@ namespace JeremyTCD.ContDeployer
                 throw new Exception($"Plugin type with name \"{_pluginName}\" does not exist");
             }
 
-            IPlugin plugin = Activator.CreateInstance(pluginType) as IPlugin;
+            _pluginContainers.TryGetValue(_pluginName, out IContainer pluginContainer);
+            IPlugin plugin = (pluginContainer != null ? pluginContainer.GetInstance(pluginType) : 
+                _mainContainer.GetInstance(pluginType)) as IPlugin;
+
+            if(plugin == null)
+            {
+                throw new Exception($"No service for plugin type with name \"{_pluginName}\"");
+            }
 
             _logger.LogInformation($"Plugin \"{_pluginName}\" successfully built");
 
