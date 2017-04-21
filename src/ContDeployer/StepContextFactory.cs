@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -15,17 +14,20 @@ namespace JeremyTCD.ContDeployer
         private IAssemblyService _assemblyService { get; }
         private ILogger<StepContextFactory> _logger { get; }
         private ILoggerFactory _loggerFactory { get; }
+        private PipelineContext _pipelineContext { get; }
+
         private Dictionary<string, Type> _pluginOptionsTypes { get; set; }
-        private Step _step { get; set; }
-        private string _pluginTypeFullName { get; set; }
+        private Dictionary<string, string> _pluginTypeFullNames { get; set; }
 
         public StepContextFactory(IAssemblyService assemblyService,
             ILoggerFactory loggerFactory,
-            ILogger<StepContextFactory> logger)
+            ILogger<StepContextFactory> logger,
+            PipelineContext piplineContext)
         {
             _assemblyService = assemblyService;
             _logger = logger;
             _loggerFactory = loggerFactory;
+            _pipelineContext = piplineContext;
         }
 
         public void LoadTypes()
@@ -34,54 +36,49 @@ namespace JeremyTCD.ContDeployer
 
             _pluginOptionsTypes = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPluginOptions)).
                 ToDictionary(type => type.Name);
-        }
 
-        public StepContextFactory AddStep(Step step, string pluginTypeFullName)
-        {
-            _step = step;
-            _pluginTypeFullName = pluginTypeFullName;
-
-            return this;
+            _pluginTypeFullNames = _assemblyService.GetAssignableTypes(pluginAssemblies, typeof(IPlugin)).
+                ToDictionary(type => type.Name, type => type.FullName);
         }
 
         public StepContext Build()
         {
+            Step step = _pipelineContext.Steps.First();
+            
             // Plugin options
             IPluginOptions pluginOptions = null;
-            _pluginOptionsTypes.TryGetValue($"{_step.PluginName}Options", out Type pluginOptionsType);
+            _pluginOptionsTypes.TryGetValue($"{step.PluginName}Options", out Type pluginOptionsType);
             if (pluginOptionsType == null)
             {
-                _logger.LogInformation($"No options type for plugin with name \"{_step.PluginName}\"");
+                _logger.LogInformation($"No options type for plugin with name \"{step.PluginName}\"");
             }
             else
             {
-                if (_step.Options != null && _step.Options.GetType().Equals(pluginOptionsType))
+                if (step.Options != null && step.Options.GetType().Equals(pluginOptionsType))
                 {
-                    pluginOptions = _step.Options;
+                    pluginOptions = step.Options;
                 }
                 else
                 {
                     pluginOptions = Activator.CreateInstance(pluginOptionsType) as IPluginOptions;
 
-                    if (_step.Config != null && !string.IsNullOrEmpty(_step.Config.Value))
+                    if (step.Config != null && !string.IsNullOrEmpty(step.Config.Value))
                     {
-                        _step.Config.Bind(pluginOptions);
+                        step.Config.Bind(pluginOptions);
                     }
                 }
 
                 pluginOptions.Validate();
-                _logger.LogInformation($"Plugin options for plugin with name \"{_step.PluginName}\" successfully built");
+                _logger.LogInformation($"Plugin options for plugin with name \"{step.PluginName}\" successfully built");
             }
 
-            ILogger logger = _loggerFactory.CreateLogger(_pluginTypeFullName);
+            ILogger logger = _loggerFactory.CreateLogger(_pluginTypeFullNames[step.PluginName]);
 
-            StepContext stepContext = new StepContext
+            return new StepContext
             {
                 Options = pluginOptions,
                 Logger = logger
             };
-
-            return stepContext;
         }
     }
 }
