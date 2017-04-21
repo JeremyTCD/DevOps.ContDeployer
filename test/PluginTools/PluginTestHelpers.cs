@@ -22,21 +22,15 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             Dictionary<string, object> sharedData = new Dictionary<string, object>();
             LinkedList<Step> steps = new LinkedList<Step>();
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(new SharedOptions
+            Mock<IOptions<SharedOptions>> mockSharedOptions = new Mock<IOptions<SharedOptions>>();
+            mockSharedOptions.Setup(o => o.Value).Returns(new SharedOptions
             {
                 DryRun = dryRun
             });
-            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
+            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockSharedOptions.Object);
             Repository repository = new Repository(Directory.GetCurrentDirectory());
 
-            return new PipelineContext
-            {
-                Repository = repository,
-                ProcessManager = processManager,
-                SharedData = sharedData,
-                Steps = steps
-            };
+            return new PipelineContext(null, processManager, repository, null);
         }
 
         /// <summary>
