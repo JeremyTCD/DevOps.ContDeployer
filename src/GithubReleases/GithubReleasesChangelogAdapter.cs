@@ -12,8 +12,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
     {
         private GithubReleasesChangelogAdapterOptions _options { get; }
         private Changelog _changelog { get; }
-        private GitHubClient _githubClient { get; }
-        
+        private IGitHubClient _githubClient { get; }        
+
         /// <summary>
         /// Creates a <see cref="GithubReleasesChangelogAdapter"/> instance
         /// </summary>
@@ -23,7 +23,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
         /// </exception>
-        public GithubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext, GitHubClient githubClient) : 
+        public GithubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext, 
+            IGithubClientFactory githubClientFactory) : 
             base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as GithubReleasesChangelogAdapterOptions;
@@ -40,7 +41,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(PipelineContext.SharedData)}");
             }
 
-            _githubClient = githubClient;
+            _githubClient = githubClientFactory.CreateClient(_options.Token);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
         public override void Run()
         {
             List<ChangelogGenerator.Version> versions = _changelog.Versions.ToList();
-
+  
             Dictionary<string, Release> releases = GetGithubReleases();
 
             GithubReleasesOptions githubReleasesOptions = new GithubReleasesOptions
@@ -123,9 +124,6 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
         /// </returns>
         private Dictionary<string, Release> GetGithubReleases()
         {
-            Credentials credentials = new Credentials(_options.Token);
-            _githubClient.Credentials = credentials;
-
             return _githubClient.
                 Repository.
                 Release.
