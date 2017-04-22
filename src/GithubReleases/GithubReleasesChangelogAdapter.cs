@@ -126,7 +126,6 @@ namespace JeremyTCD.ContDeployer.Plugin.GithubReleases
             Credentials credentials = new Credentials(_options.Token);
             _githubClient.Credentials = credentials;
 
-            // TODO dry run mode
             return _githubClient.
                 Repository.
                 Release.
