@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.Plugin.GithubReleases;
+﻿using JeremyTCD.ContDeployer.Plugin.GitHubReleases;
 using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +29,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         }
 
         [Fact]
-        public void DefaultPipline_GeneratesTagGithubReleaseAndPublishesIfNewVersionHasBeenAdded()
+        public void DefaultPipline_GeneratesTagGitHubReleaseAndPublishesIfNewVersionHasBeenAdded()
         {
             // Arrange
             Repository repository = new Repository(_tempDir);
@@ -50,7 +50,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
                                 },
                                 new
                                 {
-                                    PluginName = "GithubReleasesChangelogAdapter",
+                                    PluginName = "GitHubReleasesChangelogAdapter",
                                     Config = new
                                     {
                                         Owner = "testOwner",
@@ -79,7 +79,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 
             IConfigurationRoot configurationRoot = GetConfigurationRoot();
             Container main = GetInstanceCollection(configurationRoot);
-            // TODO override githubclient services with mock
+            // TODO override gitHubclient services with mock
             Configure(configurationRoot, main);
 
             Pipeline pipeline = main.GetInstance<Pipeline>();
