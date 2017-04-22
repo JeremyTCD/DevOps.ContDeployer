@@ -19,8 +19,6 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
         /// <returns></returns>
         public static PipelineContext CreatePipelineContext(bool dryRun = false)
         {
-            Dictionary<string, object> sharedData = new Dictionary<string, object>();
-            LinkedList<Step> steps = new LinkedList<Step>();
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
             Mock<IOptions<SharedOptions>> mockSharedOptions = new Mock<IOptions<SharedOptions>>();
             mockSharedOptions.Setup(o => o.Value).Returns(new SharedOptions
@@ -30,7 +28,14 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             ProcessManager processManager = new ProcessManager(mockLogger.Object, mockSharedOptions.Object);
             Repository repository = new Repository(Directory.GetCurrentDirectory());
 
-            return new PipelineContext(null, processManager, repository, null);
+            List<Step> steps = new List<Step>();
+            Mock<IOptions<PipelineContextOptions>> mockPipelineContextOptions = new Mock<IOptions<PipelineContextOptions>>();
+            mockPipelineContextOptions.Setup(p => p.Value).Returns(new PipelineContextOptions
+            {
+                Steps = steps
+            });
+
+            return new PipelineContext(null, processManager, repository, mockPipelineContextOptions.Object);
         }
 
         /// <summary>
