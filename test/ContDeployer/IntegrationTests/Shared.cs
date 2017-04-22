@@ -2,28 +2,25 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 {
-    [CollectionDefinition(nameof(E2ECollection))]
-    public class E2ECollection : ICollectionFixture<E2EFixture>
+    [CollectionDefinition(nameof(ContDeployerCollection))]
+    public class ContDeployerCollection : ICollectionFixture<ContDeployerFixture>
     {
     }
 
-    public class E2EFixture : IDisposable
+    public class ContDeployerFixture 
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
         public JsonSerializerSettings SerializerSettings { get; }
-        public Repository Repository { get; set; }
         public string TempGitDir { get; }
         public Signature Signature { get; }
 
-        public E2EFixture()
+        public ContDeployerFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), "ContDeployerTemp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
@@ -55,15 +52,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
 
             Repository.Init(TempDir);
 
-            Repository = new Repository(TempDir);
-
             Directory.SetCurrentDirectory(TempDir);
-        }
-
-        public void Dispose()
-        {
-            Directory.SetCurrentDirectory("\\");
-            Repository.Dispose();
         }
     }
 }

@@ -2,11 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>JeremyTCD.ContDeployer</AssemblyName>
-    <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <ApplicationIcon />
-    <OutputTypeEx>exe</OutputTypeEx>
-    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
