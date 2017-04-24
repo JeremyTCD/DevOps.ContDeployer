@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(GitTagsCollection))]
     public class GitTagsCollection : ICollectionFixture<GitTagsFixture>

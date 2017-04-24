@@ -1,6 +1,5 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
 using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests;
-using JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests;
 using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.ContDeployer.PluginTools.Tests;
 using Octokit;
@@ -9,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
 {
     public class GitHubReleasesChangelogAdapterTests
     {

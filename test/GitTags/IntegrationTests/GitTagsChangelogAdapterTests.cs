@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
 {
     [Collection(nameof(GitTagsCollection))]
     public class GitTagsChangelogAdapterTests

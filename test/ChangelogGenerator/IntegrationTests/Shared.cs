@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(ChangelogGeneratorCollection))]
     public class ChangelogGeneratorCollection : ICollectionFixture<ChangelogGeneratorFixture>

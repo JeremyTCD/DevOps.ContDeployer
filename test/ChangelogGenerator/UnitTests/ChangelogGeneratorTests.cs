@@ -1,12 +1,11 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
 using NSubstitute;
 using System;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
 {
     public class ChangelogGeneratorTests
     {

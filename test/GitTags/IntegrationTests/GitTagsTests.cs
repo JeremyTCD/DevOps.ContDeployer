@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
 {
     [Collection(nameof(GitTagsCollection))]
     public class GitTagsTests
@@ -75,7 +75,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         {
             // Arrange
             string testTagName = "0.1.0";
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(true);
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to

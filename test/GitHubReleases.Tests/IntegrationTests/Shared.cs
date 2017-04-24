@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(GitHubReleasesCollection))]
     public class GitHubReleasesCollection : ICollectionFixture<GitHubReleasesFixture>
