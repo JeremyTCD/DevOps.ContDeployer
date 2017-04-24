@@ -6,6 +6,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContext : IPipelineContext
     {
+        public IStepFactory StepFactory { get; set; }
         public IHttpManager HttpManager { get; set; }
         public IProcessManager ProcessManager { get; set; }
         public IRepository Repository { get; set; }
@@ -13,8 +14,9 @@ namespace JeremyTCD.ContDeployer.PluginTools
         public LinkedList<IStep> Steps { get; set; }
 
         public PipelineContext(IHttpManager httpManager, IProcessManager processManager, IRepository repository,
-            IOptions<PipelineContextOptions> options)
+            IOptions<PipelineContextOptions> options, IStepFactory stepFactory)
         {
+            StepFactory = stepFactory;
             HttpManager = httpManager;
             ProcessManager = processManager;
             Repository = repository;

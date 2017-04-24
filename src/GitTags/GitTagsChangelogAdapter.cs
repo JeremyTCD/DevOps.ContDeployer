@@ -52,7 +52,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
                         {
                             TagName = version.SemVersion.ToString()
                         };
-                        IStep gitTagsStep = new Step(nameof(GitTags), gitTagsOptions);
+                        IStep gitTagsStep = PipelineContext.StepFactory.Build(nameof(GitTags), gitTagsOptions);
                         PipelineContext.Steps.AddFirst(gitTagsStep);
 
                         StepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +

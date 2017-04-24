@@ -5,6 +5,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public interface IPipelineContext
     {
+        IStepFactory StepFactory { get; set; }
         IHttpManager HttpManager { get; set; }
         IProcessManager ProcessManager { get; set; }
         IRepository Repository { get; set; }

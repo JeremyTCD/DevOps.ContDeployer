@@ -101,7 +101,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 
             if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ReleaseUpdates.Count > 0)
             {
-                IStep gitHubReleasesStep = new Step(nameof(GitHubReleases), gitHubReleasesOptions);
+                IStep gitHubReleasesStep = PipelineContext.StepFactory.Build(nameof(GitHubReleases), gitHubReleasesOptions);
                 PipelineContext.Steps.AddFirst(gitHubReleasesStep);
 
                 StepContext.
