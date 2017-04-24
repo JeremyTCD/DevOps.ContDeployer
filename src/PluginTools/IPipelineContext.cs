@@ -9,7 +9,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
         IHttpManager HttpManager { get; set; }
         IProcessManager ProcessManager { get; set; }
         IRepository Repository { get; set; }
-        Dictionary<string, object> SharedData { get; set; }
+        IDictionary<string, object> SharedData { get; set; }
         LinkedList<IStep> Steps { get; set; }
     }
 }
