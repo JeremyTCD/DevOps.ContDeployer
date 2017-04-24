@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
 {
@@ -12,9 +13,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
             return changelogFactory;
         }
 
-        public static IChangelog CreateChangelog()
+        public static IChangelog CreateChangelog(SortedSet<IVersion> versions = null)
         {
-            return Substitute.For<IChangelog>();
+            IChangelog changelog = Substitute.For<IChangelog>();
+            changelog.Versions.Returns(versions);
+            return changelog;
         }
     }
 }
