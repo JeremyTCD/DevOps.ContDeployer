@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using NSubstitute;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,46 +13,72 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
     /// </summary>
     public class PluginTestHelpers
     {
-        /// <summary>
-        /// Creates a <see cref="IPipelineContext"/> instance. Uses empty structures and defaults for dependencies and
-        /// properties.
-        /// </summary>
-        /// <returns></returns>
-        public static IPipelineContext CreatePipelineContext(bool dryRun = false)
+        public static IStepContext CreateStepContext(IPluginOptions options)
         {
-            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockSharedOptions = new Mock<IOptions<SharedOptions>>();
-            mockSharedOptions.Setup(o => o.Value).Returns(new SharedOptions
-            {
-                DryRun = dryRun
-            });
-            ProcessManager processManager = new ProcessManager(mockLogger.Object, mockSharedOptions.Object);
-            Repository repository = new Repository(Directory.GetCurrentDirectory());
+            IStepContext stepContext = Substitute.For<IStepContext>();
+            stepContext.Options.Returns(options);
 
-            List<IStep> steps = new List<IStep>();
-            Mock<IOptions<PipelineContextOptions>> mockPipelineContextOptions = new Mock<IOptions<PipelineContextOptions>>();
-            mockPipelineContextOptions.Setup(p => p.Value).Returns(new PipelineContextOptions
-            {
-                Steps = steps
-            });
-
-            return new PipelineContext(null, processManager, repository, mockPipelineContextOptions.Object);
+            return stepContext;
         }
 
-        /// <summary>
-        /// Creates a <see cref="IStepContext"/> instance. 
-        /// </summary>
-        /// <param name="pluginOptions"></param>
-        /// <returns></returns>
-        public static IStepContext CreateStepContext(IPluginOptions pluginOptions = null)
+        public static Blob CreateBlob(string value)
         {
-            Mock<ILogger> mockLogger = new Mock<ILogger>();
+            Blob blob = Substitute.For<Blob>();
+            blob.GetContentStream().Returns(CreateStreamFromString(value));
 
-            return new StepContext
+            return blob;
+        }
+
+        public static TreeEntry CreateTreeEntry(Blob blob)
+        {
+            TreeEntry treeEntry = Substitute.For<TreeEntry>();
+            treeEntry.Target.Returns(blob);
+
+            return treeEntry;
+        }
+
+        public static Commit CreateCommit(string fileName = null, TreeEntry treeEntry = null)
+        {
+            Commit commit = Substitute.For<Commit>();
+            if (fileName != null)
             {
-                Options = pluginOptions,
-                Logger = mockLogger.Object
-            };
+                commit[fileName].Returns(treeEntry);
+            }
+
+            return commit;
+        }
+
+        public static IRepository CreateRepository(string commitish = null, Commit commit = null)
+        {
+            IRepository repository = Substitute.For<IRepository>();
+            if (commitish != null)
+            {
+                repository.Lookup<Commit>(commitish).Returns(commit);
+            }
+
+            return repository;
+        }
+
+        public static IPipelineContext CreatePipelineContext(IRepository repository)
+        {
+            IDictionary<string, object> sharedData = Substitute.For<IDictionary<string, object>>();
+
+            IPipelineContext pipelineContext = Substitute.For<IPipelineContext>();
+            pipelineContext.Repository.Returns(repository);
+            pipelineContext.SharedData.Returns(sharedData);
+
+            return pipelineContext;
+        }
+
+        public static Stream CreateStreamFromString(string value)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(value);
+            writer.Flush();
+            stream.Position = 0;
+
+            return stream;
         }
     }
 }
