@@ -9,19 +9,19 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
 {
     public class GitTagsChangelogAdapter : PluginBase
     {
-        private Changelog _changelog { get; }
+        private IChangelog _changelog { get; }
 
         /// <summary>
         /// Creates a <see cref="GitTagsChangelogAdapter"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
+        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
         public GitTagsChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext) : 
             base(pipelineContext, stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            _changelog = changelogObject as Changelog;
+            _changelog = changelogObject as IChangelog;
             if (_changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
@@ -34,13 +34,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// </summary>
         public override void Run()
         {
-            List<ChangelogGenerator.Version> versions = _changelog.Versions.ToList();
+            List<IVersion> versions = _changelog.Versions.ToList();
 
             bool tagsConsistentWithChangelog = true;
 
             for (int i = 0; i < versions.Count; i++)
             {
-                ChangelogGenerator.Version version = versions[i];
+                IVersion version = versions[i];
 
                 if (PipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
                 {

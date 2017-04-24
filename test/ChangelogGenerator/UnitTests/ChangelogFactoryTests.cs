@@ -33,12 +33,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             ChangelogFactory factory = new ChangelogFactory();
 
             // Act
-            Changelog result = factory.Build(pattern, changelogText);
+            IChangelog result = factory.Build(pattern, changelogText);
 
             // Assert
             Assert.NotNull(result.Versions);
             Assert.Equal(5, result.Versions.Count);
-            List<Version> versions = result.Versions.ToList();
+            List<IVersion> versions = result.Versions.ToList();
             Assert.Equal(version1, versions[0].SemVersion);
             Assert.Equal(notes1, versions[0].Notes);
             Assert.Equal(version2, versions[1].SemVersion);

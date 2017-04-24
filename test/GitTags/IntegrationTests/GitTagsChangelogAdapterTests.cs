@@ -37,7 +37,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
             // Arrange
             PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
-            SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
+            SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };
@@ -68,7 +68,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
             pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
             pipelineContext.Repository.ApplyTag(testVersion);
 
-            SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
+            SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };

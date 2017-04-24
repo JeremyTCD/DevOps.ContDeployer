@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class ChangelogFactory
+    public class ChangelogFactory : IChangelogFactory
     {
         /// <summary>
         /// Creates a <see cref="Changelog"/> instance. <see cref="Changelog.Versions"/>
@@ -18,10 +18,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         /// <returns>
         /// <see cref="Changelog"/>
         /// </returns>
-        public Changelog Build(string pattern, string changelogText)
+        public IChangelog Build(string pattern, string changelogText)
         {
             MatchCollection matches = Regex.Matches(changelogText, pattern, RegexOptions.Singleline);
-            SortedSet<Version> versions = new SortedSet<Version>();
+            SortedSet<IVersion> versions = new SortedSet<IVersion>();
 
             foreach (Match match in matches)
             {

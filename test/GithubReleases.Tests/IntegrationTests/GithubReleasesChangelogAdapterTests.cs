@@ -58,7 +58,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
             });
             PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
-            SortedSet<ChangelogGenerator.Version> versions = new SortedSet<ChangelogGenerator.Version>()
+            SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };

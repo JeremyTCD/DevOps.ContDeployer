@@ -11,7 +11,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
     public class GitHubReleasesChangelogAdapter : PluginBase
     {
         private GitHubReleasesChangelogAdapterOptions _options { get; }
-        private Changelog _changelog { get; }
+        private IChangelog _changelog { get; }
         private IGitHubClient _gitHubClient { get; }        
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
         /// If <see cref="StepContext.Options"/> is null
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="Changelog"/> instance
+        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
         public GitHubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext, 
             IGitHubClientFactory gitHubClientFactory) : 
@@ -35,7 +35,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
             }
 
             PipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            _changelog = changelogObject as Changelog;
+            _changelog = changelogObject as IChangelog;
             if (_changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(PipelineContext.SharedData)}");
@@ -50,7 +50,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
         /// </summary>
         public override void Run()
         {
-            List<ChangelogGenerator.Version> versions = _changelog.Versions.ToList();
+            List<IVersion> versions = _changelog.Versions.ToList();
   
             Dictionary<string, Release> releases = GetGitHubReleases();
 
@@ -61,7 +61,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
                 Token = _options.Token
             };
 
-            foreach (ChangelogGenerator.Version version in versions)
+            foreach (IVersion version in versions)
             {
                 string name = version.SemVersion.ToString();
 

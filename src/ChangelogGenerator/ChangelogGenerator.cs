@@ -9,6 +9,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
     public class ChangelogGenerator : PluginBase
     {
         private ChangelogGeneratorOptions _options { get; set; }
+        private IChangelogFactory _changelogFactory { get; set; }
 
         /// <summary>
         /// Creates a <see cref="ChangelogGenerator"/> instance
@@ -16,7 +17,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         /// <exception cref="InvalidOperationException">
         /// If <see cref="StepContext.Options"/> is null
         /// </exception>
-        public ChangelogGenerator(PipelineContext pipelineContext, StepContext stepContext) : 
+        public ChangelogGenerator(PipelineContext pipelineContext, StepContext stepContext, IChangelogFactory changelogFactory) : 
             base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as ChangelogGeneratorOptions;
@@ -25,6 +26,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             {
                 throw new InvalidOperationException($"{nameof(ChangelogGeneratorOptions)} required");
             }
+
+            _changelogFactory = changelogFactory;
         }
 
         /// <summary>
@@ -44,8 +47,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
             }
 
             // Build changelog
-            ChangelogFactory changelogFactory = new ChangelogFactory();
-            Changelog changelog = changelogFactory.Build(_options.Pattern, changelogText);
+            IChangelog changelog = _changelogFactory.Build(_options.Pattern, changelogText);
 
             PipelineContext.SharedData[nameof(Changelog)] = changelog;
             StepContext.Logger.LogInformation($"{nameof(Changelog)} generated");

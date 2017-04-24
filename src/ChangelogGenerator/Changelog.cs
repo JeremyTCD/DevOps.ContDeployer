@@ -2,14 +2,14 @@
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
-    public class Changelog
+    public class Changelog : IChangelog
     {
         /// <summary>
         /// Set of versions ordered in descending semver order (latest first)
         /// </summary>
-        public SortedSet<Version> Versions { get; }
+        public SortedSet<IVersion> Versions { get; }
 
-        public Changelog(SortedSet<Version> versions)
+        public Changelog(SortedSet<IVersion> versions)
         {
             Versions = versions;
         }
