@@ -6,6 +6,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
     {
         string PluginName { get; set; }
         IConfigurationSection Config { get; set; }
-        IPluginOptions Options { get; set; }
+        IPluginOptions Options { get; }
     }
 }
