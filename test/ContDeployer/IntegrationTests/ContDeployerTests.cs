@@ -82,7 +82,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
             // TODO override gitHubclient services with mock
             Configure(configurationRoot, main);
 
-            Pipeline pipeline = main.GetInstance<Pipeline>();
+            IPipeline pipeline = main.GetInstance<IPipeline>();
 
             // Act
             pipeline.Run();
@@ -113,7 +113,7 @@ namespace JeremyTCD.ContDeployer.Tests.IntegrationTests
         {
             ILoggerFactory loggerFactory = main.GetInstance<ILoggerFactory>();
             IPluginFactory pluginFactory = main.GetInstance<IPluginFactory>();
-            StepContextFactory stepContextFactory = main.GetInstance<StepContextFactory>();
+            IStepContextFactory stepContextFactory = main.GetInstance<IStepContextFactory>();
 
             loggerFactory.
                 AddFile(configurationRoot.GetValue("Logging:File:LogFile", "log.txt"),

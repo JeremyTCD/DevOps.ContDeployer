@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace JeremyTCD.ContDeployer
 {
-    public class StepContextFactory
+    public class StepContextFactory : IStepContextFactory
     {
         private IAssemblyService _assemblyService { get; }
         private ILogger<StepContextFactory> _logger { get; }
@@ -41,7 +41,7 @@ namespace JeremyTCD.ContDeployer
                 ToDictionary(type => type.Name, type => type.FullName);
         }
 
-        public StepContext Build()
+        public IStepContext Build()
         {
             Step step = _pipelineContext.Steps.First();
             

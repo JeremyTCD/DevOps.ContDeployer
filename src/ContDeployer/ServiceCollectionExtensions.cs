@@ -32,15 +32,15 @@ namespace JeremyTCD.ContDeployer
                 AddSingleton<IProcessManager, ProcessManager>().
                 AddSingleton<IHttpManager, HttpManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
-                AddSingleton<Pipeline>().
-                AddSingleton<PipelineContext>().
+                AddSingleton<IPipeline, Pipeline>().
+                AddSingleton<IPipelineContext, PipelineContext>().
                 Configure<PipelineContextOptions>(options =>
                 {
                     ConfigurationBinder.Bind(configurationRoot.GetSection("pipeline"), options);
                     options.Validate();
                 }).
-                AddSingleton<StepContextFactory>().
-                AddTransient(provider => provider.GetService<StepContextFactory>().Build()).
+                AddSingleton<IStepContextFactory, StepContextFactory>().
+                AddTransient(provider => provider.GetService<IStepContextFactory>().Build()).
                 Configure<SharedOptions>(configurationRoot.GetSection("shared"));
 
             // Load assemblies in plugins directory

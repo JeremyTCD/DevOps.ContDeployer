@@ -1,11 +1,10 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Linq;
 
 namespace JeremyTCD.ContDeployer
 {
-    public class Pipeline
+    public class Pipeline : IPipeline
     {
         private ILogger<Pipeline> _logger { get; }
         private IPluginFactory _pluginFactory { get; }

@@ -23,7 +23,7 @@ namespace JeremyTCD.ContDeployer.ConsoleApplication
         }
 
         public void Configure(ILoggerFactory loggerFactory, IPluginFactory pluginFactory,
-            StepContextFactory stepContextFactory)
+            IStepContextFactory stepContextFactory)
         {
             loggerFactory.
                 AddFile(_configurationRoot.GetValue("Logging:File:LogFile", "log.txt"),
