@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            IPipelineContext pipelineContext = IPluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(pipelineContext, null));
