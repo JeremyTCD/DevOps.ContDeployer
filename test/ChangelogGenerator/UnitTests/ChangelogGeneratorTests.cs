@@ -14,25 +14,25 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.UnitTests
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext((ChangelogGeneratorOptions)null);
+            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, stepContext, null));
+            Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, mockStepContext, null));
         }
 
         [Fact]
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            IRepository repository = PluginTestHelpers.CreateRepository(); // IRepository.Lookup<Commit>() returns null by default
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(repository);
+            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
+            IRepository mockRepository = PluginTestHelpers.CreateRepository(); // IRepository.Lookup<Commit>() returns null by default
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(pipelineContext, stepContext, null);
+            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
-            repository.Received().Lookup<Commit>("HEAD");
+            mockRepository.Received().Lookup<Commit>("HEAD");
         }
 
         [Fact]
@@ -42,19 +42,19 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.UnitTests
             string testFileName = "testFileName";
             string testCommitish = "HEAD";
 
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName
             });
-            Commit commit = PluginTestHelpers.CreateCommit(); // Commit[string] returns null by default
-            IRepository repository = PluginTestHelpers.CreateRepository(testCommitish, commit);
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(repository);
+            Commit mockCommit = PluginTestHelpers.CreateCommit(); // Commit[string] returns null by default
+            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(pipelineContext, stepContext, null);
+            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
-            var _ = commit.Received()[testFileName];
+            var _ = mockCommit.Received()[testFileName];
         }
 
         [Fact]
@@ -64,17 +64,17 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.UnitTests
             string testFileName = "testFileName";
             string testCommitish = "HEAD";
 
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName
             });
-            Blob blob = PluginTestHelpers.CreateBlob("");
-            TreeEntry treeEntry = PluginTestHelpers.CreateTreeEntry(blob);
-            Commit commit = PluginTestHelpers.CreateCommit(testFileName, treeEntry);
-            IRepository repository = PluginTestHelpers.CreateRepository(testCommitish, commit);
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(repository);
+            Blob mockBlob = PluginTestHelpers.CreateBlob("");
+            TreeEntry mockTreeEntry = PluginTestHelpers.CreateTreeEntry(mockBlob);
+            Commit mockCommit = PluginTestHelpers.CreateCommit(testFileName, mockTreeEntry);
+            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(pipelineContext, stepContext, null);
+            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
@@ -89,26 +89,26 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.UnitTests
             string testPattern = "testPattern";
             string testCommitish = "HEAD";
 
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName,
                 Pattern = testPattern
             });
-            Blob blob = PluginTestHelpers.CreateBlob(testChangelogText);
-            TreeEntry treeEntry = PluginTestHelpers.CreateTreeEntry(blob);
-            Commit commit = PluginTestHelpers.CreateCommit(testFileName, treeEntry);
-            IRepository repository = PluginTestHelpers.CreateRepository(testCommitish, commit);
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(repository);
-            IChangelog changelog = ChangelogGeneratorTestHelpers.CreateChangelog();
-            IChangelogFactory changelogFactory = ChangelogGeneratorTestHelpers.CreateChangelogFactory(changelog, testPattern, testChangelogText);
+            Blob mockBlob = PluginTestHelpers.CreateBlob(testChangelogText);
+            TreeEntry mockTreeEntry = PluginTestHelpers.CreateTreeEntry(mockBlob);
+            Commit mockCommit = PluginTestHelpers.CreateCommit(testFileName, mockTreeEntry);
+            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
+            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateChangelog();
+            IChangelogFactory mockChangelogFactory = ChangelogGeneratorTestHelpers.CreateChangelogFactory(mockChangelog, testPattern, testChangelogText);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(pipelineContext, stepContext, changelogFactory);
+            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, mockChangelogFactory);
 
             // Act
             changelogGenerator.Run();
 
             // Assert
-            pipelineContext.SharedData.Received()[nameof(Changelog)] = changelog;
+            mockPipelineContext.SharedData.Received()[nameof(Changelog)] = mockChangelog;
         }
     }
 }
