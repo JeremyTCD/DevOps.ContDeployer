@@ -1,33 +1,23 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests;
+using JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests;
 using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.ContDeployer.PluginTools.Tests;
-using LibGit2Sharp;
-using Moq;
-using NSubstitute;
 using Octokit;
 using Semver;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.UnitTests
 {
-    [Collection(nameof(GitHubReleasesCollection))]
     public class GitHubReleasesChangelogAdapterTests
     {
-        private LibGit2Sharp.Signature _signature { get; }
-
-        public GitHubReleasesChangelogAdapterTests(GitHubReleasesFixture fixture)
-        {
-            fixture.ResetTempDir();
-            _signature = fixture.Signature;
-        }
-
         [Fact]
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            IStepContext stepContext = PluginTestHelpers.CreateStepContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubReleasesChangelogAdapter(null, stepContext, null));
@@ -37,8 +27,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubReleasesChangelogAdapter(pipelineContext, stepContext, null));
@@ -51,41 +41,36 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
             string testOwner = "testOwner";
             string testRepository = "testRepository";
             string testToken = "testToken";
+            string testVersion = "1.0.0";
 
             IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions
             {
-                Token = testToken
+                Token = testToken,
+                Owner = testOwner,
+                Repository = testRepository
             });
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
-            string testVersion = "1.0.0";
+
+            IReleasesClient mockReleaseClient = GitHubReleasesTestHelpers.CreateReleaseClient(testOwner, testRepository, new List<Release>());
+            IRepositoriesClient mockRepositoriesClient = GitHubReleasesTestHelpers.CreateRepositoriesClient(mockReleaseClient);
+            IGitHubClient mockGitHubClient = GitHubReleasesTestHelpers.CreateGitHubClient(mockRepositoriesClient);
+            IGitHubClientFactory mockGitHubClientFactory = GitHubReleasesTestHelpers.CreateGitHubClientFactory(testToken, mockGitHubClient);
+
             SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
                 new ChangelogGenerator.Version { SemVersion = SemVersion.Parse(testVersion) }
             };
-            Changelog changelog = new Changelog(versions);
-            pipelineContext.SharedData.Add(nameof(Changelog), changelog);
+            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateChangelog(versions);
+            IDictionary<string, object> mockSharedData = PluginTestHelpers.CreateSharedData(nameof(Changelog), mockChangelog);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(mockSharedData);
 
-            // TODO move these to their own function, will be used in other functions
-            IReleasesClient mockReleaseClient = Substitute.For<IReleasesClient>();
-            mockReleaseClient.GetAll(testOwner, testRepository).Returns(new List<Release>());
-
-            IRepositoriesClient mockRepositoriesClient = Substitute.For<IRepositoriesClient>();
-            mockRepositoriesClient.Release.Returns(mockReleaseClient);
-
-            IGitHubClient mockGitHubClient = Substitute.For<IGitHubClient>();
-            mockGitHubClient.Repository.Returns(mockRepositoriesClient);
-
-            IGitHubClientFactory mockGitHubClientFactory = Substitute.For<IGitHubClientFactory>();
-            mockGitHubClientFactory.CreateClient(testToken).Returns(mockGitHubClient);
-
-            GitHubReleasesChangelogAdapter adapter = new GitHubReleasesChangelogAdapter(pipelineContext, stepContext, mockGitHubClientFactory);
+            GitHubReleasesChangelogAdapter adapter = new GitHubReleasesChangelogAdapter(mockPipelineContext, stepContext, mockGitHubClientFactory);
 
             // Act
             adapter.Run();
 
             // Assert
-            Assert.Equal(1, pipelineContext.Steps.Count);
-            IStep step = pipelineContext.Steps.First.Value;
+            Assert.Equal(1, mockPipelineContext.Steps.Count);
+            IStep step = mockPipelineContext.Steps.First.Value;
             Assert.Equal(nameof(GitHubReleases), step.PluginName);
             GitHubReleasesOptions options = step.Options as GitHubReleasesOptions;
             Assert.NotNull(options);
