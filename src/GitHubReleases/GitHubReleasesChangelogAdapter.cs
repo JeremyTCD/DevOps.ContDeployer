@@ -101,8 +101,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 
             if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ReleaseUpdates.Count > 0)
             {
-                IStep gitHubReleasesStep = PipelineContext.StepFactory.Build(nameof(GitHubReleases), gitHubReleasesOptions);
-                PipelineContext.Steps.AddFirst(gitHubReleasesStep);
+                IStep gitHubReleasesStep = PipelineContext.
+                    StepFactory.
+                    Build(nameof(GitHubReleases), gitHubReleasesOptions);
+                PipelineContext.
+                    Steps.
+                    AddFirst(gitHubReleasesStep);
 
                 StepContext.
                     Logger.
@@ -128,7 +132,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
                 Repository.
                 Release.
                 GetAll(_options.Owner, _options.Repository).
-                Result.ToDictionary(release => release.TagName);
+                Result.
+                ToDictionary(release => release.TagName);
         }
     }
 }
