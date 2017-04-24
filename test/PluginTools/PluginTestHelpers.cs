@@ -1,7 +1,4 @@
 ﻿using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
 using NSubstitute;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +10,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
     /// </summary>
     public class PluginTestHelpers
     {
-        public static IStepContext CreateStepContext(IPluginOptions options)
+        public static IStepContext CreateStepContext(IPluginOptions options = null)
         {
             IStepContext stepContext = Substitute.For<IStepContext>();
             stepContext.Options.Returns(options);
