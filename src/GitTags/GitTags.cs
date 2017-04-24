@@ -12,9 +12,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// Creates a <see cref="GitTags"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="StepContext.Options"/> is null
+        /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
-        public GitTags(PipelineContext pipelineContext, StepContext stepContext) : base(pipelineContext, stepContext)
+        public GitTags(IPipelineContext pipelineContext, IStepContext stepContext) : base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as GitTagsOptions;
 

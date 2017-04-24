@@ -27,7 +27,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubReleasesChangelogAdapter(null, stepContext, null));
@@ -37,8 +37,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions());
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubReleasesChangelogAdapter(pipelineContext, stepContext, null));
@@ -52,11 +52,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
             string testRepository = "testRepository";
             string testToken = "testToken";
 
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitHubReleasesChangelogAdapterOptions
             {
                 Token = testToken
             });
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
             SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
@@ -85,7 +85,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.IntegrationTests
 
             // Assert
             Assert.Equal(1, pipelineContext.Steps.Count);
-            Step step = pipelineContext.Steps.First.Value;
+            IStep step = pipelineContext.Steps.First.Value;
             Assert.Equal(nameof(GitHubReleases), step.PluginName);
             GitHubReleasesOptions options = step.Options as GitHubReleasesOptions;
             Assert.NotNull(options);

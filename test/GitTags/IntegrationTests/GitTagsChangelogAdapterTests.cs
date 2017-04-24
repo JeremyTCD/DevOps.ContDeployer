@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = IPluginTestHelpers.CreatePipelineContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(pipelineContext, null));
@@ -35,7 +35,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_AddsGitTagsStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
             SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
@@ -60,7 +60,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_DoesNothingIfChangelogVersionsAllHaveCorrespondingTags()
         {
             // Arrange
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
             string testVersion = "1.0.0";
             // Create tag
             File.WriteAllText("test.txt", "test");

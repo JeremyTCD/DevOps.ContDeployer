@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, stepContext));
@@ -35,8 +35,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator(pipelineContext, stepContext);
 
@@ -48,8 +48,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfChangelogFileDoesNotExist()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             File.WriteAllText("test.txt", "test");
             Commands.Stage(pipelineContext.Repository, "*");
@@ -65,8 +65,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         public void Run_ThrowsExceptionIfChangelogFileIsEmpty()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             File.WriteAllText("changelog.md", "");
             Commands.Stage(pipelineContext.Repository, "*");
@@ -82,8 +82,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.IntegrationTests
         public void Run_GeneratesChangelogAndInsertsItIntoSharedDataIfSuccessful()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
 
             File.WriteAllText("test.txt", "test");
             Commands.Stage(pipelineContext.Repository, "*");

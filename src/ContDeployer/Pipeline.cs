@@ -8,11 +8,11 @@ namespace JeremyTCD.ContDeployer
     {
         private ILogger<Pipeline> _logger { get; }
         private IPluginFactory _pluginFactory { get; }
-        private PipelineContext _pipelineContext { get; }
+        private IPipelineContext _pipelineContext { get; }
 
         public Pipeline(ILogger<Pipeline> logger,
             IPluginFactory pluginFactory,
-            PipelineContext pipelineContext)
+            IPipelineContext pipelineContext)
         {
             _pipelineContext = pipelineContext;
             _logger = logger;
@@ -28,7 +28,7 @@ namespace JeremyTCD.ContDeployer
 
             while (_pipelineContext.Steps.Count > 0)
             {
-                Step step = _pipelineContext.Steps.First();
+                IStep step = _pipelineContext.Steps.First();
 
                 IPlugin plugin = _pluginFactory.
                     SetPluginName(step.PluginName).

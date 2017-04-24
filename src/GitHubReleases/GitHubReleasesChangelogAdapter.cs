@@ -18,12 +18,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
         /// Creates a <see cref="GitHubReleasesChangelogAdapter"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="StepContext.Options"/> is null
+        /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
+        /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
-        public GitHubReleasesChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext, 
+        public GitHubReleasesChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext, 
             IGitHubClientFactory gitHubClientFactory) : 
             base(pipelineContext, stepContext)
         {
@@ -101,7 +101,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 
             if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ReleaseUpdates.Count > 0)
             {
-                Step gitHubReleasesStep = new Step(nameof(GitHubReleases), gitHubReleasesOptions);
+                IStep gitHubReleasesStep = new Step(nameof(GitHubReleases), gitHubReleasesOptions);
                 PipelineContext.Steps.AddFirst(gitHubReleasesStep);
 
                 StepContext.

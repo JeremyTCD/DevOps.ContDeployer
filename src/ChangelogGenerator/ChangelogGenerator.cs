@@ -15,9 +15,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         /// Creates a <see cref="ChangelogGenerator"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="StepContext.Options"/> is null
+        /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
-        public ChangelogGenerator(PipelineContext pipelineContext, StepContext stepContext, IChangelogFactory changelogFactory) : 
+        public ChangelogGenerator(IPipelineContext pipelineContext, IStepContext stepContext, IChangelogFactory changelogFactory) : 
             base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as ChangelogGeneratorOptions;
@@ -31,7 +31,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         }
 
         /// <summary>
-        /// Generates <see cref="Changelog"/> and inserts it into <see cref="PipelineContext.SharedData"/>.
+        /// Generates <see cref="Changelog"/> and inserts it into <see cref="IPipelineContext.SharedData"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="_options.Filename"/> is an empty 

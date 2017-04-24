@@ -2,10 +2,10 @@
 {
     public abstract class PluginBase : IPlugin
     {
-        protected PipelineContext PipelineContext { get; }
-        protected StepContext StepContext { get; }
+        protected IPipelineContext PipelineContext { get; }
+        protected IStepContext StepContext { get; }
 
-        public PluginBase(PipelineContext pipelineContext, StepContext stepContext)
+        public PluginBase(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             PipelineContext = pipelineContext;
             StepContext = stepContext;

@@ -7,7 +7,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContextOptions
     {
-        public List<Step> Steps { get; set; } = new List<Step>();
+        public List<IStep> Steps { get; set; } = new List<IStep>();
 
         public void Validate()
         {
@@ -15,8 +15,8 @@ namespace JeremyTCD.ContDeployer.PluginTools
                 throw new Exception($"{nameof(PipelineContextOptions)}: Pipeline steps required");
             }
 
-            Step[] steps = Steps.ToArray();
-            foreach(Step step in steps)
+            IStep[] steps = Steps.ToArray();
+            foreach(IStep step in steps)
             {
                 if (String.IsNullOrEmpty(step.PluginName))
                 {

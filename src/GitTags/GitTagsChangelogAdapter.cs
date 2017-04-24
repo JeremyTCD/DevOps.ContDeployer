@@ -15,9 +15,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// Creates a <see cref="GitTagsChangelogAdapter"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="PipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
+        /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
-        public GitTagsChangelogAdapter(PipelineContext pipelineContext, StepContext stepContext) : 
+        public GitTagsChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext) : 
             base(pipelineContext, stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
@@ -52,7 +52,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
                         {
                             TagName = version.SemVersion.ToString()
                         };
-                        Step gitTagsStep = new Step(nameof(GitTags), gitTagsOptions);
+                        IStep gitTagsStep = new Step(nameof(GitTags), gitTagsOptions);
                         PipelineContext.Steps.AddFirst(gitTagsStep);
 
                         StepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +

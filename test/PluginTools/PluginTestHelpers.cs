@@ -13,11 +13,11 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
     public class PluginTestHelpers
     {
         /// <summary>
-        /// Creates a <see cref="PipelineContext"/> instance. Uses empty structures and defaults for dependencies and
+        /// Creates a <see cref="IPipelineContext"/> instance. Uses empty structures and defaults for dependencies and
         /// properties.
         /// </summary>
         /// <returns></returns>
-        public static PipelineContext CreatePipelineContext(bool dryRun = false)
+        public static IPipelineContext CreatePipelineContext(bool dryRun = false)
         {
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
             Mock<IOptions<SharedOptions>> mockSharedOptions = new Mock<IOptions<SharedOptions>>();
@@ -28,7 +28,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             ProcessManager processManager = new ProcessManager(mockLogger.Object, mockSharedOptions.Object);
             Repository repository = new Repository(Directory.GetCurrentDirectory());
 
-            List<Step> steps = new List<Step>();
+            List<IStep> steps = new List<IStep>();
             Mock<IOptions<PipelineContextOptions>> mockPipelineContextOptions = new Mock<IOptions<PipelineContextOptions>>();
             mockPipelineContextOptions.Setup(p => p.Value).Returns(new PipelineContextOptions
             {
@@ -39,11 +39,11 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
         }
 
         /// <summary>
-        /// Creates a <see cref="StepContext"/> instance. 
+        /// Creates a <see cref="IStepContext"/> instance. 
         /// </summary>
         /// <param name="pluginOptions"></param>
         /// <returns></returns>
-        public static StepContext CreateStepContext(IPluginOptions pluginOptions = null)
+        public static IStepContext CreateStepContext(IPluginOptions pluginOptions = null)
         {
             Mock<ILogger> mockLogger = new Mock<ILogger>();
 

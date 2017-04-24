@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     /// <summary>
     /// A step in the pipeline. 
     /// </summary>
-    public class Step
+    public class Step : IStep
     {
         public Step()
         {

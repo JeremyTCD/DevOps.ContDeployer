@@ -23,7 +23,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitTags(null, stepContext));
@@ -34,7 +34,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         public void Run_ThrowsExceptionIfTagNameIsNullOrEmpty(string testTagName)
         {
             // Arrange
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             GitTags gitTags = new GitTags(null, stepContext);
 
@@ -53,8 +53,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         {
             // Arrange
             string testTagName = "0.1.0";
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
@@ -75,8 +75,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         {
             // Arrange
             string testTagName = "0.1.0";
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(true);
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext(true);
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");
@@ -97,8 +97,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.IntegrationTests
         {
             // Arrange
             string testTagName = "0.1.0";
-            PipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
-            StepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
+            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IStepContext stepContext = PluginTestHelpers.CreateStepContext(new GitTagsOptions { TagName = testTagName });
 
             // Test commit for tag to point to
             File.WriteAllText("test.txt", "test");

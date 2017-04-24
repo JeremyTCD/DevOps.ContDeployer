@@ -14,7 +14,7 @@ namespace JeremyTCD.ContDeployer
         private IAssemblyService _assemblyService { get; }
         private ILogger<StepContextFactory> _logger { get; }
         private ILoggerFactory _loggerFactory { get; }
-        private PipelineContext _pipelineContext { get; }
+        private IPipelineContext _pipelineContext { get; }
 
         private Dictionary<string, Type> _pluginOptionsTypes { get; set; }
         private Dictionary<string, string> _pluginTypeFullNames { get; set; }
@@ -22,7 +22,7 @@ namespace JeremyTCD.ContDeployer
         public StepContextFactory(IAssemblyService assemblyService,
             ILoggerFactory loggerFactory,
             ILogger<StepContextFactory> logger,
-            PipelineContext piplineContext)
+            IPipelineContext piplineContext)
         {
             _assemblyService = assemblyService;
             _logger = logger;
@@ -43,7 +43,7 @@ namespace JeremyTCD.ContDeployer
 
         public IStepContext Build()
         {
-            Step step = _pipelineContext.Steps.First();
+            IStep step = _pipelineContext.Steps.First();
             
             // Plugin options
             IPluginOptions pluginOptions = null;

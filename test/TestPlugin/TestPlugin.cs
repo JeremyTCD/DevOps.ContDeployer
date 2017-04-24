@@ -5,7 +5,7 @@ namespace JeremyTCD.ContDeployer.TestPlugin
 {
     public class TestPlugin : PluginBase
     {
-        public TestPlugin(PipelineContext pipelineContext, StepContext stepContext) : base(pipelineContext, stepContext)
+        public TestPlugin(IPipelineContext pipelineContext, IStepContext stepContext) : base(pipelineContext, stepContext)
         {
         }
 
