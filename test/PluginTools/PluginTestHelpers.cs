@@ -59,14 +59,19 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return repository;
         }
 
-        public static IPipelineContext CreatePipelineContext(IRepository repository)
+        public static IDictionary<string, object> CreateSharedData(string key, object value)
         {
             IDictionary<string, object> sharedData = Substitute.For<IDictionary<string, object>>();
+            sharedData[key].Returns(value);
 
+            return sharedData;
+        }
+
+        public static IPipelineContext CreatePipelineContext(IDictionary<string, object> sharedData = null, IRepository repository = null)
+        {
             IPipelineContext pipelineContext = Substitute.For<IPipelineContext>();
             pipelineContext.Repository.Returns(repository);
             pipelineContext.SharedData.Returns(sharedData);
-
             return pipelineContext;
         }
 
