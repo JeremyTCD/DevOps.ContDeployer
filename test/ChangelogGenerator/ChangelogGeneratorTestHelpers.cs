@@ -5,7 +5,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
 {
     public class ChangelogGeneratorTestHelpers
     {
-        public static IChangelogFactory CreateChangelogFactory(IChangelog changelog, string pattern, string text)
+        public static IChangelogFactory CreateMockChangelogFactory(IChangelog changelog, string pattern, string text)
         {
             IChangelogFactory changelogFactory = Substitute.For<IChangelogFactory>();
             changelogFactory.Build(pattern, text).Returns(changelog);
@@ -13,7 +13,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
             return changelogFactory;
         }
 
-        public static IChangelog CreateChangelog(SortedSet<IVersion> versions = null)
+        public static IChangelog CreateMockChangelog(SortedSet<IVersion> versions = null)
         {
             IChangelog changelog = Substitute.For<IChangelog>();
             changelog.Versions.Returns(versions);

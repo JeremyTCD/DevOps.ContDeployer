@@ -13,7 +13,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
         public void Constructor_ThrowsExceptionIfOptionsIsNull()
         {
             // Arrange
-            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(null);
+            IStepContext mockStepContext = PluginTestHelpers.CreateMockStepContext(null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, mockStepContext, null));
@@ -23,9 +23,9 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
         public void Run_ThrowsExceptionIfRepositoryHasNoCommits()
         {
             // Arrange
-            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions());
-            IRepository mockRepository = PluginTestHelpers.CreateRepository(); // IRepository.Lookup<Commit>() returns null by default
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
+            IStepContext mockStepContext = PluginTestHelpers.CreateMockStepContext(new ChangelogGeneratorOptions());
+            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(); // IRepository.Lookup<Commit>() returns null by default
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(repository: mockRepository);
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
@@ -41,13 +41,13 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testFileName = "testFileName";
             string testCommitish = "HEAD";
 
-            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateMockStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName
             });
-            Commit mockCommit = PluginTestHelpers.CreateCommit(); // Commit[string] returns null by default
-            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
+            Commit mockCommit = PluginTestHelpers.CreateMockCommit(); // Commit[string] returns null by default
+            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(repository: mockRepository);
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
@@ -63,15 +63,15 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testFileName = "testFileName";
             string testCommitish = "HEAD";
 
-            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateMockStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName
             });
-            Blob mockBlob = PluginTestHelpers.CreateBlob("");
-            TreeEntry mockTreeEntry = PluginTestHelpers.CreateTreeEntry(mockBlob);
-            Commit mockCommit = PluginTestHelpers.CreateCommit(testFileName, mockTreeEntry);
-            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
+            Blob mockBlob = PluginTestHelpers.CreateMockBlob("");
+            TreeEntry mockTreeEntry = PluginTestHelpers.CreateMockTreeEntry(mockBlob);
+            Commit mockCommit = PluginTestHelpers.CreateMockCommit(testFileName, mockTreeEntry);
+            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(repository: mockRepository);
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, null);
 
@@ -88,18 +88,18 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testPattern = "testPattern";
             string testCommitish = "HEAD";
 
-            IStepContext mockStepContext = PluginTestHelpers.CreateStepContext(new ChangelogGeneratorOptions
+            IStepContext mockStepContext = PluginTestHelpers.CreateMockStepContext(new ChangelogGeneratorOptions
             {
                 FileName = testFileName,
                 Pattern = testPattern
             });
-            Blob mockBlob = PluginTestHelpers.CreateBlob(testChangelogText);
-            TreeEntry mockTreeEntry = PluginTestHelpers.CreateTreeEntry(mockBlob);
-            Commit mockCommit = PluginTestHelpers.CreateCommit(testFileName, mockTreeEntry);
-            IRepository mockRepository = PluginTestHelpers.CreateRepository(testCommitish, mockCommit);
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreatePipelineContext(repository: mockRepository);
-            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateChangelog();
-            IChangelogFactory mockChangelogFactory = ChangelogGeneratorTestHelpers.CreateChangelogFactory(mockChangelog, testPattern, testChangelogText);
+            Blob mockBlob = PluginTestHelpers.CreateMockBlob(testChangelogText);
+            TreeEntry mockTreeEntry = PluginTestHelpers.CreateMockTreeEntry(mockBlob);
+            Commit mockCommit = PluginTestHelpers.CreateMockCommit(testFileName, mockTreeEntry);
+            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(testCommitish, mockCommit);
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(repository: mockRepository);
+            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateMockChangelog();
+            IChangelogFactory mockChangelogFactory = ChangelogGeneratorTestHelpers.CreateMockChangelogFactory(mockChangelog, testPattern, testChangelogText);
 
             ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, mockChangelogFactory);
 

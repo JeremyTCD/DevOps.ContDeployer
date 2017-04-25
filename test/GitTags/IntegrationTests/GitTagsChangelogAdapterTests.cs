@@ -25,7 +25,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(pipelineContext, null));
@@ -35,7 +35,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
         public void Run_AddsGitTagsStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
             string testVersion = "1.0.0";
             SortedSet<IVersion> versions = new SortedSet<IVersion>()
             {
@@ -45,7 +45,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
             pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
             GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(pipelineContext, 
-                PluginTestHelpers.CreateStepContext());
+                PluginTestHelpers.CreateMockStepContext());
 
             // Act 
             gitTagsChangelogAdapter.Run();
@@ -60,7 +60,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
         public void Run_DoesNothingIfChangelogVersionsAllHaveCorrespondingTags()
         {
             // Arrange
-            IPipelineContext pipelineContext = PluginTestHelpers.CreatePipelineContext();
+            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
             string testVersion = "1.0.0";
             // Create tag
             File.WriteAllText("test.txt", "test");
@@ -76,7 +76,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
             pipelineContext.SharedData.Add(nameof(Changelog), changelog);
 
             GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(pipelineContext,
-                PluginTestHelpers.CreateStepContext());
+                PluginTestHelpers.CreateMockStepContext());
 
             // Act 
             gitTagsChangelogAdapter.Run();

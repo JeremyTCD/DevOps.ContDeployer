@@ -10,7 +10,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
     /// </summary>
     public class PluginTestHelpers
     {
-        public static IStepContext CreateStepContext(IPluginOptions options = null)
+        public static IStepContext CreateMockStepContext(IPluginOptions options = null)
         {
             IStepContext stepContext = Substitute.For<IStepContext>();
             stepContext.Options.Returns(options);
@@ -18,7 +18,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return stepContext;
         }
 
-        public static Blob CreateBlob(string value)
+        public static Blob CreateMockBlob(string value)
         {
             Blob blob = Substitute.For<Blob>();
             blob.GetContentStream().Returns(CreateStreamFromString(value));
@@ -26,7 +26,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return blob;
         }
 
-        public static TreeEntry CreateTreeEntry(Blob blob)
+        public static TreeEntry CreateMockTreeEntry(Blob blob)
         {
             TreeEntry treeEntry = Substitute.For<TreeEntry>();
             treeEntry.Target.Returns(blob);
@@ -34,7 +34,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return treeEntry;
         }
 
-        public static Commit CreateCommit(string fileName = null, TreeEntry treeEntry = null)
+        public static Commit CreateMockCommit(string fileName = null, TreeEntry treeEntry = null)
         {
             Commit commit = Substitute.For<Commit>();
             if (fileName != null)
@@ -45,7 +45,7 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return commit;
         }
 
-        public static IRepository CreateRepository(string commitish = null, Commit commit = null)
+        public static IRepository CreateMockRepository(string commitish = null, Commit commit = null)
         {
             IRepository repository = Substitute.For<IRepository>();
             if (commitish != null)
@@ -64,7 +64,8 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return sharedData;
         }
 
-        public static IPipelineContext CreatePipelineContext(IDictionary<string, object> sharedData = null, IRepository repository = null)
+        public static IPipelineContext CreateMockPipelineContext(IDictionary<string, object> sharedData = null, 
+            IRepository repository = null)
         {
             IPipelineContext pipelineContext = Substitute.For<IPipelineContext>();
             pipelineContext.Repository.Returns(repository);
