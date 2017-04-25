@@ -56,20 +56,28 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return repository;
         }
 
-        public static IDictionary<string, object> CreateSharedData(string key, object value)
+        public static IDictionary<string, object> CreateSharedData(string key = null, object value = null)
         {
-            IDictionary<string, object> sharedData = Substitute.For<IDictionary<string, object>>();
-            sharedData[key].Returns(value);
+            IDictionary<string, object> sharedData = new Dictionary<string, object>();
+            if (key != null)
+            {
+                sharedData.Add(key, value);
+            }
 
             return sharedData;
         }
 
         public static IPipelineContext CreateMockPipelineContext(IDictionary<string, object> sharedData = null, 
-            IRepository repository = null)
+            IRepository repository = null,
+            IStepFactory stepFactory = null,
+            LinkedList<IStep> steps = null)
         {
             IPipelineContext pipelineContext = Substitute.For<IPipelineContext>();
             pipelineContext.Repository.Returns(repository);
             pipelineContext.SharedData.Returns(sharedData);
+            pipelineContext.StepFactory.Returns(stepFactory);
+            pipelineContext.Steps.Returns(steps);
+
             return pipelineContext;
         }
 
@@ -82,6 +90,28 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             stream.Position = 0;
 
             return stream;
+        }
+
+        public static IStepFactory CreateMockStepFactory(string pluginName, IStep mockStep)
+        {
+            IStepFactory stepFactory = Substitute.For<IStepFactory>();
+            stepFactory.Build(pluginName, Arg.Any<IPluginOptions>()).Returns(mockStep);
+
+            return stepFactory;
+        }
+
+        public static LinkedList<IStep> CreateSteps()
+        {
+            LinkedList<IStep> steps = new LinkedList<IStep>();
+            return steps;
+        }
+
+        public static IStep CreateMockStep(string pluginName)
+        {
+            IStep step = Substitute.For<IStep>();
+            step.PluginName.Returns(pluginName);
+
+            return step;
         }
     }
 }
