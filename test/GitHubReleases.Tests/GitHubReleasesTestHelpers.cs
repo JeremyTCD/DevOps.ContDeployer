@@ -37,5 +37,34 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests
 
             return mockReleaseClient;
         }
+
+        public static Release CreateRelease(string tagName, string body)
+        {
+            Release release = new StubRelease(tagName, body);
+            return release;
+        }
+
+        public static List<Release> CreateReleases(Release mockRelease = null)
+        {
+            List<Release> releases = new List<Release>();
+            if(mockRelease != null)
+            {
+                releases.Add(mockRelease);
+            }
+            return releases;
+        }
+    }
+
+    /// <summary>
+    /// <see cref="Release"/>s properties are not overridable. Though setters are protected, so this will
+    /// do.
+    /// </summary>
+    public class StubRelease : Release
+    {
+        public StubRelease(string tagName, string body) : base()
+        {
+            TagName = tagName;
+            Body = body;
+        }
     }
 }
