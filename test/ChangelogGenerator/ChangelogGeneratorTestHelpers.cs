@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using Semver;
 using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
@@ -11,6 +12,17 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
             changelogFactory.Build(pattern, text).Returns(changelog);
 
             return changelogFactory;
+        }
+
+        public static SortedSet<IVersion> CreateVersions(string version)
+        {
+            SortedSet<IVersion> versions = new SortedSet<IVersion>();
+            if(version != null) 
+            {
+                versions.Add(new Version { SemVersion = SemVersion.Parse(version) });
+            };
+
+            return versions;
         }
 
         public static IChangelog CreateMockChangelog(SortedSet<IVersion> versions = null)
