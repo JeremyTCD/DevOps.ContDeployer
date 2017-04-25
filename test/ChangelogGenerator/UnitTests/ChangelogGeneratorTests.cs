@@ -3,6 +3,8 @@ using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
 using NSubstitute;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
@@ -93,21 +95,27 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
                 FileName = testFileName,
                 Pattern = testPattern
             });
+
             Blob mockBlob = PluginTestHelpers.CreateMockBlob(testChangelogText);
             TreeEntry mockTreeEntry = PluginTestHelpers.CreateMockTreeEntry(mockBlob);
             Commit mockCommit = PluginTestHelpers.CreateMockCommit(testFileName, mockTreeEntry);
             IRepository mockRepository = PluginTestHelpers.CreateMockRepository(testCommitish, mockCommit);
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(repository: mockRepository);
-            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateMockChangelog();
-            IChangelogFactory mockChangelogFactory = ChangelogGeneratorTestHelpers.CreateMockChangelogFactory(mockChangelog, testPattern, testChangelogText);
+            IDictionary<string, object> sharedData = PluginTestHelpers.CreateSharedData();
+            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(sharedData, mockRepository);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, mockChangelogFactory);
+            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateMockChangelog();
+            IChangelogFactory mockChangelogFactory = ChangelogGeneratorTestHelpers.CreateMockChangelogFactory(mockChangelog, 
+                testPattern, testChangelogText);
+
+            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext, mockStepContext, 
+                mockChangelogFactory);
 
             // Act
             changelogGenerator.Run();
 
             // Assert
-            mockPipelineContext.SharedData.Received()[nameof(Changelog)] = mockChangelog;
+            sharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            Assert.NotNull(changelogObject as IChangelog);
         }
     }
 }
