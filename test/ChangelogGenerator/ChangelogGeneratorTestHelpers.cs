@@ -14,12 +14,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests
             return changelogFactory;
         }
 
-        public static SortedSet<IVersion> CreateVersions(string version)
+        public static SortedSet<IVersion> CreateVersions(string version, string notes = null)
         {
             SortedSet<IVersion> versions = new SortedSet<IVersion>();
             if(version != null) 
             {
-                versions.Add(new Version { SemVersion = SemVersion.Parse(version) });
+                versions.Add(new Version { SemVersion = SemVersion.Parse(version), Notes = notes });
             };
 
             return versions;
