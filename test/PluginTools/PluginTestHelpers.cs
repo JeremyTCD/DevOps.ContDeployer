@@ -2,6 +2,7 @@
 using NSubstitute;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace JeremyTCD.ContDeployer.PluginTools.Tests
 {
@@ -45,15 +46,26 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             return commit;
         }
 
-        public static IRepository CreateMockRepository(string commitish = null, Commit commit = null)
+        public static IRepository CreateMockRepository(string commitish = null, Commit commit = null, TagCollection tags = null)
         {
             IRepository repository = Substitute.For<IRepository>();
             if (commitish != null)
             {
                 repository.Lookup<Commit>(commitish).Returns(commit);
             }
+            repository.Tags.Returns(tags);
 
             return repository;
+        }
+
+        public static TagCollection CreateMockTags(string testVersion = null, Tag tag = null)
+        {
+            TagCollection tags = Substitute.For<TagCollection>();
+            if (testVersion != null)
+            {
+                tags[testVersion].Returns(tag);
+            }
+            return tags;
         }
 
         public static IDictionary<string, object> CreateSharedData(string key = null, object value = null)
@@ -90,6 +102,13 @@ namespace JeremyTCD.ContDeployer.PluginTools.Tests
             stream.Position = 0;
 
             return stream;
+        }
+
+        public static Tag CreateMockTag()
+        {
+            Tag tag = Substitute.For<Tag>();
+
+            return tag;
         }
 
         public static IStepFactory CreateMockStepFactory(string pluginName, IStep mockStep)
