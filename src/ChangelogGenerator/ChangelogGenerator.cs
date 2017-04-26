@@ -67,7 +67,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
         /// </exception>
         private string GetChangelogText()
         {
-            Commit head = PipelineContext.Repository.Lookup<Commit>("HEAD");
+            Commit head = PipelineContext.Repository.Lookup("HEAD") as Commit;
             if (head == null)
             {
                 throw new InvalidOperationException($"Repository has no commits");
