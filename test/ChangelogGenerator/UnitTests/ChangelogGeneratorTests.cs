@@ -26,7 +26,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, mockStepContext.Object, null));
-            mockStepContext.VerifyAll();
+            _mockRepository.VerifyAll();
         }
 
         [Fact]
