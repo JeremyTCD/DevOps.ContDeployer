@@ -7,13 +7,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 {
     public class GitHubReleasesOptions : IPluginOptions
     {
-        public string Token { get; set; }
-        public string Owner { get; set; }
-        public string Repository { get; set; }
-        public List<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
-        public List<ReleaseUpdate> ReleaseUpdates { get; set; } = new List<ReleaseUpdate>();
+        public virtual string Token { get; set; }
+        public virtual string Owner { get; set; }
+        public virtual string Repository { get; set; }
+        public virtual List<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
+        public virtual List<ReleaseUpdate> ReleaseUpdates { get; set; } = new List<ReleaseUpdate>();
 
-        public void Validate()
+        public virtual void Validate()
         {
             if (string.IsNullOrEmpty(Token))
             {

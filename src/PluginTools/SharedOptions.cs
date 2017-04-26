@@ -2,6 +2,6 @@
 {
     public class SharedOptions
     {
-        public bool DryRun { get; set; } = false;
+        public virtual bool DryRun { get; set; } = false;
     }
 }

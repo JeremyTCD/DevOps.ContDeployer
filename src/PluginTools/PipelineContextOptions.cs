@@ -1,5 +1,4 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContextOptions
     {
-        public List<IStep> Steps { get; set; } = new List<IStep>();
+        public virtual List<IStep> Steps { get; set; } = new List<IStep>();
 
         public void Validate()
         {

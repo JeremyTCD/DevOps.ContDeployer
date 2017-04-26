@@ -4,12 +4,12 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
 {
     public class ChangelogGeneratorOptions : IPluginOptions
     {
-        public string FileName { get; set; } = "changelog.md";
-        public string Branch { get; set; } = "master";
+        public virtual string FileName { get; set; } = "changelog.md";
+        public virtual string Branch { get; set; } = "master";
         // http://semver.org/
-        public string Pattern { get; set; } = @"##[ \t]+(\d*\.\d*\.\d*(?:-[a-zA-Z0-9\.-]+)?(?:\+[a-zA-Z0-9\.-]+)?)(.*?)(?=##|$)";
+        public virtual string Pattern { get; set; } = @"##[ \t]+(\d*\.\d*\.\d*(?:-[a-zA-Z0-9\.-]+)?(?:\+[a-zA-Z0-9\.-]+)?)(.*?)(?=##|$)";
 
-        public void Validate()
+        public virtual void Validate()
         {
             // Do nothing
         }

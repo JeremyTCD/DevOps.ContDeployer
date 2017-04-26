@@ -5,13 +5,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 {
     public class GitHubReleasesChangelogAdapterOptions : IPluginOptions
     {
-        public string Token { get; set; }
-        public string Owner { get; set; }
-        public string Repository { get; set; }
+        public virtual string Token { get; set; }
+        public virtual string Owner { get; set; }
+        public virtual string Repository { get; set; }
         // Optional since only necessary if tag that release points to does not already exist
-        public string Commitish { get; set; } = "";
+        public virtual string Commitish { get; set; } = "";
 
-        public void Validate()
+        public virtual void Validate()
         {
             if (string.IsNullOrEmpty(Token))
             {

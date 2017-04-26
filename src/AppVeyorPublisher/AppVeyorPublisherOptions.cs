@@ -5,7 +5,7 @@ namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
 {
     public class AppVeyorPublisherOptions : IPluginOptions
     {
-        public void Validate()
+        public virtual void Validate()
         {
             throw new NotImplementedException();
         }

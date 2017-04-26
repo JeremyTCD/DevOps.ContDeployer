@@ -8,24 +8,24 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// <summary>
         /// Tag name
         /// </summary>
-        public string TagName { get; set; } 
+        public virtual string TagName { get; set; } 
 
         /// <summary>
         /// Tag signature name
         /// </summary>
-        public string Name { get; set; } 
+        public virtual string Name { get; set; } 
 
         /// <summary>
         /// Tag signature email
         /// </summary>
-        public string Email { get; set; }
+        public virtual string Email { get; set; }
 
         /// <summary>
         /// Commit-ish referring to commit that tag will point to
         /// </summary>
-        public string Commitish { get; set; } = "HEAD";
+        public virtual string Commitish { get; set; } = "HEAD";
 
-        public void Validate()
+        public virtual void Validate()
         {
             if (string.IsNullOrEmpty(TagName))
             {
