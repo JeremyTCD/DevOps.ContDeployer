@@ -1,4 +1,5 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -37,27 +38,23 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// </exception>
         public override void Run()
         {
-            string tagName = _options.TagName;
-
-            if (string.IsNullOrEmpty(tagName))
+            // TODO Provide other tag operations 
+            //  - delete
+            //  - change object that it points to
+            //  - specifiy message
+            //  - change message
+            // TODO Double check time
+            if (!PipelineContext.SharedOptions.DryRun)
             {
-                throw new InvalidOperationException($"{nameof(GitTagsOptions.TagName)} cannot be null or empty");
+                Signature signature = new Signature(_options.Name, _options.Email, DateTimeOffset.Now);
+                GitObject target = PipelineContext.Repository.Lookup<Commit>(_options.Commitish);
+                PipelineContext.Repository.Tags.Add(_options.TagName, target, signature, "");
             }
 
-            int exitCode = PipelineContext.
-                            ProcessManager.
-                            Execute("git.exe", $"tag {_options.TagName}", 1000);
-
-            if(exitCode == 0)
-            {
-                StepContext.
-                    Logger.
-                    LogInformation($"Lightweight tag with name \"{_options.TagName}\" created");
-            }
-            else
-            {
-                throw new Exception($"Failed to create tag with name \"{_options.TagName}\"");
-            }
+            StepContext.
+                Logger.
+                LogInformation($"Annotated tag with name \"{_options.TagName}\" created. Signed with name \"{_options.Name}\" and " +
+                $"email \"{_options.Email}\"");
         }
     }
 }
