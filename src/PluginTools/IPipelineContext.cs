@@ -11,6 +11,7 @@ namespace JeremyTCD.ContDeployer.PluginTools
         IRepository Repository { get; set; }
         IDictionary<string, object> SharedData { get; set; }
         LinkedList<IStep> Steps { get; set; }
+        PipelineContextOptions PipelineContextOptions { get; set; }
         SharedOptions SharedOptions { get; set; }
     }
 }
