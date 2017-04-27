@@ -1,10 +1,7 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
-using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
 using Moq;
-using NSubstitute;
 using System;
-using System.IO;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
