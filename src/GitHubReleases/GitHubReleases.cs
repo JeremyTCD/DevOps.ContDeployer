@@ -41,7 +41,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
             // - delete
             // TODO dry run
             CreateGitHubReleases();
-            UpdateGitHubReleases();
+            EditGitHubReleases();
         }
 
         private void CreateGitHubReleases()
@@ -61,7 +61,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
             }
         }
 
-        private void UpdateGitHubReleases()
+        private void EditGitHubReleases()
         {
             if (_options.ModifiedReleases == null || _options.ModifiedReleases.Count == 0)
             {
