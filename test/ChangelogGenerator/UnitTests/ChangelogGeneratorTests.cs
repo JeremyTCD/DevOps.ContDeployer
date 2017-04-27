@@ -110,7 +110,8 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testCommitish = "HEAD";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new ChangelogGeneratorOptions { FileName = testFileName, Pattern = testPattern });
+            mockStepContext.Setup(o => o.Options).Returns(new ChangelogGeneratorOptions { FileName = testFileName,
+                Pattern = testPattern });
 
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
             Mock<IChangelogFactory> mockChangelogFactory = _mockRepository.Create<IChangelogFactory>();
