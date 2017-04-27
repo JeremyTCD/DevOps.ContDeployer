@@ -1,51 +1,33 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
+using Moq;
+using NSubstitute;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
 {
-    [Collection(nameof(GitTagsCollection))]
     public class GitTagsTests
     {
-        private Signature _signature { get; }
+        private MockRepository _mockRepository { get; }
 
-        public GitTagsTests(GitTagsFixture fixture)
+        public GitTagsTests()
         {
-            fixture.ResetTempDir();
-            _signature = fixture.Signature;
+            _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNull()
+        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitTagsOptionsInstance()
         {
             // Arrange
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext();
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitTags(null, stepContext));
-        }
-
-        [Theory]
-        [MemberData(nameof(RunThrowsExceptionIfTagNameIsNullOrEmptyData))]
-        public void Run_ThrowsExceptionIfTagNameIsNullOrEmpty(string testTagName)
-        {
-            // Arrange
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext(new GitTagsOptions { TagName = testTagName });
-
-            GitTags gitTags = new GitTags(null, stepContext);
-
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => gitTags.Run());
-        }
-
-        public static IEnumerable<object[]> RunThrowsExceptionIfTagNameIsNullOrEmptyData()
-        {
-            yield return new object[] { null };
-            yield return new object[] { "" };
+            Assert.Throws<InvalidOperationException>(() => new GitTags(null, mockStepContext.Object));
+            _mockRepository.VerifyAll();
         }
 
         [Fact]
@@ -53,64 +35,61 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
         {
             // Arrange
             string testTagName = "0.1.0";
-            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext(new GitTagsOptions { TagName = testTagName });
+            string testName = "testName";
+            string testEmail = "testEmail";
+            string testCommitish = "testCommitish";
 
-            // Test commit for tag to point to
-            File.WriteAllText("test.txt", "test");
-            Commands.Stage(pipelineContext.Repository, "*");
-            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.Options).Returns(new GitTagsOptions
+            {
+                Commitish = testCommitish,
+                Email = testEmail,
+                Name = testName,
+                TagName = testTagName
+            });
 
-            GitTags gitTags = new GitTags(pipelineContext, stepContext);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
+            mockSharedOptions.Setup(s => s.DryRun).Returns(false);
 
-            // Act
-            gitTags.Run();
+            Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
+            Mock<GitObject> mockGitObject = _mockRepository.Create<GitObject>();
+            mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockGitObject.Object);
+            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
+            mockTags.
+                Setup(t => t.Add(testTagName, mockGitObject.Object, 
+                    It.Is<Signature>(s => s.Name == testName && s.Email == testEmail), ""));
 
-            // Assert
-            Assert.NotNull(pipelineContext.Repository.Tags[testTagName]);
-        }
-
-        [Fact]
-        public void Run_DoesNothingOnDryRun()
-        {
-            // Arrange
-            string testTagName = "0.1.0";
-            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext(new GitTagsOptions { TagName = testTagName });
-
-            // Test commit for tag to point to
-            File.WriteAllText("test.txt", "test");
-            Commands.Stage(pipelineContext.Repository, "*");
-            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            GitTags gitTags = new GitTags(pipelineContext, stepContext);
+            GitTags gitTags = new GitTags(mockPipelineContext.Object, mockStepContext.Object);
 
             // Act
             gitTags.Run();
 
             // Assert
-            Assert.Null(pipelineContext.Repository.Tags[testTagName]);
+            _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfGitTagFails()
+        public void Run_DoesNotAddATagOnDryRun()
         {
             // Arrange
-            string testTagName = "0.1.0";
-            IPipelineContext pipelineContext = PluginTestHelpers.CreateMockPipelineContext();
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext(new GitTagsOptions { TagName = testTagName });
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.Options).Returns(new GitTagsOptions());
 
-            // Test commit for tag to point to
-            File.WriteAllText("test.txt", "test");
-            Commands.Stage(pipelineContext.Repository, "*");
-            pipelineContext.Repository.Commit("Initial commit", _signature, _signature);
-
-            pipelineContext.Repository.ApplyTag(testTagName);
-
-            GitTags gitTags = new GitTags(pipelineContext, stepContext);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
+            mockSharedOptions.Setup(s => s.DryRun).Returns(true);
+            
+            GitTags gitTags = new GitTags(mockPipelineContext.Object, mockStepContext.Object);
 
             // Act
-            Assert.Throws<Exception>(() => gitTags.Run());
+            gitTags.Run();
+
+            // Assert
+            _mockRepository.VerifyAll();
+            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
+            mockTags.
+                Verify(t => t.Add(It.IsAny<string>(), It.IsAny<GitObject>(), It.IsAny<Signature>(), It.IsAny<string>()), Times.Never);
         }
     }
 }
