@@ -1,27 +1,35 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
-using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests;
 using JeremyTCD.ContDeployer.PluginTools;
-using JeremyTCD.ContDeployer.PluginTools.Tests;
 using LibGit2Sharp;
-using NSubstitute;
+using Moq;
+using Semver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
 {
     public class GitTagsChangelogAdapterTests
     {
+        private MockRepository _mockRepository { get; }
+
+        public GitTagsChangelogAdapterTests()
+        {
+            _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
+        }
+
         [Fact]
         public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
-            IDictionary<string, object> sharedData = PluginTestHelpers.CreateSharedData();
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(sharedData);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
+            object outValue = null;
+            mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(mockPipelineContext, null));
+            Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(mockPipelineContext.Object, null));
+            _mockRepository.VerifyAll();
         }
 
         [Fact]
@@ -30,59 +38,75 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
             // Arrange
             string testVersion = "1.0.0";
 
-            SortedSet<IVersion> versions = ChangelogGeneratorTestHelpers.CreateVersions(testVersion);
-            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateMockChangelog(versions);
-            IDictionary<string, object> sharedData = PluginTestHelpers.CreateSharedData(nameof(Changelog), mockChangelog);
-            TagCollection mockTags = PluginTestHelpers.CreateMockTags();
-            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(tags: mockTags);
-            IStep mockStep = PluginTestHelpers.CreateMockStep(nameof(GitTags));
-            IStepFactory mockStepFactory = PluginTestHelpers.CreateMockStepFactory(nameof(GitTags), mockStep);
-            LinkedList<IStep> steps = PluginTestHelpers.CreateSteps();
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(sharedData, mockRepository,
-                mockStepFactory, steps);
+            Mock<IVersion> mockVersion = _mockRepository.Create<IVersion>();
+            mockVersion.Setup(v => v.SemVersion).Returns(SemVersion.Parse(testVersion));
+            SortedSet<IVersion> versions = new SortedSet<IVersion>();
+            versions.Add(mockVersion.Object);
+            Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
+            mockChangelog.Setup(c => c.Versions).Returns(versions);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
+            object outValue = mockChangelog.Object;
+            mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
+            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
+            mockTags.Setup(t => t[testVersion]).Returns((Tag)null);
+            Mock<IStep> mockStep = _mockRepository.Create<IStep>();
+            Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
+            mockStepFactory.
+                Setup(s => s.Build(nameof(GitTags),
+                    It.Is<GitTagsOptions>(o => o.TagName == testVersion))).
+                Returns(mockStep.Object);
 
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext();
+            LinkedList<IStep> steps = new LinkedList<IStep>();
+            mockPipelineContext.Setup(o => o.Steps).Returns(steps);
 
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext, stepContext);
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext.Object, 
+                mockStepContext.Object);
 
             // Act 
             gitTagsChangelogAdapter.Run();
 
             // Assert
-            var _ = mockTags.Received()[testVersion];
-            Assert.Equal(1, mockPipelineContext.Steps.Count);
-            GitTagsOptions generatedOptions = mockStepFactory.ReceivedCalls().First().GetArguments()[1] as GitTagsOptions;
-            Assert.NotNull(generatedOptions);
-            Assert.Equal(testVersion, generatedOptions.TagName);
+            Assert.Equal(1, steps.Count);
+            Assert.Equal(mockStep.Object, steps.First.Value);
+            _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_DoesNothingIfChangelogVersionsAllHaveCorrespondingTags()
+        public void Run_DoesNotAddAnyStepsIfLatestChangelogVersionHasACorrespondingTags()
         {
             // Arrange
             string testVersion = "1.0.0";
 
-            SortedSet<IVersion> versions = ChangelogGeneratorTestHelpers.CreateVersions(testVersion);
-            IChangelog mockChangelog = ChangelogGeneratorTestHelpers.CreateMockChangelog(versions);
-            IDictionary<string, object> sharedData = PluginTestHelpers.CreateSharedData(nameof(Changelog), mockChangelog);
-            Tag tag = PluginTestHelpers.CreateMockTag();
-            TagCollection mockTags = PluginTestHelpers.CreateMockTags(testVersion, tag);
-            IRepository mockRepository = PluginTestHelpers.CreateMockRepository(tags: mockTags);
-            IStep mockStep = PluginTestHelpers.CreateMockStep(nameof(GitTags));
-            IStepFactory mockStepFactory = PluginTestHelpers.CreateMockStepFactory(nameof(GitTags), mockStep);
-            LinkedList<IStep> steps = PluginTestHelpers.CreateSteps();
-            IPipelineContext mockPipelineContext = PluginTestHelpers.CreateMockPipelineContext(sharedData, mockRepository,
-                mockStepFactory, steps);
+            Mock<IVersion> mockVersion = _mockRepository.Create<IVersion>();
+            mockVersion.Setup(v => v.SemVersion).Returns(SemVersion.Parse(testVersion));
+            SortedSet<IVersion> versions = new SortedSet<IVersion>();
+            versions.Add(mockVersion.Object);
+            Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
+            mockChangelog.Setup(c => c.Versions).Returns(versions);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
+            object outValue = mockChangelog.Object;
+            mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
+            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
+            mockTags.Setup(t => t[testVersion]).Returns(_mockRepository.Create<Tag>().Object);
 
-            IStepContext stepContext = PluginTestHelpers.CreateMockStepContext();
+            LinkedList<IStep> steps = new LinkedList<IStep>();
+            mockPipelineContext.Object.Steps = steps;
 
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext, stepContext);
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+
+            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext.Object,
+                mockStepContext.Object);
 
             // Act 
             gitTagsChangelogAdapter.Run();
 
             // Assert
-            Assert.Equal(0, mockPipelineContext.Steps.Count);
+            Assert.Equal(0, steps.Count);
+            _mockRepository.VerifyAll();
         }
     }
 }
