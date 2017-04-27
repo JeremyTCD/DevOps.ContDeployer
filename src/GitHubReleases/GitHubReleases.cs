@@ -1,54 +1,82 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Octokit;
 using System;
-using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 {
-    public class GitHubReleases //: IPlugin
+    public class GitHubReleases : PluginBase
     {
-        //private PipelineContext _pipelineContext { get; set; }
-        //private GitHubReleaseChangelogAdapterOptions _options { get; set; }
+        private GitHubReleasesOptions _options { get; }
+        private IGitHubClient _gitHubClient { get; }
 
-        ///// <summary>
-        ///// Tags head
-        ///// </summary>
-        ///// <param name="sharedData"></param>
-        ///// <param name="steps"></param>
-        //public void Run(PipelineContext pipelineContext, StepContext stepContext)
-        //{
-        //    _options = stepContext.Options as GitHubReleaseChangelogAdapterOptions;
+        /// <summary>
+        /// Creates a <see cref="GitHubReleases"/> instance
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="IStepContext.Options"/> is null
+        /// </exception>
+        public GitHubReleases(IPipelineContext pipelineContext, IStepContext stepContext,
+            IGitHubClientFactory gitHubClientFactory) :
+            base(pipelineContext, stepContext)
+        {
+            _options = stepContext.Options as GitHubReleasesOptions;
 
-        //    if (_options == null)
-        //    {
-        //        throw new InvalidOperationException($"{nameof(GitHubReleaseChangelogAdapterOptions)} required");
-        //    }
+            if (_options == null)
+            {
+                throw new InvalidOperationException($"{nameof(GitHubReleasesChangelogAdapterOptions)} required");
+            }
 
-        //    _pipelineContext = pipelineContext;
+            _gitHubClient = gitHubClientFactory.CreateClient(_options.Token);
+        }
 
-        //    pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-        //    Changelog changelog = changelogObject as Changelog;
-        //    if (changelog == null)
-        //    {
-        //        throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
-        //    }
+        /// <summary>
+        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubReleases"/> step if a version
+        /// has no corresponding release or if a version's notes are inconsistent with its release.
+        /// </summary>
+        public override void Run()
+        {
+            // TODO provide other operations
+            // - delete
+            // TODO dry run
+            CreateGitHubReleases();
+            UpdateGitHubReleases();
+        }
 
-        //    List<ChangelogGenerator.Version> versions = changelog.Versions.ToList();
+        private void CreateGitHubReleases()
+        {
+            if (_options.NewReleases == null || _options.NewReleases.Count == 0)
+            {
+                StepContext.Logger.LogInformation("No new releases");
+            }
 
-        //    List<Release> releases = GetGitHubReleases();
+            foreach (NewRelease newRelease in _options.NewReleases)
+            {
+                _gitHubClient.Repository.Release.Create(_options.Owner, _options.Repository, newRelease);
+                StepContext.
+                    Logger.
+                    LogInformation($"Created release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +
+                        $"{JsonConvert.SerializeObject(newRelease, Formatting.Indented)}");
+            }
+        }
 
-        //    // iterate through versions, ensure that each has a corresponding release with the same notes
-        //}
+        private void UpdateGitHubReleases()
+        {
+            if (_options.ModifiedReleases == null || _options.ModifiedReleases.Count == 0)
+            {
+                StepContext.Logger.LogInformation("No release updates");
+            }
 
-        //public List<Release> GetGitHubReleases()
-        //{
-        //    GitHubClient client = new GitHubClient(new ProductHeaderValue(nameof(ContDeployer)));
-        //    Credentials credentials = new Credentials(_options.Token);
-        //    client.Credentials = credentials;
-
-        //    List<Release> releases = client.Repository.Release.GetAll(_options.Owner, _options.Repository).Result.ToList();
-
-        //    return releases;
-        //}
-
+            foreach (ModifiedRelease modifiedRelease in _options.ModifiedReleases)
+            {
+                _gitHubClient.Repository.Release.Edit(_options.Owner, _options.Repository, modifiedRelease.Id,
+                    modifiedRelease.ReleaseUpdate);
+                StepContext.
+                    Logger.
+                    LogInformation($"Modified release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +
+                        $"{JsonConvert.SerializeObject(modifiedRelease, Formatting.Indented)}");
+            }
+        }
     }
 }
