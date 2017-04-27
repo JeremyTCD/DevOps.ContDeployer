@@ -84,13 +84,17 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
                 }
                 else if (release.Body != version.Notes)
                 {
-                    gitHubReleasesOptions.ReleaseUpdates.Add(new ReleaseUpdate()
+                    gitHubReleasesOptions.ModifiedReleases.Add(new ModifiedRelease()
                     {
-                        Body = version.Notes,
-                        Name = name,
-                        Draft = false,
-                        Prerelease = name.Contains('-'),
-                        TargetCommitish = _options.Commitish
+                        ReleaseUpdate = new ReleaseUpdate
+                        {
+                            Body = version.Notes,
+                            Name = release.Name,
+                            Draft = release.Draft,
+                            Prerelease = release.Prerelease,
+                            TargetCommitish = release.TargetCommitish
+                        },
+                        Id = release.Id
                     });
 
                     StepContext.
@@ -99,7 +103,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
                 }
             }
 
-            if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ReleaseUpdates.Count > 0)
+            if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ModifiedReleases.Count > 0)
             {
                 IStep gitHubReleasesStep = PipelineContext.
                     StepFactory.
@@ -133,7 +137,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
                 Release.
                 GetAll(_options.Owner, _options.Repository).
                 Result.
-                ToDictionary(release => release.TagName);
+                ToDictionary(release => release.Name);
         }
     }
 }

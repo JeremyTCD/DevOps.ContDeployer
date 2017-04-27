@@ -113,6 +113,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             string testVersion = "1.0.0";
             string testBody1 = "testBody1";
             string testBody2 = "testBody2";
+            int testId = 1;
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(o => o.Options).Returns(new GitHubReleasesChangelogAdapterOptions
@@ -123,7 +124,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             });
 
             Mock<IGitHubClient> mockGitHubClient = _mockRepository.Create<IGitHubClient>();
-            Release release = new StubRelease(testVersion, testBody1);
+            Release release = new StubRelease(testVersion, testBody1, testId);
             Mock<IReleasesClient> mockReleasesClient = Mock.Get(mockGitHubClient.Object.Repository.Release);
             mockReleasesClient.Setup(r => r.GetAll(testOwner, testRepository)).ReturnsAsync(new List<Release> { release });
             Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
@@ -144,7 +145,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
             mockStepFactory.
                 Setup(s => s.Build(nameof(GitHubReleases),
-                    It.Is<GitHubReleasesOptions>(o => o.ReleaseUpdates.Count == 1 && o.ReleaseUpdates[0].Name == testVersion))).
+                    It.Is<GitHubReleasesOptions>(o => o.ModifiedReleases.Count == 1 && 
+                        o.ModifiedReleases[0].ReleaseUpdate.Name == testVersion &&
+                        o.ModifiedReleases[0].ReleaseUpdate.Body == testBody2 && 
+                        o.ModifiedReleases[0].Id == testId))).
                 Returns(mockStep.Object);
 
             LinkedList<IStep> steps = new LinkedList<IStep>();
@@ -168,10 +172,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
         /// </summary>
         private class StubRelease : Release
         {
-            public StubRelease(string tagName, string body) : base()
+            public StubRelease(string tagName, string body, int id) : base()
             {
-                TagName = tagName;
+                Name = tagName;
                 Body = body;
+                Id = id;
             }
         }
     }

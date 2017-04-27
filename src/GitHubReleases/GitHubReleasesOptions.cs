@@ -1,6 +1,6 @@
-﻿using System;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using Octokit;
+using System;
 using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
@@ -11,7 +11,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
         public virtual string Owner { get; set; }
         public virtual string Repository { get; set; }
         public virtual List<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
-        public virtual List<ReleaseUpdate> ReleaseUpdates { get; set; } = new List<ReleaseUpdate>();
+        public virtual List<ModifiedRelease> ModifiedReleases { get; set; } = new List<ModifiedRelease>();
 
         public virtual void Validate()
         {
