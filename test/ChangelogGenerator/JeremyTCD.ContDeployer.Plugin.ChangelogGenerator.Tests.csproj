@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.csproj" />
-    <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

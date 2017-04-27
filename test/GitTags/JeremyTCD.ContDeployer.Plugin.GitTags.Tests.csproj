@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GitTags\JeremyTCD.ContDeployer.Plugin.GitTags.csproj" />
-    <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
