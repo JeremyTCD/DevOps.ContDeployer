@@ -43,11 +43,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
             //  - change object that it points to
             //  - specifiy message
             //  - change message
-            // TODO Double check time
+            // TODO Double check time for consistency with what LibGit2Sharp expects
             if (!PipelineContext.SharedOptions.DryRun)
             {
                 Signature signature = new Signature(_options.Name, _options.Email, DateTimeOffset.Now);
-                GitObject target = PipelineContext.Repository.Lookup<Commit>(_options.Commitish);
+                GitObject target = PipelineContext.Repository.Lookup(_options.Commitish);
                 PipelineContext.Repository.Tags.Add(_options.TagName, target, signature, "");
             }
 
