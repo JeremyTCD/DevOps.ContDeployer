@@ -10,8 +10,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
         public virtual string Token { get; set; }
         public virtual string Owner { get; set; }
         public virtual string Repository { get; set; }
-        public virtual List<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
-        public virtual List<ModifiedRelease> ModifiedReleases { get; set; } = new List<ModifiedRelease>();
+        public virtual IList<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
+        public virtual IList<ModifiedRelease> ModifiedReleases { get; set; } = new List<ModifiedRelease>();
 
         public virtual void Validate()
         {
