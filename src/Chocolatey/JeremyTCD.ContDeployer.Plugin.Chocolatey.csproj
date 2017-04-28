@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.Chocolatey</AssemblyName>
+  </PropertyGroup>
+
+</Project>
