@@ -53,7 +53,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 
             foreach (NewRelease newRelease in _options.NewReleases)
             {
-                _gitHubClient.Repository.Release.Create(_options.Owner, _options.Repository, newRelease);
+                if (!PipelineContext.SharedOptions.DryRun)
+                {
+                    _gitHubClient.Repository.Release.Create(_options.Owner, _options.Repository, newRelease);
+                }
+
                 StepContext.
                     Logger.
                     LogInformation($"Created release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +
@@ -70,8 +74,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
 
             foreach (ModifiedRelease modifiedRelease in _options.ModifiedReleases)
             {
-                _gitHubClient.Repository.Release.Edit(_options.Owner, _options.Repository, modifiedRelease.Id,
-                    modifiedRelease.ReleaseUpdate);
+                if (!PipelineContext.SharedOptions.DryRun)
+                {
+                    _gitHubClient.Repository.Release.Edit(_options.Owner, _options.Repository, modifiedRelease.Id,
+                        modifiedRelease.ReleaseUpdate);
+                }
+
                 StepContext.
                     Logger.
                     LogInformation($"Modified release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +

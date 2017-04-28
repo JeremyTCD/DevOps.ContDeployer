@@ -48,12 +48,14 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             });
 
             Mock<IGitHubClient> mockGitHubClient = _mockRepository.Create<IGitHubClient>();
-            Mock<IReleasesClient> mockReleasesClient = Mock.Get(mockGitHubClient.Object.Repository.Release);
-            mockReleasesClient.Setup(r => r.Create(testOwner, testRepository, newRelease));
+            Mock.Get(mockGitHubClient.Object.Repository.Release).Setup(r => r.Create(testOwner, testRepository, newRelease));
             Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
-            GitHubReleases adapter = new GitHubReleases(null, mockStepContext.Object, mockGitHubClientFactory.Object);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
+
+            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
 
             // Act
             adapter.Run();
@@ -63,7 +65,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_EditGitHubReleaseIfGitReleasesOptionsContainsAModifiedRelease()
+        public void Run_EditsGitHubReleaseIfGitReleasesOptionsContainsAModifiedRelease()
         {
             // Arrange
             string testOwner = "testOwner";
@@ -87,18 +89,67 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             });
 
             Mock<IGitHubClient> mockGitHubClient = _mockRepository.Create<IGitHubClient>();
-            Mock<IReleasesClient> mockReleasesClient = Mock.Get(mockGitHubClient.Object.Repository.Release);
-            mockReleasesClient.Setup(r => r.Edit(testOwner, testRepository, testId, releaseUpdate));
+            Mock.Get(mockGitHubClient.Object.Repository.Release).Setup(r => r.Edit(testOwner, testRepository, testId, releaseUpdate));
             Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
-            GitHubReleases adapter = new GitHubReleases(null, mockStepContext.Object, mockGitHubClientFactory.Object);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
+
+            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
 
             // Act
             adapter.Run();
 
             // Assert
             _mockRepository.VerifyAll();
+        }
+
+        [Fact]
+        public void Run_DoesNotEditOrCreateGitHubReleasesOnDryRun()
+        {
+            // Arrange
+            string testOwner = "testOwner";
+            string testRepository = "testRepository";
+            string testToken = "testToken";
+            int testId = 1;
+            string testTagName = "1.0.0";
+
+            NewRelease newRelease = new NewRelease(testTagName);
+            ReleaseUpdate releaseUpdate = new ReleaseUpdate();
+            ModifiedRelease modifiedRelease = new ModifiedRelease
+            {
+                Id = testId,
+                ReleaseUpdate = releaseUpdate
+            };
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(o => o.Options).Returns(new GitHubReleasesOptions
+            {
+                Token = testToken,
+                Owner = testOwner,
+                Repository = testRepository,
+                ModifiedReleases = new List<ModifiedRelease> { modifiedRelease },
+                NewReleases = new List<NewRelease> { newRelease}
+            });
+
+            Mock<IGitHubClient> mockGitHubClient = _mockRepository.Create<IGitHubClient>();
+            Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
+            mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
+
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(true);
+
+            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
+
+            // Act
+            adapter.Run();
+
+            // Assert
+            _mockRepository.VerifyAll();
+            mockGitHubClient.
+                Verify(g => g.Repository.Release.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NewRelease>()), Times.Never);
+            mockGitHubClient.
+                Verify(g => g.Repository.Release.Edit(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<ReleaseUpdate>()), Times.Never);
         }
     }
 }
