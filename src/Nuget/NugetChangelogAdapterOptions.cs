@@ -7,7 +7,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
 {
     public class NugetChangelogAdapterOptions : IPluginOptions
     {
-        public virtual IList<string> Sources { get; set; } = new List<string>();
+        public virtual string Source { get; set; } 
         public virtual string PackageName { get; set; }
 
         public void Validate()
@@ -17,9 +17,9 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
                 throw new Exception($"{nameof(PackageName)} cannot be null or empty");
             }
 
-            if(Sources.Count == 0)
+            if (string.IsNullOrEmpty(Source))
             {
-                throw new Exception($"{nameof(Sources)} cannot be empty");
+                throw new Exception($"{nameof(Source)} cannot be null or empty");
             }
             // TODO
         }

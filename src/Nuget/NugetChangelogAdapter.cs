@@ -1,22 +1,20 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
-using NuGet.Commands;
-using NuGet.Configuration;
+﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+using JeremyTCD.ContDeployer.PluginTools;
+using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace JeremyTCD.ContDeployer.Plugin.Nuget
 {
     public class NugetChangelogAdapter : PluginBase
     {
-        private IListCommandRunner _listCommandRunner { get; }
         private NugetChangelogAdapterOptions _options { get; }
+        private INugetClient _nugetClient { get; }
+        private IChangelog _changelog { get; }
 
-
-        public NugetChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext, IListCommandRunner listCommandRunner) :
-            base(pipelineContext, stepContext)
+        public NugetChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext,
+            INugetClient nugetClient) : base(pipelineContext, stepContext)
         {
             _options = stepContext.Options as NugetChangelogAdapterOptions;
 
@@ -25,33 +23,23 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
                 throw new InvalidOperationException($"{nameof(NugetChangelogAdapterOptions)} required");
             }
 
-            _listCommandRunner = listCommandRunner;
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            _changelog = changelogObject as IChangelog;
+            if (_changelog == null)
+            {
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
+            }
+
+            _nugetClient = nugetClient;
         }
 
         public override void Run()
         {
-        }
+            List<IPackageSearchMetadata> packageSearchMetadata = _nugetClient.GetPackageVersions(_options.Source, _options.PackageName, 
+                CancellationToken.None);
 
-        private void GetPackageVersions()
-        {
-            IList<PackageSource> packageSources = _options.
-                Sources.
-                Select(s => new PackageSource(s)).
-                ToList();
-
-            // TODO don't even need ListCommandRunenr since it just prints, we want the actual values
-            ListArgs args = new ListArgs(new List<string>{_options.PackageName}, 
-                packageSources, 
-                NullSettings.Instance, // Not used by ListCommandRunner
-                null, // TODO nuget has its own ilogger class, figure out how to use standard logger
-                null, // TODO nuget has its own ilogger class, figure out how to use standard logger
-                true, 
-                "No packaged", // TODO move these to strings.resx, copy actual strings from nuget.client
-                "License url: {0}", 
-                "Not supported",
-                true, true, true, CancellationToken.None);
-
-            _
+            // Compare to changelog
+            // - if a changelog version has no corresponding package, add nuget step 
         }
     }
 }
