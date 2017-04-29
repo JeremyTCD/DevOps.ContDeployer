@@ -7,11 +7,11 @@ using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
 {
-    public class NugetChangelogAdapterTests
+    public class NugetChangelogAdapterUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public NugetChangelogAdapterTests()
+        public NugetChangelogAdapterUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
