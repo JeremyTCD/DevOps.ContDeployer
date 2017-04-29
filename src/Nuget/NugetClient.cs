@@ -16,6 +16,9 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
             _logger = logger;
         }
 
+        // TODO search for package with name exactly = packagename
+        // - https://docs.microsoft.com/en-us/nuget/consume-packages/finding-and-choosing-packages
+        // - test with MySql.Data.Entity
         public List<IPackageSearchMetadata> GetPackageVersions(string source, string packageName, CancellationToken cancellationToken)
         {
             SourceRepository sourceRepository = Repository.Factory.GetCoreV3(source);
@@ -33,6 +36,8 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
 
             List<IPackageSearchMetadata> result = new List<IPackageSearchMetadata>();
 
+            // TODO look through source, determine whether IEnumerableAsync is actually useful
+            // why is it making multiple requests? multiple pages? each package 1 request?
             while (asyncEnumerator.MoveNextAsync().Result)
             {
                 result.Add(asyncEnumerator.Current);
