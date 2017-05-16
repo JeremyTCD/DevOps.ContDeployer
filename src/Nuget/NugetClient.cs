@@ -1,12 +1,23 @@
-﻿using NuGet.Common;
+﻿using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
+using Microsoft.Build.Logging;
+using NuGet.Commands;
+using NuGet.Common;
+using NuGet.Configuration;
+using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace JeremyTCD.ContDeployer.Plugin.Nuget
 {
+    /// <summary>
+    /// Convenience methods for interacting with Nuget servers. Consider decomposing into more general functions
+    /// and publishing as a separate project.
+    /// </summary>
     public class NugetClient : INugetClient
     {
         private ILogger _logger { get; }
@@ -16,12 +27,9 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
             _logger = logger;
         }
 
-        // TODO search for package with name exactly = packagename
-        // - https://docs.microsoft.com/en-us/nuget/consume-packages/finding-and-choosing-packages
-        // - test with MySql.Data.Entity
-        public List<IPackageSearchMetadata> GetPackageVersions(string source, string packageName, CancellationToken cancellationToken)
+        public List<IPackageSearchMetadata> GetPackageVersions(string source, string packageId, CancellationToken cancellationToken)
         {
-            SourceRepository sourceRepository = Repository.Factory.GetCoreV3(source);
+            SourceRepository sourceRepository = Repository.Factory.GetCoreV2(new PackageSource(source));
             ListResource feed = sourceRepository.GetResourceAsync<ListResource>(cancellationToken).Result;
 
             if (feed == null)
@@ -30,9 +38,11 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
                     $"does not support the list operation");
             }
 
+            // Prefix with "PackageId" to only include exact package id matches in the result
+            // https://docs.microsoft.com/en-us/nuget/consume-packages/finding-and-choosing-packages
             IEnumerableAsync<IPackageSearchMetadata> packageSearchMetadata = feed.
-                ListAsync(packageName, true, true, true, _logger, cancellationToken).Result;
-            IEnumeratorAsync<IPackageSearchMetadata> asyncEnumerator = packageSearchMetadata.GetEnumeratorAsync();
+                ListAsync($"packageid:{packageId}", true, true, true, _logger, cancellationToken).Result;
+            IEnumeratorAsync <IPackageSearchMetadata> asyncEnumerator = packageSearchMetadata.GetEnumeratorAsync();
 
             List<IPackageSearchMetadata> result = new List<IPackageSearchMetadata>();
 
@@ -44,6 +54,26 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Packs a project into a nuget package
+        /// </summary>
+        /// <param name="path">
+        /// Path of a project file (e.g csproj), .nuspec or project.json
+        /// </param>
+        /// <param name="propertyProvider">
+        /// Function that returns property values for given keys
+        /// </param>
+        public void Pack(string path, string outputPath, Func<string, string> propertyProvider)
+        {
+            BuildParameters parameters = new BuildParameters(new ProjectCollection())
+            {
+                //Loggers = new ILogger[] { new ConsoleLogger() }
+            };
+            //return BuildManager.DefaultBuildManager.Build(
+            //    parameters,
+            //    new BuildRequestData(path, properties, null, new[] { target }, null));
         }
     }
 }

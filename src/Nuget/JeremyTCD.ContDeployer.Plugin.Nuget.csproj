@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.Commands" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Build" Version="15.1.1012" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" />
+    <PackageReference Include="NuGet.Commands" Version="4.3.0-beta1-2418" />
+    <PackageReference Include="NuGet.Common" Version="4.3.0-beta1-2418" />
+    <PackageReference Include="NuGet.Protocol.Core.v3" Version="4.3.0-beta1-2418" />
   </ItemGroup>
 
   <ItemGroup>
