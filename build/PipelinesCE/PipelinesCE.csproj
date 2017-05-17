@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--Eventually, these should be referenced as nuget packages-->
+    <ProjectReference Include="..\..\src\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.Changelog.csproj" />
+    <ProjectReference Include="..\..\src\ContDeployer\JeremyTCD.ContDeployer.csproj" />
+    <ProjectReference Include="..\..\src\GitHubReleases\JeremyTCD.ContDeployer.Plugin.GitHub.csproj" />
+    <ProjectReference Include="..\..\src\GitTags\JeremyTCD.ContDeployer.Plugin.Git.csproj" />
+    <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.ContDeployer.Plugin.MSBuild.csproj" />
+    <ProjectReference Include="..\..\src\Nuget\JeremyTCD.ContDeployer.Plugin.Nuget.csproj" />
+  </ItemGroup>
+
+</Project>
