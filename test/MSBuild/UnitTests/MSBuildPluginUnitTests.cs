@@ -15,7 +15,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitTagsOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
@@ -34,7 +34,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
             string testSwitches = "testSwitches";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new MSBuildOptions
+            mockStepContext.Setup(s => s.Options).Returns(new MSBuildPluginOptions
             {
                 ProjOrSlnFile = testFile,
                 Switches = testSwitches
@@ -62,7 +62,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new MSBuildOptions());
+            mockStepContext.Setup(s => s.Options).Returns(new MSBuildPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);

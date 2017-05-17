@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
+namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
     public interface IChangelog
     {

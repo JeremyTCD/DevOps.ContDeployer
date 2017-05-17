@@ -3,25 +3,25 @@ using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags
+namespace JeremyTCD.ContDeployer.Plugin.Git
 {
-    public class GitTags : PluginBase
+    public class GitPlugin : PluginBase
     {
-        private GitTagsOptions _options { get; }
+        private GitPluginOptions _options { get; }
 
         /// <summary>
-        /// Creates a <see cref="GitTags"/> instance
+        /// Creates a <see cref="GitPlugin"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
-        public GitTags(IPipelineContext pipelineContext, IStepContext stepContext) : base(pipelineContext, stepContext)
+        public GitPlugin(IPipelineContext pipelineContext, IStepContext stepContext) : base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as GitTagsOptions;
+            _options = stepContext.Options as GitPluginOptions;
 
             if (_options == null)
             {
-                throw new InvalidOperationException($"{nameof(GitTagsOptions)} required");
+                throw new InvalidOperationException($"{nameof(GitPluginOptions)} required");
             }
         }
 
@@ -31,7 +31,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         /// <param name="sharedData"></param>
         /// <param name="steps"></param>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="GitTagsOptions.TagName"/> is null or empty
+        /// Thrown if <see cref="GitPluginOptions.TagName"/> is null or empty
         /// </exception>
         /// <exception cref="Exception">
         /// Thrown if git.exe fails 

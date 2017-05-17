@@ -4,35 +4,35 @@ using Newtonsoft.Json;
 using Octokit;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
+namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
-    public class GitHubReleases : PluginBase
+    public class GitHubPlugin : PluginBase
     {
-        private GitHubReleasesOptions _options { get; }
+        private GitHubPluginOptions _options { get; }
         private IGitHubClient _gitHubClient { get; }
 
         /// <summary>
-        /// Creates a <see cref="GitHubReleases"/> instance
+        /// Creates a <see cref="GitHubPlugin"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
-        public GitHubReleases(IPipelineContext pipelineContext, IStepContext stepContext,
+        public GitHubPlugin(IPipelineContext pipelineContext, IStepContext stepContext,
             IGitHubClientFactory gitHubClientFactory) :
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as GitHubReleasesOptions;
+            _options = stepContext.Options as GitHubPluginOptions;
 
             if (_options == null)
             {
-                throw new InvalidOperationException($"{nameof(GitHubReleasesChangelogAdapterOptions)} required");
+                throw new InvalidOperationException($"{nameof(GitHubChangelogAdapterOptions)} required");
             }
 
             _gitHubClient = gitHubClientFactory.CreateClient(_options.Token);
         }
 
         /// <summary>
-        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubReleases"/> step if a version
+        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
         /// has no corresponding release or if a version's notes are inconsistent with its release.
         /// </summary>
         public override void Run()

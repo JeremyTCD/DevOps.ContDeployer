@@ -1,9 +1,9 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher
+namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPlugin
 {
-    public class AppVeyorPublisherOptions : IPluginOptions
+    public class AppVeyorPluginOptions : IPluginOptions
     {
         public virtual void Validate()
         {

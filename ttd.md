@@ -5,9 +5,6 @@
   - Some way to import projects into current solution?
 
 ## Initial Features
-- Clean up solution
-  - Plugins should end with name plugin
-  - Consistent names for tests
 - Code based pipeline definition 
   - This requires additions to ContDeployer
   - Instead of reading from a json file, locate project with pipeline definitions, build it and run it
@@ -49,3 +46,9 @@
   - Ensure that code calls correct date time type (DateTimeOffset.UtcNow)
 - Unit tests for ContDeployer and Plugin tools types
   - All types with logic should be tested
+
+## Notes
+### Tests
+- For xunit, tests in the same class or in classes that share the same collection are not run in parallel. Many of the tests in this solution utilize temporary folders. Those that utilize the same temporary
+  folders should not run in parallel. https://xunit.github.io/docs/running-tests-in-parallel.html.
+ 

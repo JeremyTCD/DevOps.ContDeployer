@@ -67,10 +67,10 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
         /// </param>
         public void Pack(string path, string outputPath, Func<string, string> propertyProvider)
         {
-            BuildParameters parameters = new BuildParameters(new ProjectCollection())
-            {
+            //BuildParameters parameters = new BuildParameters(new ProjectCollection())
+            //{
                 //Loggers = new ILogger[] { new ConsoleLogger() }
-            };
+            //};
             //return BuildManager.DefaultBuildManager.Build(
             //    parameters,
             //    new BuildRequestData(path, properties, null, new[] { target }, null));

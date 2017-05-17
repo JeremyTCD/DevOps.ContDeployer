@@ -3,16 +3,16 @@ using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.IntegrationTests
 {
-    [CollectionDefinition(nameof(MSBuildClientCollection))]
-    public class MSBuildClientCollection : ICollectionFixture<MSBuildClientFixture>
+    [CollectionDefinition(nameof(MSBuildCollection))]
+    public class MSBuildCollection : ICollectionFixture<MSBuildFixture>
     {
     }
 
-    public class MSBuildClientFixture
+    public class MSBuildFixture
     {
         public string TempDir { get; }
 
-        public MSBuildClientFixture()
+        public MSBuildFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), "MSBuildClientTemp");
         }

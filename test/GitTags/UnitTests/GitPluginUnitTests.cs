@@ -4,26 +4,26 @@ using Moq;
 using System;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
 {
-    public class GitTagsTests
+    public class GitPluginUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public GitTagsTests()
+        public GitPluginUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitTagsOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitTags(null, mockStepContext.Object));
+            Assert.Throws<InvalidOperationException>(() => new GitPlugin(null, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
 
@@ -37,7 +37,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
             string testCommitish = "testCommitish";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new GitTagsOptions
+            mockStepContext.Setup(s => s.Options).Returns(new GitPluginOptions
             {
                 Commitish = testCommitish,
                 Email = testEmail,
@@ -57,10 +57,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
                 Setup(t => t.Add(testTagName, mockGitObject.Object, 
                     It.Is<Signature>(s => s.Name == testName && s.Email == testEmail), ""));
 
-            GitTags gitTags = new GitTags(mockPipelineContext.Object, mockStepContext.Object);
+            GitPlugin gitPlugin = new GitPlugin(mockPipelineContext.Object, mockStepContext.Object);
 
             // Act
-            gitTags.Run();
+            gitPlugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();
@@ -71,16 +71,16 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new GitTagsOptions());
+            mockStepContext.Setup(s => s.Options).Returns(new GitPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
             mockSharedOptions.Setup(s => s.DryRun).Returns(true);
             
-            GitTags gitTags = new GitTags(mockPipelineContext.Object, mockStepContext.Object);
+            GitPlugin gitPlugin = new GitPlugin(mockPipelineContext.Object, mockStepContext.Object);
 
             // Act
-            gitTags.Run();
+            gitPlugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();

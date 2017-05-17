@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
 using JeremyTCD.ContDeployer.PluginTools;
 using Moq;
 using System;

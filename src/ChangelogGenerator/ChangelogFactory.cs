@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
+namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
     public class ChangelogFactory : IChangelogFactory
     {

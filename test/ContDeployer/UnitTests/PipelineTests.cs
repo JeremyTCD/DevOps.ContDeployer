@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.ContDeployer.Tests
+﻿namespace JeremyTCD.ContDeployer.Tests.UnitTests
 {
     public class PipelineTests
     {

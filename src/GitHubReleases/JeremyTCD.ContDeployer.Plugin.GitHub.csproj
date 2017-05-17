@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.csproj" />
+    <ProjectReference Include="..\ChangelogGenerator\JeremyTCD.ContDeployer.Plugin.Changelog.csproj" />
     <ProjectReference Include="..\PluginTools\JeremyTCD.ContDeployer.PluginTools.csproj" />
   </ItemGroup>
 

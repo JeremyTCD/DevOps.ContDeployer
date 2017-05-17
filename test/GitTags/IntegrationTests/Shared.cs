@@ -5,14 +5,14 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.IntegrationTests
 {
-    [CollectionDefinition(nameof(GitTagsCollection))]
-    public class GitTagsCollection : ICollectionFixture<GitTagsFixture>
+    [CollectionDefinition(nameof(GitCollection))]
+    public class GitCollection : ICollectionFixture<GitFixture>
     {
     }
 
-    public class GitTagsFixture
+    public class GitFixture
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
@@ -20,9 +20,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.IntegrationTests
         public JsonSerializerSettings SerializerSettings { get; }
         public Signature Signature { get; }
 
-        public GitTagsFixture()
+        public GitFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(GitTags)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(GitPlugin)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();

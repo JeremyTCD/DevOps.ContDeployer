@@ -2,9 +2,9 @@
 using System.Linq;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
 {
-    public class ChangelogFactoryTests
+    public class ChangelogFactoryUnitTests
     {
         [Fact]
         public void Build_CreatesChangelogMetadata()

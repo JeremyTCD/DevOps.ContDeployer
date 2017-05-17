@@ -7,17 +7,17 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild
 {
     public class MSBuildPlugin : PluginBase
     {
-        private MSBuildOptions _options { get; }
+        private MSBuildPluginOptions _options { get; }
         private IMSBuildClient _msBuildClient { get; }
 
         public MSBuildPlugin(IMSBuildClient msBuildClient, IPipelineContext pipelineContext, IStepContext stepContext) :
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as MSBuildOptions;
+            _options = stepContext.Options as MSBuildPluginOptions;
 
             if(_options == null)
             {
-                throw new InvalidOperationException($"{nameof(MSBuildOptions)} required");
+                throw new InvalidOperationException($"{nameof(MSBuildPluginOptions)} required");
             }
 
             _msBuildClient = msBuildClient;

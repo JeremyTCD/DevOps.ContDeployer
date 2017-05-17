@@ -1,23 +1,18 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
-using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using LibGit2Sharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.IntegrationTests
+namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.IntegrationTests
 {
-    [CollectionDefinition(nameof(GitHubReleasesCollection))]
-    public class GitHubReleasesCollection : ICollectionFixture<GitHubReleasesFixture>
+    [CollectionDefinition(nameof(GitHubCollection))]
+    public class GitHubCollection : ICollectionFixture<GitHubFixture>
     {
     }
 
-    public class GitHubReleasesFixture
+    public class GitHubFixture
     {
         public string TempDir { get; }
         public string TempPluginsDir { get; }
@@ -25,9 +20,9 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.IntegrationTests
         public JsonSerializerSettings SerializerSettings { get; }
         public Signature Signature { get; }
 
-        public GitHubReleasesFixture()
+        public GitHubFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(GitHubReleases)}Temp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(GitHubPlugin)}Temp");
             TempPluginsDir = Path.Combine(TempDir, "plugins");
             TempGitDir = Path.Combine(TempDir, ".git");
             SerializerSettings = new JsonSerializerSettings();

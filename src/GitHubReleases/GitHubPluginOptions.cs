@@ -1,15 +1,17 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using Octokit;
 using System;
+using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
+namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
-    public class GitHubReleasesChangelogAdapterOptions : IPluginOptions
+    public class GitHubPluginOptions : IPluginOptions
     {
         public virtual string Token { get; set; }
         public virtual string Owner { get; set; }
         public virtual string Repository { get; set; }
-        // Optional since only necessary if tag that release points to does not already exist
-        public virtual string Commitish { get; set; } = "";
+        public virtual IList<NewRelease> NewReleases { get; set; } = new List<NewRelease>();
+        public virtual IList<ModifiedRelease> ModifiedReleases { get; set; } = new List<ModifiedRelease>();
 
         public virtual void Validate()
         {

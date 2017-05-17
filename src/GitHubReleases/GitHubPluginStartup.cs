@@ -1,9 +1,9 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases
+namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
-    public class GitHubReleasesStartup : IPluginStartup
+    public class GitHubPluginStartup : IPluginStartup
     {
         public void ConfigureServices(IServiceCollection services)
         {

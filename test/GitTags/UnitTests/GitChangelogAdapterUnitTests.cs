@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
 using JeremyTCD.ContDeployer.PluginTools;
 using LibGit2Sharp;
 using Moq;
@@ -7,13 +7,13 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
 {
-    public class GitTagsChangelogAdapterTests
+    public class GitChangelogAdapterTests
     {
         private MockRepository _mockRepository { get; }
 
-        public GitTagsChangelogAdapterTests()
+        public GitChangelogAdapterTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
@@ -28,12 +28,12 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitTagsChangelogAdapter(mockPipelineContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => new GitChangelogAdapter(mockPipelineContext.Object, null));
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_AddsGitTagsStepIfChangelogsLastestVersionHasNoCorrespondingTag()
+        public void Run_AddsGitStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
             string testVersion = "1.0.0";
@@ -53,8 +53,8 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
             Mock<IStep> mockStep = _mockRepository.Create<IStep>();
             Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
             mockStepFactory.
-                Setup(s => s.Build(nameof(GitTags),
-                    It.Is<GitTagsOptions>(o => o.TagName == testVersion))).
+                Setup(s => s.Build(nameof(GitPlugin),
+                    It.Is<GitPluginOptions>(o => o.TagName == testVersion))).
                 Returns(mockStep.Object);
 
             LinkedList<IStep> steps = new LinkedList<IStep>();
@@ -62,11 +62,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
 
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext.Object, 
+            GitChangelogAdapter gitChangelogAdapter = new GitChangelogAdapter(mockPipelineContext.Object, 
                 mockStepContext.Object);
 
             // Act 
-            gitTagsChangelogAdapter.Run();
+            gitChangelogAdapter.Run();
 
             // Assert
             Assert.Equal(1, steps.Count);
@@ -98,11 +98,11 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags.Tests.UnitTests
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
 
-            GitTagsChangelogAdapter gitTagsChangelogAdapter = new GitTagsChangelogAdapter(mockPipelineContext.Object,
+            GitChangelogAdapter gitChangelogAdapter = new GitChangelogAdapter(mockPipelineContext.Object,
                 mockStepContext.Object);
 
             // Act 
-            gitTagsChangelogAdapter.Run();
+            gitChangelogAdapter.Run();
 
             // Assert
             Assert.Equal(0, steps.Count);

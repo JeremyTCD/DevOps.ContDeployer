@@ -1,8 +1,8 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
+namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
-    public class ChangelogGeneratorOptions : IPluginOptions
+    public class ChangelogPluginOptions : IPluginOptions
     {
         public virtual string FileName { get; set; } = "changelog.md";
         public virtual string Branch { get; set; } = "master";

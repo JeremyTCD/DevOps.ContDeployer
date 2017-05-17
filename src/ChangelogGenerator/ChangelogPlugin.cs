@@ -4,27 +4,27 @@ using LibGit2Sharp.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
+namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
-    public class ChangelogGenerator : PluginBase
+    public class ChangelogPlugin : PluginBase
     {
-        private ChangelogGeneratorOptions _options { get; set; }
+        private ChangelogPluginOptions _options { get; set; }
         private IChangelogFactory _changelogFactory { get; set; }
 
         /// <summary>
-        /// Creates a <see cref="ChangelogGenerator"/> instance
+        /// Creates a <see cref="ChangelogPlugin"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="IStepContext.Options"/> is null
         /// </exception>
-        public ChangelogGenerator(IPipelineContext pipelineContext, IStepContext stepContext, IChangelogFactory changelogFactory) : 
+        public ChangelogPlugin(IPipelineContext pipelineContext, IStepContext stepContext, IChangelogFactory changelogFactory) : 
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as ChangelogGeneratorOptions;
+            _options = stepContext.Options as ChangelogPluginOptions;
 
             if (_options == null)
             {
-                throw new InvalidOperationException($"{nameof(ChangelogGeneratorOptions)} required");
+                throw new InvalidOperationException($"{nameof(ChangelogPluginOptions)} required");
             }
 
             _changelogFactory = changelogFactory;

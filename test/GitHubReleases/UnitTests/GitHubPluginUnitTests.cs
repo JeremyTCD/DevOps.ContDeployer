@@ -5,26 +5,26 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
 {
-    public class GitHubReleasesTests
+    public class GitHubPluginUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public GitHubReleasesTests()
+        public GitHubPluginUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitHubReleasesOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitHubOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitHubReleases(null, mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => new GitHubPlugin(null, mockStepContext.Object, null));
             _mockRepository.VerifyAll();
         }
 
@@ -39,7 +39,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
 
             NewRelease newRelease = new NewRelease(testTagName);
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubReleasesOptions
+            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -55,10 +55,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
 
-            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
+            GitHubPlugin plugin = new GitHubPlugin(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
 
             // Act
-            adapter.Run();
+            plugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();
@@ -80,7 +80,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
                 ReleaseUpdate = releaseUpdate
             };
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubReleasesOptions
+            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -96,17 +96,17 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
 
-            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
+            GitHubPlugin plugin = new GitHubPlugin(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
 
             // Act
-            adapter.Run();
+            plugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_DoesNotEditOrCreateGitHubReleasesOnDryRun()
+        public void Run_DoesNotEditOrCreateGitHubOnDryRun()
         {
             // Arrange
             string testOwner = "testOwner";
@@ -123,7 +123,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
                 ReleaseUpdate = releaseUpdate
             };
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubReleasesOptions
+            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -139,10 +139,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHubReleases.Tests.UnitTests
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(true);
 
-            GitHubReleases adapter = new GitHubReleases(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
+            GitHubPlugin plugin = new GitHubPlugin(mockPipelineContext.Object, mockStepContext.Object, mockGitHubClientFactory.Object);
 
             // Act
-            adapter.Run();
+            plugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();

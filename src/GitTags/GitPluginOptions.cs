@@ -1,9 +1,9 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags
+namespace JeremyTCD.ContDeployer.Plugin.Git
 {
-    public class GitTagsOptions : IPluginOptions
+    public class GitPluginOptions : IPluginOptions
     {
         /// <summary>
         /// Tag name
@@ -29,22 +29,22 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
         {
             if (string.IsNullOrEmpty(TagName))
             {
-                throw new Exception($"{nameof(GitTagsOptions)}: {nameof(TagName)} cannot be null or empty");
+                throw new Exception($"{nameof(GitPluginOptions)}: {nameof(TagName)} cannot be null or empty");
             }
 
             if (string.IsNullOrEmpty(Name))
             {
-                throw new Exception($"{nameof(GitTagsOptions)}: {nameof(Name)} cannot be null or empty");
+                throw new Exception($"{nameof(GitPluginOptions)}: {nameof(Name)} cannot be null or empty");
             }
 
             if (string.IsNullOrEmpty(Email))
             {
-                throw new Exception($"{nameof(GitTagsOptions)}: {nameof(Email)} cannot be null or empty");
+                throw new Exception($"{nameof(GitPluginOptions)}: {nameof(Email)} cannot be null or empty");
             }
 
             if (string.IsNullOrEmpty(Commitish))
             {
-                throw new Exception($"{nameof(GitTagsOptions)}: {nameof(Commitish)} cannot be null or empty");
+                throw new Exception($"{nameof(GitPluginOptions)}: {nameof(Commitish)} cannot be null or empty");
             }
         }
     }

@@ -3,18 +3,18 @@ using Xunit;
 
 namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.IntegrationTests
 {
-    [CollectionDefinition(nameof(NugetClientCollection))]
-    public class NugetClientCollection : ICollectionFixture<NugetClientFixture>
+    [CollectionDefinition(nameof(NugetCollection))]
+    public class NugetCollection : ICollectionFixture<NugetFixture>
     {
     }
 
-    public class NugetClientFixture
+    public class NugetFixture
     {
         public string TempDir { get; }
 
-        public NugetClientFixture()
+        public NugetFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), "NugetClientTemp");
+            TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(NugetFixture)}Temp");
         }
 
         // Deletes entire temp directory then recreates it

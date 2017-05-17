@@ -1,7 +1,7 @@
 ﻿using Semver;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator
+namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
     public interface IVersion : IComparable<IVersion>
     {

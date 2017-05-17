@@ -1,23 +1,23 @@
-﻿using JeremyTCD.ContDeployer.Plugin.ChangelogGenerator;
+﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
 using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitTags
+namespace JeremyTCD.ContDeployer.Plugin.Git
 {
-    public class GitTagsChangelogAdapter : PluginBase
+    public class GitChangelogAdapter : PluginBase
     {
         private IChangelog _changelog { get; }
 
         /// <summary>
-        /// Creates a <see cref="GitTagsChangelogAdapter"/> instance
+        /// Creates a <see cref="GitChangelogAdapter"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
-        public GitTagsChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext) : 
+        public GitChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext) : 
             base(pipelineContext, stepContext)
         {
             pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
@@ -30,7 +30,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
 
         /// <summary>
         /// Compares <see cref="Changelog"/> and git tags. If latest version has no corresponding tag (new version), 
-        /// adds <see cref="GitTags"/> step to tag head.
+        /// adds <see cref="GitPlugin"/> step to tag head.
         /// </summary>
         public override void Run()
         {
@@ -48,15 +48,15 @@ namespace JeremyTCD.ContDeployer.Plugin.GitTags
 
                     if (i == 0)
                     {
-                        GitTagsOptions gitTagsOptions = new GitTagsOptions
+                        GitPluginOptions gitPluginOptions = new GitPluginOptions
                         {
                             TagName = version.SemVersion.ToString()
                         };
-                        IStep gitTagsStep = PipelineContext.StepFactory.Build(nameof(GitTags), gitTagsOptions);
-                        PipelineContext.Steps.AddFirst(gitTagsStep);
+                        IStep gitPluginStep = PipelineContext.StepFactory.Build(nameof(GitPlugin), gitPluginOptions);
+                        PipelineContext.Steps.AddFirst(gitPluginStep);
 
                         StepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
-                            $"has no corresponding tag, added {nameof(GitTags)} step");
+                            $"has no corresponding tag, added {nameof(GitPlugin)} step");
                     }
                     else
                     {

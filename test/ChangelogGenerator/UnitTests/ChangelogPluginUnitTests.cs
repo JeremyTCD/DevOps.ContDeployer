@@ -6,26 +6,26 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
+namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
 {
-    public class ChangelogGeneratorTests
+    public class ChangelogPluginUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public ChangelogGeneratorTests()
+        public ChangelogPluginUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAChangelogGeneratorOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAChangelogPluginOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new ChangelogGenerator(null, mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => new ChangelogPlugin(null, mockStepContext.Object, null));
             _mockRepository.VerifyAll();
         }
 
@@ -36,16 +36,16 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testCommitish = "HEAD";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new ChangelogGeneratorOptions());
+            mockStepContext.Setup(s => s.Options).Returns(new ChangelogPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
             mockRepository.Setup(r => r.Lookup(testCommitish)).Returns((Commit)null);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext.Object, mockStepContext.Object, null);
+            ChangelogPlugin changelogPlugin = new ChangelogPlugin(mockPipelineContext.Object, mockStepContext.Object, null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
+            Assert.Throws<InvalidOperationException>(() => changelogPlugin.Run());
             _mockRepository.VerifyAll();
         }
 
@@ -57,7 +57,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testCommitish = "HEAD";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new ChangelogGeneratorOptions { FileName = testFileName });
+            mockStepContext.Setup(s => s.Options).Returns(new ChangelogPluginOptions { FileName = testFileName });
 
             Mock<Commit> mockCommit = _mockRepository.Create<Commit>();
             mockCommit.Setup(c => c[testFileName]).Returns((TreeEntry)null);
@@ -65,10 +65,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
             mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockCommit.Object);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext.Object, mockStepContext.Object, null);
+            ChangelogPlugin changelogPlugin = new ChangelogPlugin(mockPipelineContext.Object, mockStepContext.Object, null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
+            Assert.Throws<InvalidOperationException>(() => changelogPlugin.Run());
             _mockRepository.VerifyAll();
         }
 
@@ -81,7 +81,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testCommitish = "HEAD";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new ChangelogGeneratorOptions { FileName = testFileName });
+            mockStepContext.Setup(o => o.Options).Returns(new ChangelogPluginOptions { FileName = testFileName });
 
             Mock<Blob> mockBlob = _mockRepository.Create<Blob>();
             mockBlob.Setup(b => b.GetContentStream()).Returns(CreateStreamFromString(testChangelogText));
@@ -93,10 +93,10 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
             mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockCommit.Object);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext.Object, mockStepContext.Object, null);
+            ChangelogPlugin changelogPlugin = new ChangelogPlugin(mockPipelineContext.Object, mockStepContext.Object, null);
 
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => changelogGenerator.Run());
+            Assert.Throws<InvalidOperationException>(() => changelogPlugin.Run());
             _mockRepository.VerifyAll();
         }
 
@@ -110,7 +110,7 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             string testCommitish = "HEAD";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new ChangelogGeneratorOptions { FileName = testFileName,
+            mockStepContext.Setup(o => o.Options).Returns(new ChangelogPluginOptions { FileName = testFileName,
                 Pattern = testPattern });
 
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
@@ -127,11 +127,11 @@ namespace JeremyTCD.ContDeployer.Plugin.ChangelogGenerator.Tests.UnitTests
             Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
             mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockCommit.Object);
 
-            ChangelogGenerator changelogGenerator = new ChangelogGenerator(mockPipelineContext.Object, mockStepContext.Object, 
+            ChangelogPlugin changelogPlugin = new ChangelogPlugin(mockPipelineContext.Object, mockStepContext.Object, 
                 mockChangelogFactory.Object);
 
             // Act
-            changelogGenerator.Run();
+            changelogPlugin.Run();
 
             // Assert
             _mockRepository.VerifyAll();
