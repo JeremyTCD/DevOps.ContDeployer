@@ -1,36 +1,28 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     /// <summary>
     /// A step in the pipeline. 
     /// </summary>
-    public class Step : IStep
+    public class Step<T> : IStep where T : IPlugin
     {
-        public Step()
-        {
 
-        }
-
-        public Step(string pluginName, IPluginOptions options)
+        public Step(IPluginOptions options)
         {
-            PluginName = pluginName;
-            Options = options;
+            PluginType = typeof(T);
+            PluginOptions = options;
         }
 
         /// <summary>
         /// Name of plugin
         /// </summary>
-        public string PluginName { get; set; }
-
-        /// <summary>
-        /// Raw config
-        /// </summary>
-        public IConfigurationSection Config { get; set; } 
+        public Type PluginType { get; set; }
 
         /// <summary>
         /// Instantiated options
         /// </summary>
-        public IPluginOptions Options { get; }
+        public IPluginOptions PluginOptions { get; set; }
     }
 }

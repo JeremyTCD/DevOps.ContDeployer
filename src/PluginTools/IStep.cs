@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     public interface IStep
     {
-        string PluginName { get; set; }
-        IConfigurationSection Config { get; set; }
-        IPluginOptions Options { get; }
+        Type PluginType { get; set; }
+        IPluginOptions PluginOptions { get; }
     }
 }
