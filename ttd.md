@@ -3,20 +3,24 @@
   - http://stackoverflow.com/questions/42773815/net-core-csproj-global-json-projects-equivalent
   - Publish packages locally with pdb?
   - Some way to import projects into current solution?
-
+- Fix architecture to better handle injection of objects that utilize runtime data
 ## Initial Features
 - Code based pipeline definition 
   - This requires additions to ContDeployer
   - Instead of reading from a json file, locate project with pipeline definitions, build it and run it
-- Nuget plugin
-  - Use MSBuild.exe to pack
+  - Architecture
+    - Runtime data (e.g plugin options, remaining steps) should be provided api method parameters. 
+      Messing with services at runtime or using complex factories causes inflexibility and convolution.
+      - https://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=99
+  - Nuget plugin
+    - Use MSBuild.exe to pack
     - Does /t:pack also build?
-  - Figure out how to use nuget to package and deliver exe
-  - Test and get it to work. Try locally or try http://staging.nuget.org/
-  - Publish ContDeployer to nuget (rename it?)
-- Console app
-  - Arguments
-- Envionment variables plugin
+    - Figure out how to use nuget to package and deliver exe
+    - Test and get it to work. Try locally or try http://staging.nuget.org/
+    - Publish ContDeployer to nuget (rename it?)
+  - Console app
+    - Arguments
+  - Envionment variables plugin
 
 ## Future Features
 - Nuget plugin
