@@ -9,14 +9,13 @@ namespace PipelinesCE
 {
     public class CEPipelineFactory : IPipelineFactory
     {
-        public IEnumerable<IStep> CreatePipeline()
+        public IEnumerable<IStep> Build()
         {
             return new IStep[]{
-                // TODO is there some way to verify that the correct options type is provided?
                 new Step<ChangelogPlugin>(new ChangelogPluginOptions
                 {
                         Branch = "master",
-                        FileName = "changelog.md",
+                        File = "changelog.md",
                         Pattern = ""
                 }),
                 new Step<MSBuildPlugin>(new MSBuildPluginOptions
