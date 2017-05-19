@@ -1,13 +1,10 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using System;
 
 namespace JeremyTCD.ContDeployer
 {
     public interface IPluginFactory
     {
-        void LoadTypes();
-
-        IPluginFactory SetPluginName(string pluginName);
-
-        IPlugin Build();
+        IPlugin Build(Type pluginType);
     }
 }

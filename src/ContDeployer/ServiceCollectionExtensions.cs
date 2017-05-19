@@ -24,25 +24,15 @@ namespace JeremyTCD.ContDeployer
                 AddLogging().
                 AddOptions().
                 AddSingleton<IAssemblyService>(assemblyService).
-                AddSingleton<IRepository>(provider => new Repository(Directory.GetCurrentDirectory())).
                 AddSingleton<HttpClient>().
                 AddSingleton(main);
 
             services.
                 AddSingleton<IProcessManager, ProcessManager>().
-                AddSingleton<IHttpManager, HttpManager>().
                 AddSingleton<IPluginFactory, PluginFactory>().
-                AddSingleton<IStepFactory, StepFactory>().
                 AddSingleton<IPipeline, Pipeline>().
                 AddSingleton<IPipelineContext, PipelineContext>().
-                Configure<PipelineContextOptions>(options =>
-                {
-                    ConfigurationBinder.Bind(configurationRoot.GetSection("pipeline"), options);
-                    options.Validate();
-                }).
-                AddSingleton<IStepContextFactory, StepContextFactory>().
-                AddTransient(provider => provider.GetService<IStepContextFactory>().Build()).
-                Configure<SharedOptions>(configurationRoot.GetSection("shared"));
+                Configure<SharedOptions>(configurationRoot.GetSection("shared")); // TODO not using json configuration anymore
 
             // Load assemblies in plugins directory
             assemblyService.LoadAssembliesInDir(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), true);

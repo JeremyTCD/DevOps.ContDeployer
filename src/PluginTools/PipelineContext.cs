@@ -1,30 +1,18 @@
-﻿using LibGit2Sharp;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
     public class PipelineContext : IPipelineContext
     {
-        public IStepFactory StepFactory { get; set; }
-        public IHttpManager HttpManager { get; set; }
         public IProcessManager ProcessManager { get; set; }
-        public IRepository Repository { get; set; }
         public IDictionary<string, object> SharedData { get; set; }
-        public LinkedList<IStep> Steps { get; set; }
-        public PipelineContextOptions PipelineContextOptions { get; set; }
         public SharedOptions SharedOptions { get; set; }
 
-        public PipelineContext(IHttpManager httpManager, IProcessManager processManager, IRepository repository,
-            IOptions<PipelineContextOptions> pipelineContextOptionsAccessor, 
-            IStepFactory stepFactory, IOptions<SharedOptions> sharedOptionsAccessor)
+        public PipelineContext(IProcessManager processManager, 
+            IOptions<SharedOptions> sharedOptionsAccessor)
         {
-            StepFactory = stepFactory;
-            HttpManager = httpManager;
             ProcessManager = processManager;
-            Repository = repository;
-            PipelineContextOptions = pipelineContextOptionsAccessor.Value;
-            Steps = new LinkedList<IStep>(PipelineContextOptions.Steps);
             SharedData = new Dictionary<string, object>();
             SharedOptions = sharedOptionsAccessor.Value;
         }

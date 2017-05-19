@@ -1,6 +1,8 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer
 {
@@ -9,14 +11,21 @@ namespace JeremyTCD.ContDeployer
         private ILogger<Pipeline> _logger { get; }
         private IPluginFactory _pluginFactory { get; }
         private IPipelineContext _pipelineContext { get; }
+        private IStepContextFactory _stepContextFactory { get; }
+        private ILoggerFactory _loggerFactory { get; }
 
-        public Pipeline(ILogger<Pipeline> logger,
-            IPluginFactory pluginFactory,
-            IPipelineContext pipelineContext)
+        public LinkedList<IStep> Steps { get; set; }
+        public string Name { get; set; }
+
+        public Pipeline(ILogger<Pipeline> logger, IPluginFactory pluginFactory, 
+            IPipelineContext pipelineContext, IStepContextFactory stepContextFactory,
+            ILoggerFactory loggerFactory)
         {
+            _stepContextFactory = stepContextFactory;
             _pipelineContext = pipelineContext;
             _logger = logger;
             _pluginFactory = pluginFactory;
+            _loggerFactory = loggerFactory;
         }
 
         /// <summary>
@@ -26,18 +35,23 @@ namespace JeremyTCD.ContDeployer
         {
             _logger.LogInformation("=== Running pipeline ===");
 
-            while (_pipelineContext.Steps.Count > 0)
+            while (Steps.Count > 0)
             {
-                IStep step = _pipelineContext.Steps.First();
+                IStep step = Steps.First();
+                Steps.RemoveFirst();
 
                 IPlugin plugin = _pluginFactory.
-                    SetPluginName(step.PluginName).
+                    Build(step.PluginType);
+                ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
+                IStepContext stepContext = _stepContextFactory.
+                    AddPluginOptions(step.PluginOptions).
+                    AddRemainingSteps(Steps).
+                    AddLogger(logger).
                     Build();
 
-                _pipelineContext.Steps.RemoveFirst();
-                _logger.LogInformation($"== Running {plugin.GetType().Name} ==");
-                plugin.Run();
-                _logger.LogInformation($"== {plugin.GetType().Name} complete ==");
+                _logger.LogInformation($"== Running {step.PluginType.Name} ==");
+                plugin.Run(_pipelineContext, stepContext);
+                _logger.LogInformation($"== {step.PluginType.Name} complete ==");
             }
 
             _logger.LogInformation("=== Pipeline complete ===");

@@ -1,4 +1,5 @@
 ﻿using JeremyTCD.ContDeployer.PluginTools;
+using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JeremyTCD.ContDeployer.Plugin.Changelog
@@ -8,6 +9,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IChangelogFactory, ChangelogFactory>();
+            services.AddSingleton<IFileService, FileService>();
         }
     }
 }

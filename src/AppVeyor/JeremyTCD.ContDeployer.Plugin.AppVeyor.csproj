@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>JeremyTCD.ContDeployer.Plugin.AppVeyorPublisher</AssemblyName>
+    <AssemblyName>JeremyTCD.ContDeployer.Plugin.AppVeyor</AssemblyName>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 

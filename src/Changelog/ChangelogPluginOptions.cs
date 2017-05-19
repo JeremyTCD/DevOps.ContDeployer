@@ -4,7 +4,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
 {
     public class ChangelogPluginOptions : IPluginOptions
     {
-        public virtual string FileName { get; set; } = "changelog.md";
+        public virtual string File { get; set; } = "changelog.md";
 
         /// <summary>
         /// Branch to checkout. Defaults to master if unspecified.

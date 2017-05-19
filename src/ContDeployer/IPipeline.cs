@@ -1,10 +1,13 @@
-﻿namespace JeremyTCD.ContDeployer
+﻿using JeremyTCD.ContDeployer.PluginTools;
+using System.Collections.Generic;
+
+namespace JeremyTCD.ContDeployer
 {
     public interface IPipeline 
     {
-        /// <summary>
-        /// test
-        /// </summary>
+        LinkedList<IStep> Steps { get; set; }
+        string Name { get; set; }
+
         void Run();
     }
 }

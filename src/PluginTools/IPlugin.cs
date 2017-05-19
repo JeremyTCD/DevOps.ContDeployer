@@ -2,6 +2,6 @@
 {
     public interface IPlugin
     {
-        void Run();
+        void Run(IPipelineContext pipelineContext, IStepContext stepContext);
     }
 }

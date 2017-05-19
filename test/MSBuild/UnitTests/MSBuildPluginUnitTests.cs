@@ -15,7 +15,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNotAGitOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();

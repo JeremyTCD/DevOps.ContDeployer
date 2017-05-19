@@ -19,7 +19,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotAGitHubChangelogAdapterOptionsInstance()
+        public void Constructor_ThrowsExceptionIfOptionsIsNotAGitHubChangelogAdapterOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();

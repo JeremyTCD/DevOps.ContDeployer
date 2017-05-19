@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace JeremyTCD.ContDeployer.PluginTools
 {
@@ -6,5 +7,6 @@ namespace JeremyTCD.ContDeployer.PluginTools
     {
         IPluginOptions Options { get; set; }
         ILogger Logger { get; set; }
+        IEnumerable<IStep> RemainingSteps { get; set; }
     }
 }
