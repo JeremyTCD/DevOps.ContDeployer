@@ -1,75 +1,85 @@
 ﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
 using JeremyTCD.ContDeployer.PluginTools;
+using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.Git
 {
-    public class GitChangelogAdapter : PluginBase
+    public class GitChangelogAdapter : IPlugin
     {
-        private IChangelog _changelog { get; }
+        private IRepository _repository { get; }
 
         /// <summary>
         /// Creates a <see cref="GitChangelogAdapter"/> instance
         /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
+        /// <param name="repositoryFactory"></param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="repositoryFactory"/> is null
         /// </exception>
-        public GitChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext) : 
-            base(pipelineContext, stepContext)
+        public GitChangelogAdapter(IRepositoryFactory repositoryFactory)
         {
-            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
-            _changelog = changelogObject as IChangelog;
-            if (_changelog == null)
+            if(repositoryFactory == null)
             {
-                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
+                throw new ArgumentNullException(nameof(repositoryFactory));
             }
+
+            _repository = repositoryFactory.Build(Directory.GetCurrentDirectory());
         }
 
         /// <summary>
         /// Compares <see cref="Changelog"/> and git tags. If latest version has no corresponding tag (new version), 
         /// adds <see cref="GitPlugin"/> step to tag head.
         /// </summary>
-        public override void Run()
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
+        /// </exception>
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
-            List<IVersion> versions = _changelog.Versions.ToList();
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            IChangelog changelog = changelogObject as IChangelog;
+            if (changelog == null)
+            {
+                throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
+            }
 
+            List<IVersion> versions = changelog.Versions.ToList();
             bool tagsConsistentWithChangelog = true;
 
             for (int i = 0; i < versions.Count; i++)
             {
                 IVersion version = versions[i];
 
-                if (PipelineContext.Repository.Tags[version.SemVersion.ToString()] == null)
+                if (_repository.Tags[version.SemVersion.ToString()] == null)
                 {
                     tagsConsistentWithChangelog = false;
 
                     if (i == 0)
                     {
-                        GitPluginOptions gitPluginOptions = new GitPluginOptions
+                        IStep gitPluginStep = new Step<GitPlugin>(new GitPluginOptions
                         {
                             TagName = version.SemVersion.ToString()
-                        };
-                        IStep gitPluginStep = PipelineContext.StepFactory.Build(nameof(GitPlugin), gitPluginOptions);
-                        PipelineContext.Steps.AddFirst(gitPluginStep);
+                        });
+                        stepContext.RemainingSteps.AddFirst(gitPluginStep);
 
-                        StepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
+                        stepContext.Logger.LogInformation($"New version \"{version.SemVersion.ToString()}\"" +
                             $"has no corresponding tag, added {nameof(GitPlugin)} step");
                     }
                     else
                     {
                         // TODO Each version should point to a commit, corresponding commits should be
                         // tagged
-                        StepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
+                        stepContext.Logger.LogWarning($"Version \"{version.SemVersion.ToString()}\" has no corresponding tag");
                     }
                 }
             }
 
             if (tagsConsistentWithChangelog)
             {
-                StepContext.
+                stepContext.
                     Logger.
                     LogInformation("Tags consistent with changelog");
             }

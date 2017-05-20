@@ -3,15 +3,10 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPlugin
 {
-    public class AppVeyorPlugin : PluginBase
+    public class AppVeyorPlugin : IPlugin
     {
-        public AppVeyorPlugin(IPipelineContext pipelineContext, IStepContext stepContext) : base(pipelineContext, stepContext)
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
-        }
-
-        public override void Run()
-        {
-            throw new NotImplementedException();
         }
     }
 }

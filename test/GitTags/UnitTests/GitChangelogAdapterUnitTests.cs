@@ -19,7 +19,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
+        public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
@@ -27,50 +27,52 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
             object outValue = null;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns((IRepository)null);
+
+            GitChangelogAdapter adapter = new GitChangelogAdapter(mockRepositoryFactory.Object);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitChangelogAdapter(mockPipelineContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => adapter.Run(mockPipelineContext.Object, null));
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_AddsGitStepIfChangelogsLastestVersionHasNoCorrespondingTag()
+        public void Run_AddsGitPluginStepIfChangelogsLastestVersionHasNoCorrespondingTag()
         {
             // Arrange
             string testVersion = "1.0.0";
 
             Mock<IVersion> mockVersion = _mockRepository.Create<IVersion>();
             mockVersion.Setup(v => v.SemVersion).Returns(SemVersion.Parse(testVersion));
-            SortedSet<IVersion> versions = new SortedSet<IVersion>();
-            versions.Add(mockVersion.Object);
+            SortedSet<IVersion> versions = new SortedSet<IVersion> { mockVersion.Object };
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
             mockChangelog.Setup(c => c.Versions).Returns(versions);
+
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
             object outValue = mockChangelog.Object;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
-            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
-            mockTags.Setup(t => t[testVersion]).Returns((Tag)null);
-            Mock<IStep> mockStep = _mockRepository.Create<IStep>();
-            Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
-            mockStepFactory.
-                Setup(s => s.Build(nameof(GitPlugin),
-                    It.Is<GitPluginOptions>(o => o.TagName == testVersion))).
-                Returns(mockStep.Object);
 
-            LinkedList<IStep> steps = new LinkedList<IStep>();
-            mockPipelineContext.Setup(o => o.Steps).Returns(steps);
+            Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();
+            Mock<TagCollection> mockTags = Mock.Get(mockRepository.Object.Tags);
+            mockTags.Setup(t => t[testVersion]).Returns((Tag)null);
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns(mockRepository.Object);
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            LinkedList<IStep> steps = new LinkedList<IStep>();
+            mockStepContext.Setup(s => s.RemainingSteps).Returns(steps);
 
-            GitChangelogAdapter gitChangelogAdapter = new GitChangelogAdapter(mockPipelineContext.Object, 
-                mockStepContext.Object);
+            GitChangelogAdapter adapter = new GitChangelogAdapter(mockRepositoryFactory.Object);
 
             // Act 
-            gitChangelogAdapter.Run();
+            adapter.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
             Assert.Equal(1, steps.Count);
-            Assert.Equal(mockStep.Object, steps.First.Value);
+            GitPluginOptions options = steps.First.Value.PluginOptions as GitPluginOptions;
+            Assert.Equal(testVersion, options.TagName);
             _mockRepository.VerifyAll();
         }
 
@@ -82,30 +84,34 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
 
             Mock<IVersion> mockVersion = _mockRepository.Create<IVersion>();
             mockVersion.Setup(v => v.SemVersion).Returns(SemVersion.Parse(testVersion));
-            SortedSet<IVersion> versions = new SortedSet<IVersion>();
-            versions.Add(mockVersion.Object);
+            SortedSet<IVersion> versions = new SortedSet<IVersion> { mockVersion.Object };
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
             mockChangelog.Setup(c => c.Versions).Returns(versions);
+
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
             object outValue = mockChangelog.Object;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
-            Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
-            mockTags.Setup(t => t[testVersion]).Returns(_mockRepository.Create<Tag>().Object);
 
-            LinkedList<IStep> steps = new LinkedList<IStep>();
-            mockPipelineContext.Object.Steps = steps;
+            Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();
+            Mock<TagCollection> mockTags = Mock.Get(mockRepository.Object.Tags);
+            mockTags.Setup(t => t[testVersion]).Returns((Tag)null);
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns(mockRepository.Object);
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            LinkedList<IStep> steps = new LinkedList<IStep>();
+            mockStepContext.Setup(s => s.RemainingSteps).Returns(steps);
 
-            GitChangelogAdapter gitChangelogAdapter = new GitChangelogAdapter(mockPipelineContext.Object,
-                mockStepContext.Object);
+            GitChangelogAdapter adapter = new GitChangelogAdapter(mockRepositoryFactory.Object);
 
             // Act 
-            gitChangelogAdapter.Run();
+            adapter.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
-            Assert.Equal(0, steps.Count);
+            Assert.Equal(1, steps.Count);
+            GitPluginOptions options = steps.First.Value.PluginOptions as GitPluginOptions;
+            Assert.Equal(testVersion, options.TagName);
             _mockRepository.VerifyAll();
         }
     }

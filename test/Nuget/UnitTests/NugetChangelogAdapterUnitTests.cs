@@ -21,7 +21,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new NugetChangelogAdapter(null, mockStepContext.Object, null));
@@ -33,7 +33,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new NugetChangelogAdapterOptions());
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new NugetChangelogAdapterOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);

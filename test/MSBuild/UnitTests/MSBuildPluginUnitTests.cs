@@ -19,7 +19,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new MSBuildPlugin(null, null, mockStepContext.Object));
@@ -34,7 +34,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
             string testSwitches = "testSwitches";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new MSBuildPluginOptions
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions
             {
                 ProjOrSlnFile = testFile,
                 Switches = testSwitches
@@ -62,7 +62,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new MSBuildPluginOptions());
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);

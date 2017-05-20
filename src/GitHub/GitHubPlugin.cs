@@ -6,7 +6,7 @@ using System;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
-    public class GitHubPlugin : PluginBase
+    public class GitHubPlugin : IPlugin
     {
         private GitHubPluginOptions _options { get; }
         private IGitHubClient _gitHubClient { get; }
@@ -15,13 +15,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         /// Creates a <see cref="GitHubPlugin"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="IStepContext.Options"/> is null
+        /// If <see cref="IStepContext.PluginOptions"/> is null
         /// </exception>
         public GitHubPlugin(IPipelineContext pipelineContext, IStepContext stepContext,
             IGitHubClientFactory gitHubClientFactory) :
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as GitHubPluginOptions;
+            _options = stepContext.PluginOptions as GitHubPluginOptions;
 
             if (_options == null)
             {
@@ -35,7 +35,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
         /// has no corresponding release or if a version's notes are inconsistent with its release.
         /// </summary>
-        public override void Run()
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             // TODO provide other operations
             // - delete

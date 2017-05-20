@@ -23,7 +23,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             ChangelogPlugin plugin = new ChangelogPlugin(null, null);
 
@@ -39,7 +39,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             string testFile = "testFile";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new ChangelogPluginOptions { File = testFile });
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new ChangelogPluginOptions { File = testFile });
 
             Mock<IFileService> mockFileService = _mockRepository.Create<IFileService>();
             mockFileService.Setup(f => f.Exists(It.Is<string>(s => s == testFile))).Returns(false);
@@ -58,7 +58,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             string testFile = "testFile";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new ChangelogPluginOptions { File = testFile });
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new ChangelogPluginOptions { File = testFile });
 
             Mock<IFileService> mockFileService = _mockRepository.Create<IFileService>();
             mockFileService.Setup(f => f.Exists(It.Is<string>(s => s == testFile))).Returns(true);
@@ -80,7 +80,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             string testPattern = "testPattern";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new ChangelogPluginOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new ChangelogPluginOptions
             {
                 File = testFile,
                 Pattern = testPattern

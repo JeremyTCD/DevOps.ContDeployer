@@ -23,7 +23,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubChangelogAdapter(null, mockStepContext.Object, null));
@@ -35,7 +35,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns(new GitHubChangelogAdapterOptions());
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new GitHubChangelogAdapterOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
@@ -58,7 +58,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
             string testVersion = "1.0.0";
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubChangelogAdapterOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new GitHubChangelogAdapterOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -116,7 +116,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
             int testId = 1;
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubChangelogAdapterOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new GitHubChangelogAdapterOptions
             {
                 Token = testToken,
                 Owner = testOwner,

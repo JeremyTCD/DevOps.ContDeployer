@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace JeremyTCD.ContDeployer.Plugin.Nuget
 {
-    public class NugetChangelogAdapter : PluginBase
+    public class NugetChangelogAdapter : IPlugin
     {
         private NugetChangelogAdapterOptions _options { get; }
         private INugetClient _nugetClient { get; }
@@ -16,7 +16,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
         public NugetChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext,
             INugetClient nugetClient) : base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as NugetChangelogAdapterOptions;
+            _options = stepContext.PluginOptions as NugetChangelogAdapterOptions;
 
             if (_options == null)
             {
@@ -33,7 +33,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
             _nugetClient = nugetClient;
         }
 
-        public override void Run()
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             List<IPackageSearchMetadata> packageSearchMetadata = _nugetClient.GetPackageVersions(_options.Source, _options.PackageName, 
                 CancellationToken.None);

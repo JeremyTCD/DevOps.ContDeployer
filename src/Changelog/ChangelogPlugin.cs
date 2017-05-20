@@ -24,7 +24,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
         /// Generates <see cref="Changelog"/> and inserts it into <see cref="IPipelineContext.SharedData"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="IStepContext.Options"/> is not an instance of <see cref="ChangelogPluginOptions"/>
+        /// If <see cref="IStepContext.PluginOptions"/> is not an instance of <see cref="ChangelogPluginOptions"/>
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="ChangelogPluginOptions.File"/> does not exist
@@ -34,7 +34,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
         /// </exception>
         public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
-            ChangelogPluginOptions options = stepContext.Options as ChangelogPluginOptions;
+            ChangelogPluginOptions options = stepContext.PluginOptions as ChangelogPluginOptions;
 
             if (options == null)
             {

@@ -21,7 +21,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.Options).Returns((IPluginOptions)null);
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => new GitHubPlugin(null, mockStepContext.Object, null));
@@ -39,7 +39,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
 
             NewRelease newRelease = new NewRelease(testTagName);
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -80,7 +80,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
                 ReleaseUpdate = releaseUpdate
             };
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,
@@ -123,7 +123,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
                 ReleaseUpdate = releaseUpdate
             };
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(o => o.Options).Returns(new GitHubPluginOptions
+            mockStepContext.Setup(o => o.PluginOptions).Returns(new GitHubPluginOptions
             {
                 Token = testToken,
                 Owner = testOwner,

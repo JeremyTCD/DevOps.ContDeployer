@@ -5,7 +5,7 @@ using System.IO;
 
 namespace JeremyTCD.ContDeployer.Plugin.MSBuild
 {
-    public class MSBuildPlugin : PluginBase
+    public class MSBuildPlugin : IPlugin
     {
         private MSBuildPluginOptions _options { get; }
         private IMSBuildClient _msBuildClient { get; }
@@ -13,7 +13,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild
         public MSBuildPlugin(IMSBuildClient msBuildClient, IPipelineContext pipelineContext, IStepContext stepContext) :
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as MSBuildPluginOptions;
+            _options = stepContext.PluginOptions as MSBuildPluginOptions;
 
             if(_options == null)
             {
@@ -26,7 +26,7 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild
         /// <summary>
         /// Executes MSBuild.exe with specified arguments
         /// </summary>
-        public override void Run()
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             if (!PipelineContext.SharedOptions.DryRun)
             {

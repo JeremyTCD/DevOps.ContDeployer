@@ -5,8 +5,8 @@ namespace JeremyTCD.ContDeployer.PluginTools
 {
     public interface IStepContext
     {
-        IPluginOptions Options { get; set; }
+        IPluginOptions PluginOptions { get; set; }
         ILogger Logger { get; set; }
-        IEnumerable<IStep> RemainingSteps { get; set; }
+        LinkedList<IStep> RemainingSteps { get; set; }
     }
 }

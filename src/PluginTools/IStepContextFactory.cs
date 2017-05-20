@@ -10,8 +10,8 @@ namespace JeremyTCD.ContDeployer.PluginTools
     /// </summary>
     public interface IStepContextFactory
     {
-        IStepContextFactory AddRemainingSteps(IEnumerable<IStep> steps);
-        IStepContextFactory AddPluginOptions(IPluginOptions options);
+        IStepContextFactory AddRemainingSteps(LinkedList<IStep> remainingSteps);
+        IStepContextFactory AddPluginOptions(IPluginOptions pluginOptions);
         IStepContextFactory AddLogger(ILogger logger);
 
         IStepContext Build();

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
-    public class GitHubChangelogAdapter : PluginBase
+    public class GitHubChangelogAdapter : IPlugin
     {
         private GitHubChangelogAdapterOptions _options { get; }
         private IChangelog _changelog { get; }
@@ -18,7 +18,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         /// Creates a <see cref="GitHubChangelogAdapter"/> instance
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If <see cref="IStepContext.Options"/> is null
+        /// If <see cref="IStepContext.PluginOptions"/> is null
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
@@ -27,7 +27,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
             IGitHubClientFactory gitHubClientFactory) : 
             base(pipelineContext, stepContext)
         {
-            _options = stepContext.Options as GitHubChangelogAdapterOptions;
+            _options = stepContext.PluginOptions as GitHubChangelogAdapterOptions;
 
             if (_options == null)
             {
@@ -48,7 +48,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
         /// has no corresponding release or if a version's notes are inconsistent with its release.
         /// </summary>
-        public override void Run()
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             List<IVersion> versions = _changelog.Versions.ToList();
   
