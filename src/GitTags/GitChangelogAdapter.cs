@@ -17,16 +17,8 @@ namespace JeremyTCD.ContDeployer.Plugin.Git
         /// Creates a <see cref="GitChangelogAdapter"/> instance
         /// </summary>
         /// <param name="repositoryFactory"></param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="repositoryFactory"/> is null
-        /// </exception>
         public GitChangelogAdapter(IRepositoryFactory repositoryFactory)
         {
-            if(repositoryFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repositoryFactory));
-            }
-
             _repository = repositoryFactory.Build(Directory.GetCurrentDirectory());
         }
 
