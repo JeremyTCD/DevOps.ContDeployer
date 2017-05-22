@@ -12,6 +12,11 @@ namespace JeremyTCD.ContDeployer.Plugin.Git
 
         public GitPlugin(IRepositoryFactory repositoryFactory)
         {
+            if (repositoryFactory == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryFactory));
+            }
+            
             _repository = repositoryFactory.Build(Directory.GetCurrentDirectory());
         }
 

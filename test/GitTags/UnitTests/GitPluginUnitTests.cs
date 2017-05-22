@@ -15,78 +15,90 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
-        //[Fact]
-        //public void Constructor_ThrowsExceptionIfOptionsIsNotAGitOptionsInstance()
-        //{
-        //    // Arrange
-        //    Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-        //    mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
+        [Fact]
+        public void Run_ThrowsExceptionIfStepContextPluginOptionsIsNotAGitPluginOptionsInstance()
+        {
+            // Arrange
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
-        //    // Act and Assert
-        //    Assert.Throws<InvalidOperationException>(() => new GitPlugin(null, mockStepContext.Object));
-        //    _mockRepository.VerifyAll();
-        //}
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns((IRepository)null);
 
-        //[Fact]
-        //public void Run_CreatesTagWithSpecifiedName()
-        //{
-        //    // Arrange
-        //    string testTagName = "0.1.0";
-        //    string testName = "testName";
-        //    string testEmail = "testEmail";
-        //    string testCommitish = "testCommitish";
+            GitPlugin plugin = new GitPlugin(mockRepositoryFactory.Object); 
 
-        //    Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-        //    mockStepContext.Setup(s => s.PluginOptions).Returns(new GitPluginOptions
-        //    {
-        //        Commitish = testCommitish,
-        //        Email = testEmail,
-        //        Name = testName,
-        //        TagName = testTagName
-        //    });
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => plugin.Run(null, mockStepContext.Object));
+            _mockRepository.VerifyAll();
+        }
 
-        //    Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-        //    Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
-        //    mockSharedOptions.Setup(s => s.DryRun).Returns(false);
+        [Fact]
+        public void Run_CreatesTagWithSpecifiedName()
+        {
+            // Arrange
+            string testTagName = "0.1.0";
+            string testName = "testName";
+            string testEmail = "testEmail";
+            string testCommitish = "testCommitish";
 
-        //    Mock<IRepository> mockRepository = Mock.Get(mockPipelineContext.Object.Repository);
-        //    Mock<GitObject> mockGitObject = _mockRepository.Create<GitObject>();
-        //    mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockGitObject.Object);
-        //    Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
-        //    mockTags.
-        //        Setup(t => t.Add(testTagName, mockGitObject.Object, 
-        //            It.Is<Signature>(s => s.Name == testName && s.Email == testEmail), ""));
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new GitPluginOptions
+            {
+                Commitish = testCommitish,
+                Email = testEmail,
+                Name = testName,
+                TagName = testTagName
+            });
 
-        //    GitPlugin gitPlugin = new GitPlugin(mockPipelineContext.Object, mockStepContext.Object);
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
+            mockSharedOptions.Setup(s => s.DryRun).Returns(false);
 
-        //    // Act
-        //    gitPlugin.Run();
+            Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();
+            Mock<GitObject> mockGitObject = _mockRepository.Create<GitObject>();
+            mockRepository.Setup(r => r.Lookup(testCommitish)).Returns(mockGitObject.Object);
+            Mock<TagCollection> mockTags = Mock.Get(mockRepository.Object.Tags);
+            mockTags.
+                Setup(t => t.Add(testTagName, mockGitObject.Object,
+                    It.Is<Signature>(s => s.Name == testName && s.Email == testEmail), ""));
 
-        //    // Assert
-        //    _mockRepository.VerifyAll();
-        //}
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns(mockRepository.Object);
 
-        //[Fact]
-        //public void Run_DoesNotAddATagOnDryRun()
-        //{
-        //    // Arrange
-        //    Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-        //    mockStepContext.Setup(s => s.PluginOptions).Returns(new GitPluginOptions());
+            GitPlugin plugin = new GitPlugin(mockRepositoryFactory.Object);
 
-        //    Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-        //    Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
-        //    mockSharedOptions.Setup(s => s.DryRun).Returns(true);
-            
-        //    GitPlugin gitPlugin = new GitPlugin(mockPipelineContext.Object, mockStepContext.Object);
+            // Act
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
 
-        //    // Act
-        //    gitPlugin.Run();
+            // Assert
+            _mockRepository.VerifyAll();
+        }
 
-        //    // Assert
-        //    _mockRepository.VerifyAll();
-        //    Mock<TagCollection> mockTags = Mock.Get(mockPipelineContext.Object.Repository.Tags);
-        //    mockTags.
-        //        Verify(t => t.Add(It.IsAny<string>(), It.IsAny<GitObject>(), It.IsAny<Signature>(), It.IsAny<string>()), Times.Never);
-        //}
+        [Fact]
+        public void Run_DoesNotAddATagOnDryRun()
+        {
+            // Arrange
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new GitPluginOptions());
+
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
+            mockSharedOptions.Setup(s => s.DryRun).Returns(true);
+
+            Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();
+            Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
+            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns(mockRepository.Object);
+
+            GitPlugin plugin = new GitPlugin(mockRepositoryFactory.Object);
+
+            // Act
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            Mock<TagCollection> mockTags = Mock.Get(mockRepository.Object.Tags);
+            mockTags.
+                Verify(t => t.Add(It.IsAny<string>(), It.IsAny<GitObject>(), It.IsAny<Signature>(), It.IsAny<string>()), Times.Never);
+        }
     }
 }
