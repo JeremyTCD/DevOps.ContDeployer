@@ -88,7 +88,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
 
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
             Mock<IChangelogFactory> mockChangelogFactory = _mockRepository.Create<IChangelogFactory>();
-            mockChangelogFactory.Setup(c => c.Build(testPattern, testChangelogText)).Returns(mockChangelog.Object);
+            mockChangelogFactory.Setup(c => c.CreateChangelog(testPattern, testChangelogText)).Returns(mockChangelog.Object);
 
             Mock<IFileService> mockFileService = _mockRepository.Create<IFileService>();
             mockFileService.Setup(f => f.Exists(It.Is<string>(s => s == testFile))).Returns(true);

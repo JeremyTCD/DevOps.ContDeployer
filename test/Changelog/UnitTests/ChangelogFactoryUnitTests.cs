@@ -31,7 +31,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             ChangelogFactory factory = new ChangelogFactory();
 
             // Act
-            IChangelog result = factory.Build(pattern, changelogText);
+            IChangelog result = factory.CreateChangelog(pattern, changelogText);
 
             // Assert
             Assert.NotNull(result.Versions);

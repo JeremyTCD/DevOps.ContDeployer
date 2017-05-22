@@ -18,7 +18,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
         /// <returns>
         /// <see cref="Changelog"/>
         /// </returns>
-        public IChangelog Build(string pattern, string changelogText)
+        public IChangelog CreateChangelog(string pattern, string changelogText)
         {
             MatchCollection matches = Regex.Matches(changelogText, pattern, RegexOptions.Singleline);
             SortedSet<IVersion> versions = new SortedSet<IVersion>();

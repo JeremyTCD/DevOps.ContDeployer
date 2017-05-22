@@ -53,7 +53,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog
             }
 
             // Build changelog
-            IChangelog changelog = _changelogFactory.Build(options.Pattern, changelogText);
+            IChangelog changelog = _changelogFactory.CreateChangelog(options.Pattern, changelogText);
 
             pipelineContext.SharedData[nameof(Changelog)] = changelog;
             stepContext.Logger.LogInformation($"{nameof(Changelog)} generated");

@@ -2,6 +2,6 @@
 {
     public interface IChangelogFactory
     {
-        IChangelog Build(string pattern, string changelogText);
+        IChangelog CreateChangelog(string pattern, string changelogText);
     }
 }
