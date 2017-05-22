@@ -28,7 +28,6 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
             Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
-            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns((IRepository)null);
 
             GitChangelogAdapter adapter = new GitChangelogAdapter(mockRepositoryFactory.Object);
 

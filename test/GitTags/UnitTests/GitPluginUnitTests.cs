@@ -23,7 +23,6 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
             mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
             Mock<IRepositoryFactory> mockRepositoryFactory = _mockRepository.Create<IRepositoryFactory>();
-            mockRepositoryFactory.Setup(r => r.Build(It.IsAny<string>())).Returns((IRepository)null);
 
             GitPlugin plugin = new GitPlugin(mockRepositoryFactory.Object); 
 
