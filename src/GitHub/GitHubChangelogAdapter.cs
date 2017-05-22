@@ -10,12 +10,22 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
     public class GitHubChangelogAdapter : IPlugin
     {
-        private GitHubChangelogAdapterOptions _options { get; }
-        private IChangelog _changelog { get; }
-        private IGitHubClient _gitHubClient { get; }        
+        private GitHubChangelogAdapterOptions _options { get; set;  }
+        private IChangelog _changelog { get; set;  }
+        private IGitHubClient _gitHubClient { get; set; }
+        private IGitHubClientFactory _gitHubClientFactory { get; }        
 
         /// <summary>
         /// Creates a <see cref="GitHubChangelogAdapter"/> instance
+        /// </summary>
+        public GitHubChangelogAdapter(IGitHubClientFactory gitHubClientFactory) 
+        {
+            _gitHubClientFactory = gitHubClientFactory;
+        }
+
+        /// <summary>
+        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
+        /// has no corresponding release or if a version's notes are inconsistent with its release.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="IStepContext.PluginOptions"/> is null
@@ -23,38 +33,27 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         /// <exception cref="InvalidOperationException">
         /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
         /// </exception>
-        public GitHubChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext, 
-            IGitHubClientFactory gitHubClientFactory) : 
-            base(pipelineContext, stepContext)
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             _options = stepContext.PluginOptions as GitHubChangelogAdapterOptions;
-
             if (_options == null)
             {
                 throw new InvalidOperationException($"{nameof(GitHubChangelogAdapterOptions)} required");
             }
 
-            PipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
+            pipelineContext.SharedData.TryGetValue(nameof(Changelog), out object changelogObject);
             _changelog = changelogObject as IChangelog;
             if (_changelog == null)
             {
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(PipelineContext.SharedData)}");
             }
-
-            _gitHubClient = gitHubClientFactory.CreateClient(_options.Token);
-        }
-
-        /// <summary>
-        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
-        /// has no corresponding release or if a version's notes are inconsistent with its release.
-        /// </summary>
-        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
-        {
             List<IVersion> versions = _changelog.Versions.ToList();
   
+            _gitHubClient = _gitHubClientFactory.CreateClient(_options.Token);
+
             Dictionary<string, Release> releases = GetGitHubReleases();
 
-            GitHubPluginOptions gitHubReleasesOptions = new GitHubPluginOptions
+            GitHubPluginOptions gitHubPluginOptions = new GitHubPluginOptions
             {
                 Owner = _options.Owner,
                 Repository = _options.Repository,
@@ -69,7 +68,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
 
                 if (release == null)
                 {
-                    gitHubReleasesOptions.NewReleases.Add(new NewRelease(name)
+                    gitHubPluginOptions.NewReleases.Add(new NewRelease(name)
                     {
                         Body = version.Notes,
                         Name = name,
@@ -78,13 +77,13 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
                         TargetCommitish = _options.Commitish // Ignored by gitHub api if tag already exists, otherwise creates a tag pointing to commitish
                     });
 
-                    StepContext.
+                    stepContext.
                         Logger.
                         LogInformation($"Version \"{name}\" has no corresponding gitHub release");
                 }
                 else if (release.Body != version.Notes)
                 {
-                    gitHubReleasesOptions.ModifiedReleases.Add(new ModifiedRelease()
+                    gitHubPluginOptions.ModifiedReleases.Add(new ModifiedRelease()
                     {
                         ReleaseUpdate = new ReleaseUpdate
                         {
@@ -97,28 +96,26 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
                         Id = release.Id
                     });
 
-                    StepContext.
+                    stepContext.
                         Logger.
                         LogInformation($"Version \"{name}\" has been updated");
                 }
             }
 
-            if (gitHubReleasesOptions.NewReleases.Count > 0 || gitHubReleasesOptions.ModifiedReleases.Count > 0)
+            if (gitHubPluginOptions.NewReleases.Count > 0 || gitHubPluginOptions.ModifiedReleases.Count > 0)
             {
-                IStep gitHubReleasesStep = PipelineContext.
-                    StepFactory.
-                    Build(nameof(GitHubPlugin), gitHubReleasesOptions);
-                PipelineContext.
-                    Steps.
-                    AddFirst(gitHubReleasesStep);
+                IStep gitHubStep = new Step<GitHubPlugin>(gitHubPluginOptions);
+                stepContext.
+                    RemainingSteps.
+                    AddFirst(gitHubStep);
 
-                StepContext.
+                stepContext.
                     Logger.
                     LogInformation($"Added {nameof(GitHubPlugin)} step");
             }
             else
             {
-                StepContext.
+                stepContext.
                     Logger.
                     LogInformation("GitHub releases consistent with changelog");
             }

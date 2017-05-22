@@ -19,19 +19,23 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNotAGitHubChangelogAdapterOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotAGitHubChangelogAdapterOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
+            Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
+
+            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(mockGitHubClientFactory.Object);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitHubChangelogAdapter(null, mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => adapter.Run(null, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
+        public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
@@ -42,14 +46,15 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
             object outValue = null;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
+            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(null);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new GitHubChangelogAdapter(mockPipelineContext.Object, 
-                mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => adapter.Run(mockPipelineContext.Object, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_AddsGitHubStepWithOptionsContainingANewReleaseIfAVersionHasNoCorrespondingRelease()
+        public void Run_AddsGitHubPluginStepWithOptionsContainingANewReleaseIfAVersionHasNoCorrespondingRelease()
         {
             // Arrange
             string testOwner = "testOwner";
@@ -73,33 +78,27 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
 
             Mock<IVersion> mockVersion = _mockRepository.Create<IVersion>();
             mockVersion.Setup(v => v.SemVersion).Returns(SemVersion.Parse(testVersion));
-            SortedSet<IVersion> versions = new SortedSet<IVersion>();
-            versions.Add(mockVersion.Object);
+            SortedSet<IVersion> versions = new SortedSet<IVersion> { mockVersion.Object };
             Mock<IChangelog> mockChangelog = _mockRepository.Create<IChangelog>();
             mockChangelog.Setup(c => c.Versions).Returns(versions);
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
             Mock<IDictionary<string, object>> mockSharedData = Mock.Get(mockPipelineContext.Object.SharedData);
             object outValue = mockChangelog.Object;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
-            Mock<IStep> mockStep = _mockRepository.Create<IStep>();
-            Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
-            mockStepFactory.
-                Setup(s => s.Build(nameof(GitHubPlugin), 
-                    It.Is<GitHubPluginOptions>(o => o.NewReleases.Count == 1 && o.NewReleases[0].Name == testVersion))).
-                Returns(mockStep.Object);
 
-            LinkedList<IStep> steps = new LinkedList<IStep>();
-            mockPipelineContext.Setup(o => o.Steps).Returns(steps);
+            LinkedList<IStep> remainingSteps = new LinkedList<IStep>();
+            mockStepContext.Setup(o => o.RemainingSteps).Returns(remainingSteps);
 
-            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(mockPipelineContext.Object, 
-                mockStepContext.Object, mockGitHubClientFactory.Object);
+            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(mockGitHubClientFactory.Object);  
 
             // Act
-            adapter.Run();
+            adapter.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
-            Assert.Equal(1, steps.Count);
-            Assert.Equal(mockStep.Object, steps.First.Value);
+            Assert.Equal(1, remainingSteps.Count);
+            GitHubPluginOptions gitHubPluginOptions = remainingSteps.First.Value.PluginOptions as GitHubPluginOptions;
+            Assert.NotNull(gitHubPluginOptions);
+            Assert.Equal(1, gitHubPluginOptions.NewReleases.Count);
             _mockRepository.VerifyAll();
         }
 
@@ -142,27 +141,20 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
             object outValue = mockChangelog.Object;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
             Mock<IStep> mockStep = _mockRepository.Create<IStep>();
-            Mock<IStepFactory> mockStepFactory = Mock.Get(mockPipelineContext.Object.StepFactory);
-            mockStepFactory.
-                Setup(s => s.Build(nameof(GitHubPlugin),
-                    It.Is<GitHubPluginOptions>(o => o.ModifiedReleases.Count == 1 && 
-                        o.ModifiedReleases[0].ReleaseUpdate.Name == testVersion &&
-                        o.ModifiedReleases[0].ReleaseUpdate.Body == testBody2 && 
-                        o.ModifiedReleases[0].Id == testId))).
-                Returns(mockStep.Object);
 
-            LinkedList<IStep> steps = new LinkedList<IStep>();
-            mockPipelineContext.Setup(o => o.Steps).Returns(steps);
+            LinkedList<IStep> remainingSteps = new LinkedList<IStep>();
+            mockStepContext.Setup(o => o.RemainingSteps).Returns(remainingSteps);
 
-            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(mockPipelineContext.Object,
-                mockStepContext.Object, mockGitHubClientFactory.Object);
+            GitHubChangelogAdapter adapter = new GitHubChangelogAdapter(mockGitHubClientFactory.Object);
 
             // Act
-            adapter.Run();
+            adapter.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
-            Assert.Equal(1, steps.Count);
-            Assert.Equal(mockStep.Object, steps.First.Value);
+            Assert.Equal(1, remainingSteps.Count);
+            GitHubPluginOptions gitHubPluginOptions = remainingSteps.First.Value.PluginOptions as GitHubPluginOptions;
+            Assert.NotNull(gitHubPluginOptions);
+            Assert.Equal(1, gitHubPluginOptions.ModifiedReleases.Count);
             _mockRepository.VerifyAll();
         }
 
