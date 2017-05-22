@@ -16,7 +16,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfStepContextPluginOptionsIsNotAGitPluginOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotAGitPluginOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();

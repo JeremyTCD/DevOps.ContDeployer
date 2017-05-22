@@ -19,7 +19,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfStepContextPluginOptionsIsNotAChangelogPluginOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotAChangelogPluginOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
