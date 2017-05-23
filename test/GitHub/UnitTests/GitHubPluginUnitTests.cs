@@ -52,7 +52,7 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
             });
 
             Mock<IGitHubClient> mockGitHubClient = _mockRepository.Create<IGitHubClient>();
-            Mock.Get(mockGitHubClient.Object.Repository.Release).Setup(r => r.Create(testToken, testRepository, newRelease));
+            Mock.Get(mockGitHubClient.Object.Repository.Release).Setup(r => r.Create(testOwner, testRepository, newRelease));
             Mock<IGitHubClientFactory> mockGitHubClientFactory = _mockRepository.Create<IGitHubClientFactory>();
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
