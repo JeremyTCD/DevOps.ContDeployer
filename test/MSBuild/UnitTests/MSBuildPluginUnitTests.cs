@@ -15,14 +15,18 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNotAGitOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotAGitOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
+            Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
+
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new MSBuildPlugin(null, null, mockStepContext.Object));
+            Assert.Throws<InvalidOperationException>(() => plugin.Run(null, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
 
@@ -47,11 +51,10 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
             Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
             mockMSBuildClient.Setup(m => m.Build(testFile, testSwitches));
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object, mockPipelineContext.Object,
-                mockStepContext.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
 
             // Act
-            plugin.Run();
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
             _mockRepository.VerifyAll();
@@ -70,11 +73,10 @@ namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
 
             Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object, mockPipelineContext.Object,
-                mockStepContext.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
 
             // Act
-            plugin.Run();
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
             _mockRepository.VerifyAll();
