@@ -9,7 +9,7 @@
     <ProjectReference Include="..\..\src\Changelog\JeremyTCD.ContDeployer.Plugin.Changelog.csproj" />
     <ProjectReference Include="..\..\src\ContDeployer\JeremyTCD.ContDeployer.csproj" />
     <ProjectReference Include="..\..\src\GitHub\JeremyTCD.ContDeployer.Plugin.GitHub.csproj" />
-    <ProjectReference Include="..\..\src\GitTags\JeremyTCD.ContDeployer.Plugin.Git.csproj" />
+    <ProjectReference Include="..\..\src\Git\JeremyTCD.ContDeployer.Plugin.Git.csproj" />
     <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.ContDeployer.Plugin.MSBuild.csproj" />
     <ProjectReference Include="..\..\src\Nuget\JeremyTCD.ContDeployer.Plugin.Nuget.csproj" />
   </ItemGroup>
