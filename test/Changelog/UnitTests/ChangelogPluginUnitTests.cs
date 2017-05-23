@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
 using LibGit2Sharp;
 using Moq;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.UnitTests
 {
     public class ChangelogPluginUnitTests
     {

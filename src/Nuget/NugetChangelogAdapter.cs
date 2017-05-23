@@ -1,11 +1,11 @@
-﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
+using JeremyTCD.PipelinesCE.PluginTools;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
     public class NugetChangelogAdapter : IPlugin
     {

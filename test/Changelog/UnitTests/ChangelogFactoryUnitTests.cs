@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.UnitTests
 {
     public class ChangelogFactoryUnitTests
     {

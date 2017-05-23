@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JeremyTCD.ContDeployer.PluginTools {
+namespace JeremyTCD.PipelinesCE.PluginTools {
     using System;
     using System.Reflection;
     
@@ -40,7 +40,7 @@ namespace JeremyTCD.ContDeployer.PluginTools {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.ContDeployer.PluginTools.Strings", typeof(Strings).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.PipelinesCE.PluginTools.Strings", typeof(Strings).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

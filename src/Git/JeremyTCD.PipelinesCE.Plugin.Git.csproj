@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>JeremyTCD.PipelinesCE.Plugin.GitTags</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.0.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj" />
+    <ProjectReference Include="..\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
+  </ItemGroup>
+
+</Project>

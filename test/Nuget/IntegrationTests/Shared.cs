@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(NugetCollection))]
     public class NugetCollection : ICollectionFixture<NugetFixture>

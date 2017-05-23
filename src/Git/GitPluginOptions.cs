@@ -1,7 +1,7 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.Git
+namespace JeremyTCD.PipelinesCE.Plugin.Git
 {
     public class GitPluginOptions : IPluginOptions
     {

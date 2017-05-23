@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public interface IPipelineContext
     {

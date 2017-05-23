@@ -1,7 +1,7 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.AppVeyorPlugin
+namespace JeremyTCD.PipelinesCE.Plugin.AppVeyorPlugin
 {
     public class AppVeyorPluginOptions : IPluginOptions
     {

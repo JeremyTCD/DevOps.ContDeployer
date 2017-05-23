@@ -1,6 +1,6 @@
 ﻿using Octokit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class ModifiedRelease 
     {

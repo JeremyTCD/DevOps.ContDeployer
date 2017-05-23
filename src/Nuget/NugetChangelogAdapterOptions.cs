@@ -1,9 +1,9 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
     public class NugetChangelogAdapterOptions : IPluginOptions
     {

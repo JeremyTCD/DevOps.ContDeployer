@@ -1,6 +1,6 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {
     /// <summary>
     /// Wraps MSBuild.exe - https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.

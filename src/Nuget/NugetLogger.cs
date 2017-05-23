@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
     /// <summary>
     /// Pipes <see cref="NuGet.Common.ILogger"/> logs to an <see cref="Microsoft.Extensions.Logging.ILogger"/>

@@ -1,10 +1,10 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public class ChangelogPlugin : IPlugin
     {

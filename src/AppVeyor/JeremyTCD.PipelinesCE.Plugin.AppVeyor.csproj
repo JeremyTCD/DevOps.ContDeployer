@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>JeremyTCD.PipelinesCE.Plugin.AppVeyor</AssemblyName>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Composition" Version="1.0.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
+  </ItemGroup>
+
+</Project>

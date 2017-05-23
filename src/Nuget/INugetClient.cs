@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
     public interface INugetClient
     {

@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(GitHubCollection))]
     public class GitHubCollection : ICollectionFixture<GitHubFixture>

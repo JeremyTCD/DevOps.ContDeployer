@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
-namespace JeremyTCD.ContDeployer.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     // TODO ExecuteAsync
     public class ProcessManager : IProcessManager

@@ -1,10 +1,10 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using LibGit2Sharp;
 using Moq;
 using System;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.Git.Tests.UnitTests
 {
     public class GitPluginUnitTests
     {

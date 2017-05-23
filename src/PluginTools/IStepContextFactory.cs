@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     /// <summary>
     /// Factory for <see cref="IStepContext"/> instances. This interface decouples <see cref="IStepContext"/> from <see cref="StepContext"/>.

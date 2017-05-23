@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public class Changelog : IChangelog
     {

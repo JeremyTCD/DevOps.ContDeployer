@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.ContDeployer.Plugin.GitHub
+﻿namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class GitHubChangelogAdapterStartup : GitHubPluginStartup
     {

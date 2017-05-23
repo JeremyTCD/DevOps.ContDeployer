@@ -1,6 +1,6 @@
 ﻿using Semver;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public class Version : IVersion
     {

@@ -1,6 +1,6 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public class ChangelogPluginOptions : IPluginOptions
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace JeremyTCD.ContDeployer.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public interface IStep
     {

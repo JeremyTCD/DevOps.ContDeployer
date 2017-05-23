@@ -1,10 +1,10 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.UnitTests
 {
     public class NugetChangelogAdapterUnitTests
     {

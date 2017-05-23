@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace JeremyTCD.ContDeployer.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public class StepContext : IStepContext
     {

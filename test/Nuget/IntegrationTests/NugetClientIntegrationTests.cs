@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.IntegrationTests
 {
     /// <summary>
     /// Nuget.Client api isn't stable yet (as of 4.0.0-rc-netstandard2.0). All functions that utilize the api

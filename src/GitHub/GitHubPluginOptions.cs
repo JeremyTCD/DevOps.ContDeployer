@@ -1,9 +1,9 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Octokit;
 using System;
 using System.Collections.Generic;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class GitHubPluginOptions : IPluginOptions
     {

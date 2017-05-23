@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using StructureMap;
 using System;
 
-namespace JeremyTCD.ContDeployer.ConsoleApplication
+namespace JeremyTCD.PipelinesCE.ConsoleApplication
 {
     public class ConsoleApplication
     {

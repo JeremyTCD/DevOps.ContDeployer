@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.ContDeployer.PluginTools
+﻿namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public class SharedOptions
     {

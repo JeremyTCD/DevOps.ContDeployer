@@ -1,4 +1,4 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(ChangelogPluginCollection))]
     public class ChangelogPluginCollection : ICollectionFixture<ChangelogPluginFixture>

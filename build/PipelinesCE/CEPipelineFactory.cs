@@ -1,8 +1,8 @@
-﻿using JeremyTCD.ContDeployer;
-using JeremyTCD.ContDeployer.Plugin.Changelog;
-using JeremyTCD.ContDeployer.Plugin.Git;
-using JeremyTCD.ContDeployer.Plugin.MSBuild;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE;
+using JeremyTCD.PipelinesCE.Plugin.Changelog;
+using JeremyTCD.PipelinesCE.Plugin.Git;
+using JeremyTCD.PipelinesCE.Plugin.MSBuild;
+using JeremyTCD.PipelinesCE.PluginTools;
 using System.Collections.Generic;
 
 namespace PipelinesCE

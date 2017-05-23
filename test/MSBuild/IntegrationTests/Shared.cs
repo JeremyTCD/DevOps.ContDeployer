@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(MSBuildCollection))]
     public class MSBuildCollection : ICollectionFixture<MSBuildFixture>

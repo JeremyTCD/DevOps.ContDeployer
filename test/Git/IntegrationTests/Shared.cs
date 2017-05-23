@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.Git.Tests.IntegrationTests
 {
     [CollectionDefinition(nameof(GitCollection))]
     public class GitCollection : ICollectionFixture<GitFixture>

@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.ContDeployer.Plugin.Chocolatey
+﻿namespace JeremyTCD.PipelinesCE.Plugin.Chocolatey
 {
     public class ChocolateyChangelogAdapter
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {
     public interface IMSBuildClient
     {

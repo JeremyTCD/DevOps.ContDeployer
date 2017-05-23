@@ -1,7 +1,7 @@
 ﻿using Octokit;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     /// <summary>
     /// As suggested here - https://github.com/octokit/octokit.net/issues/1538

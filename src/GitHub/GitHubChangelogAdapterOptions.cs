@@ -1,7 +1,7 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using System;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class GitHubChangelogAdapterOptions : IPluginOptions
     {

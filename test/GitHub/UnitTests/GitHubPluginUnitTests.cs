@@ -1,11 +1,11 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
 using Octokit;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.UnitTests
 {
     public class GitHubPluginUnitTests
     {

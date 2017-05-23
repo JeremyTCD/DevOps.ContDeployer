@@ -1,5 +1,5 @@
-﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
+using JeremyTCD.PipelinesCE.PluginTools;
 using LibGit2Sharp;
 using Moq;
 using Semver;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.Git.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.Git.Tests.UnitTests
 {
     public class GitChangelogAdapterTests
     {

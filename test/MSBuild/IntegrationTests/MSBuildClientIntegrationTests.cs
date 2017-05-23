@@ -1,11 +1,11 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.IO;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
 {
     /// <summary>
     /// MSBuild.Client api isn't stable yet (as of 4.0.0-rc-netstandard2.0). All functions that utilize the api

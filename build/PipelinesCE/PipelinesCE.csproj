@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
@@ -6,12 +6,12 @@
 
   <ItemGroup>
     <!--Eventually, these should be referenced as nuget packages-->
-    <ProjectReference Include="..\..\src\Changelog\JeremyTCD.ContDeployer.Plugin.Changelog.csproj" />
-    <ProjectReference Include="..\..\src\ContDeployer\JeremyTCD.ContDeployer.csproj" />
-    <ProjectReference Include="..\..\src\GitHub\JeremyTCD.ContDeployer.Plugin.GitHub.csproj" />
-    <ProjectReference Include="..\..\src\Git\JeremyTCD.ContDeployer.Plugin.Git.csproj" />
-    <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.ContDeployer.Plugin.MSBuild.csproj" />
-    <ProjectReference Include="..\..\src\Nuget\JeremyTCD.ContDeployer.Plugin.Nuget.csproj" />
+    <ProjectReference Include="..\..\src\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj" />
+    <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
+    <ProjectReference Include="..\..\src\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.csproj" />
+    <ProjectReference Include="..\..\src\Git\JeremyTCD.PipelinesCE.Plugin.Git.csproj" />
+    <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj" />
+    <ProjectReference Include="..\..\src\Nuget\JeremyTCD.PipelinesCE.Plugin.Nuget.csproj" />
   </ItemGroup>
 
 </Project>

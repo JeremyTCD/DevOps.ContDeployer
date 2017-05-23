@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace JeremyTCD.ContDeployer.Plugin.Nuget
+namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
     /// <summary>
     /// Convenience methods for interacting with Nuget servers. Consider decomposing into more general functions

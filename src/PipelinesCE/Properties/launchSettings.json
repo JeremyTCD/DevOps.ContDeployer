@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "JeremyTCD.PipelinesCE": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
+    }
+  }
+}

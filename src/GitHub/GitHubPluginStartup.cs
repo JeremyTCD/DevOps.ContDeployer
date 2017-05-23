@@ -1,13 +1,13 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class GitHubPluginStartup : IPluginStartup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(provider => new GitHubClientFactory("https://api.gitHub.com", nameof(ContDeployer)));
+            services.AddSingleton(provider => new GitHubClientFactory("https://api.gitHub.com", nameof(PipelinesCE)));
         }
     }
 }

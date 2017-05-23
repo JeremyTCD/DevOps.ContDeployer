@@ -1,8 +1,8 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JeremyTCD.ContDeployer.Plugin.Changelog
+namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public class ChangelogPluginStartup : IPluginStartup
     {

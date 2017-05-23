@@ -1,7 +1,7 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {
     public class MSBuildPluginStartup : IPluginStartup
     {

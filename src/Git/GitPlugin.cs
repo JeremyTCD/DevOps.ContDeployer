@@ -1,10 +1,10 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
-namespace JeremyTCD.ContDeployer.Plugin.Git
+namespace JeremyTCD.PipelinesCE.Plugin.Git
 {
     public class GitPlugin : IPlugin
     {

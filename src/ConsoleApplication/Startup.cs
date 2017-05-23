@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using StructureMap;
 using System.IO;
 
-namespace JeremyTCD.ContDeployer.ConsoleApplication
+namespace JeremyTCD.PipelinesCE.ConsoleApplication
 {
     public class Startup
     {
@@ -19,7 +19,7 @@ namespace JeremyTCD.ContDeployer.ConsoleApplication
 
         public void ConfigureServices(IContainer main)
         {
-            main.AddContDeployer(_configurationRoot);
+            main.AddPipelinesCE(_configurationRoot);
         }
 
         public void Configure(ILoggerFactory loggerFactory)

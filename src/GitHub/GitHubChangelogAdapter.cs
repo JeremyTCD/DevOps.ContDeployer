@@ -1,12 +1,12 @@
-﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.ContDeployer.Plugin.GitHub
+namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 {
     public class GitHubChangelogAdapter : IPlugin
     {

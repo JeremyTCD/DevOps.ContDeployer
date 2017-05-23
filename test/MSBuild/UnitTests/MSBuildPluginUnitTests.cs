@@ -1,9 +1,9 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
 using System;
 using Xunit;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
 {
     public class MSBuildPluginUnitTests
     {

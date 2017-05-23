@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.ContDeployer.Plugin.Changelog
+﻿namespace JeremyTCD.PipelinesCE.Plugin.Changelog
 {
     public interface IChangelogFactory
     {

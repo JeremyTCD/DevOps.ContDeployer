@@ -1,9 +1,9 @@
-﻿using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
-namespace JeremyTCD.ContDeployer.Plugin.MSBuild
+namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {
     public class MSBuildPlugin : IPlugin
     {
