@@ -22,16 +22,13 @@ namespace JeremyTCD.ContDeployer.ConsoleApplication
             main.AddContDeployer(_configurationRoot);
         }
 
-        public void Configure(ILoggerFactory loggerFactory, IPluginFactory pluginFactory,
-            IStepContextFactory stepContextFactory)
+        public void Configure(ILoggerFactory loggerFactory)
         {
             loggerFactory.
                 AddFile(_configurationRoot.GetValue("Logging:File:LogFile", "log.txt"),
                     (_configurationRoot.GetValue("Logging:File:LogLevel", LogLevel.Information))).
                 AddConsole(_configurationRoot.GetValue("Logging:Console:LogLevel", LogLevel.Information)).
                 AddDebug(_configurationRoot.GetValue("Logging:Debug:LogLevel", LogLevel.Information));
-            pluginFactory.LoadTypes();
-            stepContextFactory.LoadTypes();
         }
     }
 }
