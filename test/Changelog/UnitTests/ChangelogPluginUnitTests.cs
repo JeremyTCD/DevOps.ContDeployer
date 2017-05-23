@@ -61,8 +61,8 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             mockStepContext.Setup(o => o.PluginOptions).Returns(new ChangelogPluginOptions { File = testFile });
 
             Mock<IFileService> mockFileService = _mockRepository.Create<IFileService>();
-            mockFileService.Setup(f => f.Exists(It.Is<string>(s => s == testFile))).Returns(true);
-            mockFileService.Setup(f => f.ReadAllText(It.Is<string>(s => s == testFile))).Returns("");
+            mockFileService.Setup(f => f.Exists(testFile)).Returns(true);
+            mockFileService.Setup(f => f.ReadAllText(testFile)).Returns("");
 
             ChangelogPlugin changelogPlugin = new ChangelogPlugin(null, mockFileService.Object);
 
@@ -91,8 +91,8 @@ namespace JeremyTCD.ContDeployer.Plugin.Changelog.Tests.UnitTests
             mockChangelogFactory.Setup(c => c.CreateChangelog(testPattern, testChangelogText)).Returns(mockChangelog.Object);
 
             Mock<IFileService> mockFileService = _mockRepository.Create<IFileService>();
-            mockFileService.Setup(f => f.Exists(It.Is<string>(s => s == testFile))).Returns(true);
-            mockFileService.Setup(f => f.ReadAllText(It.Is<string>(s => s == testFile))).Returns(testChangelogText);
+            mockFileService.Setup(f => f.Exists(testFile)).Returns(true);
+            mockFileService.Setup(f => f.ReadAllText(testFile)).Returns(testChangelogText);
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
 
