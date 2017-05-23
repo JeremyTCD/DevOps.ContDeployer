@@ -8,18 +8,28 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
 {
     public class GitHubPlugin : IPlugin
     {
-        private GitHubPluginOptions _options { get; }
-        private IGitHubClient _gitHubClient { get; }
+        private GitHubPluginOptions _options { get; set; }
+        private IGitHubClient _gitHubClient { get; set; }
+        private IStepContext _stepContext { get; set; }
+        private IPipelineContext _pipelineContext { get; set; }
+        private IGitHubClientFactory _gitHubClientFactory { get; }
 
         /// <summary>
         /// Creates a <see cref="GitHubPlugin"/> instance
         /// </summary>
+        public GitHubPlugin(IGitHubClientFactory gitHubClientFactory) 
+        {
+            _gitHubClientFactory = gitHubClientFactory;
+        }
+
+        /// <summary>
+        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
+        /// has no corresponding release or if a version's notes are inconsistent with its release.
+        /// </summary>
         /// <exception cref="InvalidOperationException">
         /// If <see cref="IStepContext.PluginOptions"/> is null
         /// </exception>
-        public GitHubPlugin(IPipelineContext pipelineContext, IStepContext stepContext,
-            IGitHubClientFactory gitHubClientFactory) :
-            base(pipelineContext, stepContext)
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
         {
             _options = stepContext.PluginOptions as GitHubPluginOptions;
 
@@ -28,15 +38,10 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
                 throw new InvalidOperationException($"{nameof(GitHubChangelogAdapterOptions)} required");
             }
 
-            _gitHubClient = gitHubClientFactory.CreateClient(_options.Token);
-        }
+            _stepContext = stepContext;
+            _pipelineContext = pipelineContext;
+            _gitHubClient = _gitHubClientFactory.CreateClient(_options.Token);
 
-        /// <summary>
-        /// Compares <see cref="_changelog"/> and gitHub releases. Adds <see cref="GitHubPlugin"/> step if a version
-        /// has no corresponding release or if a version's notes are inconsistent with its release.
-        /// </summary>
-        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
-        {
             // TODO provide other operations
             // - delete
             // TODO dry run
@@ -48,17 +53,17 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         {
             if (_options.NewReleases == null || _options.NewReleases.Count == 0)
             {
-                StepContext.Logger.LogInformation("No new releases");
+                _stepContext.Logger.LogInformation("No new releases");
             }
 
             foreach (NewRelease newRelease in _options.NewReleases)
             {
-                if (!PipelineContext.SharedOptions.DryRun)
+                if (!_pipelineContext.SharedOptions.DryRun)
                 {
                     _gitHubClient.Repository.Release.Create(_options.Owner, _options.Repository, newRelease);
                 }
 
-                StepContext.
+                _stepContext.
                     Logger.
                     LogInformation($"Created release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +
                         $"{JsonConvert.SerializeObject(newRelease, Formatting.Indented)}");
@@ -69,18 +74,18 @@ namespace JeremyTCD.ContDeployer.Plugin.GitHub
         {
             if (_options.ModifiedReleases == null || _options.ModifiedReleases.Count == 0)
             {
-                StepContext.Logger.LogInformation("No release updates");
+                _stepContext.Logger.LogInformation("No release updates");
             }
 
             foreach (ModifiedRelease modifiedRelease in _options.ModifiedReleases)
             {
-                if (!PipelineContext.SharedOptions.DryRun)
+                if (!_pipelineContext.SharedOptions.DryRun)
                 {
                     _gitHubClient.Repository.Release.Edit(_options.Owner, _options.Repository, modifiedRelease.Id,
                         modifiedRelease.ReleaseUpdate);
                 }
 
-                StepContext.
+                _stepContext.
                     Logger.
                     LogInformation($"Modified release for repository \"{_options.Repository}\" with owner \"{_options.Owner}\":\n" +
                         $"{JsonConvert.SerializeObject(modifiedRelease, Formatting.Indented)}");
