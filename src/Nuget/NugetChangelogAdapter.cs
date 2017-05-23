@@ -9,16 +9,30 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
 {
     public class NugetChangelogAdapter : IPlugin
     {
-        private NugetChangelogAdapterOptions _options { get; }
         private INugetClient _nugetClient { get; }
-        private IChangelog _changelog { get; }
+        private IChangelog _changelog { get; set; }
 
-        public NugetChangelogAdapter(IPipelineContext pipelineContext, IStepContext stepContext,
-            INugetClient nugetClient) : base(pipelineContext, stepContext)
+        public NugetChangelogAdapter(INugetClient nugetClient) 
         {
-            _options = stepContext.PluginOptions as NugetChangelogAdapterOptions;
+            _nugetClient = nugetClient;
+        }
 
-            if (_options == null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pipelineContext"></param>
+        /// <param name="stepContext"></param>
+        /// <exception cref="InvalidOperationException">
+        /// If <see cref="IStepContext.PluginOptions"/> is null
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <see cref="IPipelineContext.SharedData"/> does not contain <see cref="IChangelog"/> instance
+        /// </exception>
+        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
+        {
+            NugetChangelogAdapterOptions options = stepContext.PluginOptions as NugetChangelogAdapterOptions;
+
+            if (options == null)
             {
                 throw new InvalidOperationException($"{nameof(NugetChangelogAdapterOptions)} required");
             }
@@ -30,12 +44,7 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget
                 throw new InvalidOperationException($"No {nameof(Changelog)} in {nameof(pipelineContext.SharedData)}");
             }
 
-            _nugetClient = nugetClient;
-        }
-
-        public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
-        {
-            List<IPackageSearchMetadata> packageSearchMetadata = _nugetClient.GetPackageVersions(_options.Source, _options.PackageName, 
+            List<IPackageSearchMetadata> packageSearchMetadata = _nugetClient.GetPackageVersions(options.Source, options.PackageName, 
                 CancellationToken.None);
 
             // Compare to changelog

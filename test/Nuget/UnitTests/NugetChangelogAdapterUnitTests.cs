@@ -1,5 +1,4 @@
-﻿using JeremyTCD.ContDeployer.Plugin.Changelog;
-using JeremyTCD.ContDeployer.PluginTools;
+﻿using JeremyTCD.ContDeployer.PluginTools;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -17,19 +16,23 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfOptionsIsNullOrNotNugetChangelogAdapterOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotANugetChangelogAdapterOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
+            Mock<INugetClient> mockNugetClient = _mockRepository.Create<INugetClient>();
+
+            NugetChangelogAdapter adapter = new NugetChangelogAdapter(mockNugetClient.Object);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new NugetChangelogAdapter(null, mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => adapter.Run(null, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Constructor_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
+        public void Run_ThrowsExceptionIfSharedDataDoesNotContainChangelog()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
@@ -40,9 +43,12 @@ namespace JeremyTCD.ContDeployer.Plugin.Nuget.Tests.UnitTests
             object outValue = null;
             mockSharedData.Setup(s => s.TryGetValue(nameof(Changelog), out outValue));
 
+            Mock<INugetClient> mockNugetClient = _mockRepository.Create<INugetClient>();
+
+            NugetChangelogAdapter adapter = new NugetChangelogAdapter(mockNugetClient.Object);
+
             // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => new NugetChangelogAdapter(mockPipelineContext.Object, 
-                mockStepContext.Object, null));
+            Assert.Throws<InvalidOperationException>(() => adapter.Run(mockPipelineContext.Object, mockStepContext.Object));
             _mockRepository.VerifyAll();
         }
     }
