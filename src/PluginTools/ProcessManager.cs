@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
 namespace JeremyTCD.PipelinesCE.PluginTools
@@ -8,12 +7,10 @@ namespace JeremyTCD.PipelinesCE.PluginTools
     public class ProcessManager : IProcessManager
     {
         private ILogger<ProcessManager> _logger { get; }
-        private SharedOptions _sharedOptions { get; }
 
-        public ProcessManager(ILogger<ProcessManager> logger, IOptions<SharedOptions> sharedOptionsAccessor)
+        public ProcessManager(ILogger<ProcessManager> logger)
         {
             _logger = logger;
-            _sharedOptions = sharedOptionsAccessor.Value;
         }
 
         /// <summary>
@@ -24,35 +21,25 @@ namespace JeremyTCD.PipelinesCE.PluginTools
         /// <returns>
         /// Exit code
         /// </returns>
-        public int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue, 
-            bool executeOnDryRun = false)
+        public int Execute(string fileName, string arguments, int timeoutMillis = int.MaxValue)
         {
-            if (_sharedOptions.DryRun && !executeOnDryRun)
+            ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                _logger.LogInformation($"Dry run \"{fileName} {arguments}\"");
+                FileName = fileName,
+                Arguments = arguments,
+                CreateNoWindow = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true
+            };
 
-                return 0;
-            }
-            else
+            using (Process process = new Process { StartInfo = startInfo })
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Arguments = arguments,
-                    CreateNoWindow = false,
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true
-                };
+                process.Start();
+                process.WaitForExit(timeoutMillis);
 
-                using (Process process = new Process { StartInfo = startInfo })
-                {
-                    process.Start();
-                    process.WaitForExit(timeoutMillis);
-
-                    _logger.LogInformation($"Successfully executed \"{fileName} {arguments}\"");
-                    return process.ExitCode;
-                }
+                _logger.LogInformation($"Successfully executed \"{fileName} {arguments}\"");
+                return process.ExitCode;
             }
         }
     }
