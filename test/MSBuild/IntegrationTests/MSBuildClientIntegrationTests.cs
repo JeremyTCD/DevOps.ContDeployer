@@ -11,7 +11,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
     /// MSBuild.Client api isn't stable yet (as of 4.0.0-rc-netstandard2.0). All functions that utilize the api
     /// should be put through thorough integration tests.
     /// </summary>
-    [Collection("MSBuildCollection")]
+    [Collection(nameof(MSBuildCollection))]
     public class MSBuildClientIntegrationTests
     {
         private string _tempDir { get; set; }
