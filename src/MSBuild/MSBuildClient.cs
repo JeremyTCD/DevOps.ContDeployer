@@ -29,7 +29,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
         /// </param>
         public void Build(string projOrSlnFile = null, string switches = null)
         {
-            _processManager.Execute("msbuild.exe", 
+            _processManager.Run("msbuild.exe", 
                 string.Concat(switches ?? "", " ", projOrSlnFile ?? ""));
         }
     } 

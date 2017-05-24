@@ -48,9 +48,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
             File.WriteAllText(projFile, _testProj);
 
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(new SharedOptions { DryRun = false });
-            IProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
+            IProcessManager processManager = new ProcessManager(mockLogger.Object);
 
             MSBuildClient client = new MSBuildClient(processManager);
 
@@ -71,9 +69,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
             File.WriteAllText(projFile, _testProj);
 
             Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            Mock<IOptions<SharedOptions>> mockOptions = new Mock<IOptions<SharedOptions>>();
-            mockOptions.Setup(o => o.Value).Returns(new SharedOptions { DryRun = false });
-            IProcessManager processManager = new ProcessManager(mockLogger.Object, mockOptions.Object);
+            IProcessManager processManager = new ProcessManager(mockLogger.Object);
 
             MSBuildClient client = new MSBuildClient(processManager);
 
