@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.DotNetCore.Utils;
 
 namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {

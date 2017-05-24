@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using JeremyTCD.DotNetCore.Utils;
+using System.Collections.Generic;
 
 namespace JeremyTCD.PipelinesCE.PluginTools
 {
