@@ -1,15 +1,8 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-using JeremyTCD.DotNetCore.Utils;
-using LibGit2Sharp;
-using Microsoft.Extensions.Configuration;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
 using StructureMap;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE
 {
