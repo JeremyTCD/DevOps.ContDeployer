@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using StructureMap;
-using System;
+﻿using StructureMap;
 
 namespace JeremyTCD.PipelinesCE.ConsoleApplication
 {
@@ -13,13 +10,9 @@ namespace JeremyTCD.PipelinesCE.ConsoleApplication
             IContainer main = new Container();
             startup.ConfigureServices(main);
 
-            // TODO How does asp net core call Configure with variable types as parameters?
-            ILoggerFactory loggerFactory = main.GetInstance<ILoggerFactory>();
-            startup.Configure(loggerFactory);
+            PipelinesCE pipelinesCE = main.GetInstance<PipelinesCE>();
 
-            IPipeline pipeline = main.GetInstance<IPipeline>();
-
-            pipeline.Run();
+            pipelinesCE.Run();
         }
     }
 }
