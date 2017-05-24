@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using JeremyTCD.PipelinesCE.ConsoleApplication;
+using Microsoft.Extensions.Logging;
+using StructureMap;
+using System.IO;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
@@ -15,6 +18,18 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         public PipelinesCEFixture()
         {
             TempDir = Path.Combine(Path.GetTempPath(), $"{nameof(PipelinesCE)}Temp");
+        }
+
+        public IContainer GetContainer()
+        {
+            Startup startup = new Startup();
+            IContainer main = new Container();
+            startup.ConfigureServices(main);
+
+            // TODO this should be configured by PipelinesCE
+            //main.GetInstance<ILoggerFactory>().AddDebug();
+
+            return main;
         }
 
         // Deletes entire temp directory, recreates it and inits git repository
