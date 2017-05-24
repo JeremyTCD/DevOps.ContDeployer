@@ -6,14 +6,14 @@ namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public class PipelineContext : IPipelineContext
     {
-        public IProcessManager ProcessManager { get; set; }
+        public IProcessService ProcessService { get; set; }
         public IDictionary<string, object> SharedData { get; set; }
         public SharedOptions SharedOptions { get; set; }
 
-        public PipelineContext(IProcessManager processManager, 
+        public PipelineContext(IProcessService processService, 
             IOptions<SharedOptions> sharedOptionsAccessor)
         {
-            ProcessManager = processManager;
+            ProcessService = processService;
             SharedData = new Dictionary<string, object>();
             SharedOptions = sharedOptionsAccessor.Value;
         }

@@ -46,10 +46,10 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
 
             File.WriteAllText(projFile, _testProj);
 
-            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            IProcessManager processManager = new ProcessManager(mockLogger.Object);
+            Mock<ILogger<ProcessService>> mockLogger = new Mock<ILogger<ProcessService>>();
+            IProcessService processService = new ProcessService(mockLogger.Object);
 
-            MSBuildClient client = new MSBuildClient(processManager);
+            MSBuildClient client = new MSBuildClient(processService);
 
             // Act
             client.Build(projFile);
@@ -67,10 +67,10 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
 
             File.WriteAllText(projFile, _testProj);
 
-            Mock<ILogger<ProcessManager>> mockLogger = new Mock<ILogger<ProcessManager>>();
-            IProcessManager processManager = new ProcessManager(mockLogger.Object);
+            Mock<ILogger<ProcessService>> mockLogger = new Mock<ILogger<ProcessService>>();
+            IProcessService processService = new ProcessService(mockLogger.Object);
 
-            MSBuildClient client = new MSBuildClient(processManager);
+            MSBuildClient client = new MSBuildClient(processService);
 
             // Act
             client.Build(projFile, "/property:Configuration=Release");

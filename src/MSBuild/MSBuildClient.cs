@@ -11,11 +11,11 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
     /// </summary>
     public class MSBuildClient : IMSBuildClient
     {
-        private IProcessManager _processManager { get; }
+        private IProcessService _processService { get; }
 
-        public MSBuildClient(IProcessManager processManager)
+        public MSBuildClient(IProcessService processService)
         {
-            _processManager = processManager;
+            _processService = processService;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
         /// </param>
         public void Build(string projOrSlnFile = null, string switches = null)
         {
-            _processManager.Run("msbuild.exe", 
+            _processService.Run("msbuild.exe", 
                 string.Concat(switches ?? "", " ", projOrSlnFile ?? ""));
         }
     } 
