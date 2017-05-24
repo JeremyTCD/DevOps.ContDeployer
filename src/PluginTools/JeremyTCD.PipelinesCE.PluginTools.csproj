@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.24.7-g9fca61fdda" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-preview1-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0-preview1-final" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0-preview1-final" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

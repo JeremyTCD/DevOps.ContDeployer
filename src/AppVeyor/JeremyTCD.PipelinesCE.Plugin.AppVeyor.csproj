@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>JeremyTCD.PipelinesCE.Plugin.AppVeyor</AssemblyName>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Composition" Version="1.0.31" />
+    <PackageReference Include="System.Composition" Version="1.1.0-preview1-25305-02" />
   </ItemGroup>
 
   <ItemGroup>
