@@ -5,9 +5,6 @@ namespace JeremyTCD.PipelinesCE
 {
     public interface IPipeline 
     {
-        LinkedList<IStep> Steps { get; set; }
-        string Name { get; set; }
-
-        void Run();
+        void Run(IEnumerable<IStep> steps);
     }
 }

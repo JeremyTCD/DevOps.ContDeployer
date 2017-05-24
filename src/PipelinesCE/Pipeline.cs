@@ -1,8 +1,7 @@
 ﻿using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JeremyTCD.PipelinesCE
 {
@@ -13,9 +12,6 @@ namespace JeremyTCD.PipelinesCE
         private IPipelineContext _pipelineContext { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
-
-        public LinkedList<IStep> Steps { get; set; }
-        public string Name { get; set; }
 
         public Pipeline(ILogger<Pipeline> logger, IPluginFactory pluginFactory, 
             IPipelineContext pipelineContext, IStepContextFactory stepContextFactory,
@@ -31,21 +27,23 @@ namespace JeremyTCD.PipelinesCE
         /// <summary>
         /// Runs each pipeline step serially
         /// </summary>
-        public void Run()
+        public void Run(IEnumerable<IStep> steps)
         {
+            LinkedList<IStep> remainingSteps = new LinkedList<IStep>(steps);
+
             _logger.LogInformation("=== Running pipeline ===");
 
-            while (Steps.Count > 0)
+            while (remainingSteps.Count > 0)
             {
-                IStep step = Steps.First();
-                Steps.RemoveFirst();
+                IStep step = remainingSteps.First();
+                remainingSteps.RemoveFirst();
 
                 IPlugin plugin = _pluginFactory.
                     Build(step.PluginType);
                 ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
                 IStepContext stepContext = _stepContextFactory.
                     AddPluginOptions(step.PluginOptions).
-                    AddRemainingSteps(Steps).
+                    AddRemainingSteps(remainingSteps).
                     AddLogger(logger).
                     Build();
 
