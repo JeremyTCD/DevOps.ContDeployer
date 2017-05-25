@@ -12,7 +12,8 @@ namespace JeremyTCD.PipelinesCE.ConsoleApplication
 
             PipelinesCE pipelinesCE = main.GetInstance<PipelinesCE>();
 
-            pipelinesCE.Run();
+            // TODO get options from command line arguments
+            pipelinesCE.Run(null);
         }
     }
 }
