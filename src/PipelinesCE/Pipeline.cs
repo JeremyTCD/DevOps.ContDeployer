@@ -9,19 +9,21 @@ namespace JeremyTCD.PipelinesCE
     {
         private ILogger<Pipeline> _logger { get; }
         private IPluginFactory _pluginFactory { get; }
-        private IPipelineContext _pipelineContext { get; }
+        private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
 
-        public Pipeline(ILogger<Pipeline> logger, IPluginFactory pluginFactory, 
-            IPipelineContext pipelineContext, IStepContextFactory stepContextFactory,
+        public Pipeline(ILogger<Pipeline> logger, 
+            IPluginFactory pluginFactory, 
+            IStepContextFactory stepContextFactory,
+            IPipelineContextFactory pipelineContextFactory,
             ILoggerFactory loggerFactory)
         {
             _stepContextFactory = stepContextFactory;
-            _pipelineContext = pipelineContext;
             _logger = logger;
             _pluginFactory = pluginFactory;
             _loggerFactory = loggerFactory;
+            _pipelineContextFactory = pipelineContextFactory;
         }
 
         /// <summary>
@@ -29,6 +31,9 @@ namespace JeremyTCD.PipelinesCE
         /// </summary>
         public void Run(IEnumerable<IStep> steps)
         {
+            IPipelineContext pipelineContext = _pipelineContextFactory.
+                AddPipelineOptions(pipelineOptions).
+                CreatePipelineContext();
             LinkedList<IStep> remainingSteps = new LinkedList<IStep>(steps);
 
             _logger.LogInformation("=== Running pipeline ===");
@@ -47,7 +52,7 @@ namespace JeremyTCD.PipelinesCE
                     CreateStepContext();
 
                 _logger.LogInformation($"== Running {step.PluginType.Name} ==");
-                plugin.Run(_pipelineContext, stepContext);
+                plugin.Run(pipelineContext, stepContext);
                 _logger.LogInformation($"== {step.PluginType.Name} complete ==");
             }
 
