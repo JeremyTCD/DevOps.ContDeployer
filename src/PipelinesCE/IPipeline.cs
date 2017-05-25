@@ -5,6 +5,6 @@ namespace JeremyTCD.PipelinesCE
 {
     public interface IPipeline 
     {
-        void Run(IEnumerable<IStep> steps);
+        void Run(IEnumerable<IStep> steps, PipelineOptions pipelineOptions);
     }
 }

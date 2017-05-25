@@ -29,7 +29,7 @@ namespace JeremyTCD.PipelinesCE
         /// <summary>
         /// Runs each pipeline step serially
         /// </summary>
-        public void Run(IEnumerable<IStep> steps)
+        public void Run(IEnumerable<IStep> steps, PipelineOptions pipelineOptions)
         {
             IPipelineContext pipelineContext = _pipelineContextFactory.
                 AddPipelineOptions(pipelineOptions).
