@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
@@ -7,6 +7,7 @@
   <ItemGroup>
     <!--Eventually, these should be referenced as nuget packages-->
     <ProjectReference Include="..\..\src\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj" />
+    <ProjectReference Include="..\..\src\Configuration\JeremyTCD.PipelinesCE.Plugin.Configuration.csproj" />
     <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
     <ProjectReference Include="..\..\src\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.csproj" />
     <ProjectReference Include="..\..\src\Git\JeremyTCD.PipelinesCE.Plugin.Git.csproj" />
