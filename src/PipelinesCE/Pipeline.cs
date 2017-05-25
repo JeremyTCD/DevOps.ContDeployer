@@ -38,14 +38,13 @@ namespace JeremyTCD.PipelinesCE
                 IStep step = remainingSteps.First();
                 remainingSteps.RemoveFirst();
 
-                IPlugin plugin = _pluginFactory.
-                    Build(step.PluginType);
+                IPlugin plugin = _pluginFactory.CreatePlugin(step.PluginType);
                 ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
                 IStepContext stepContext = _stepContextFactory.
                     AddPluginOptions(step.PluginOptions).
                     AddRemainingSteps(remainingSteps).
                     AddLogger(logger).
-                    Build();
+                    CreateStepContext();
 
                 _logger.LogInformation($"== Running {step.PluginType.Name} ==");
                 plugin.Run(_pipelineContext, stepContext);

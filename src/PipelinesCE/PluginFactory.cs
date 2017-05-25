@@ -23,7 +23,7 @@ namespace JeremyTCD.PipelinesCE
             _pluginContainers = pluginContainers;
         }
 
-        public IPlugin Build(Type pluginType)
+        public IPlugin CreatePlugin(Type pluginType)
         {
             string pluginName = pluginType.Name;
 

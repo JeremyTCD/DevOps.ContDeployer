@@ -10,7 +10,7 @@ namespace PipelinesCE
 {
     public class CEPipelineFactory : IPipelineFactory
     {
-        public IEnumerable<IStep> Build()
+        public IEnumerable<IStep> CreatePipeline()
         {
             return new IStep[]{
                 new Step<ConfigurationPlugin>(new ConfigurationPluginOptions

@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.Logging;
 
 namespace JeremyTCD.PipelinesCE.PluginTools
 {
@@ -29,7 +27,7 @@ namespace JeremyTCD.PipelinesCE.PluginTools
             return this;
         }
 
-        public IStepContext Build()
+        public IStepContext CreateStepContext()
         {
             return new StepContext
             {

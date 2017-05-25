@@ -8,6 +8,6 @@ namespace JeremyTCD.PipelinesCE
     /// </summary>
     public interface IPipelineFactory
     {
-        IEnumerable<IStep> Build();
+        IEnumerable<IStep> CreatePipeline();
     }
 }
