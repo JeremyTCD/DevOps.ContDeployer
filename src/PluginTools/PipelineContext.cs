@@ -7,9 +7,8 @@ namespace JeremyTCD.PipelinesCE.PluginTools
     public class PipelineContext : IPipelineContext
     {
         public IProcessService ProcessService { get; set; }
+        public PipelineOptions PipelineOptions { get; set; }
         public IDictionary<string, object> SharedData { get; set; }
-        public SharedOptions SharedOptions { get; set; }
-
         public PipelineContext(IProcessService processService, 
             IOptions<SharedOptions> sharedOptionsAccessor)
         {

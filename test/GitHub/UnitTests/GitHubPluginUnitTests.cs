@@ -57,7 +57,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.UnitTests
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
+            Mock.Get(mockPipelineContext.Object.PipelineOptions).Setup(s => s.DryRun).Returns(false);
 
             GitHubPlugin plugin = new GitHubPlugin(mockGitHubClientFactory.Object);
 
@@ -98,7 +98,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.UnitTests
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(false);
+            Mock.Get(mockPipelineContext.Object.PipelineOptions).Setup(s => s.DryRun).Returns(false);
 
             GitHubPlugin plugin = new GitHubPlugin(mockGitHubClientFactory.Object);
 
@@ -141,7 +141,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.UnitTests
             mockGitHubClientFactory.Setup(g => g.CreateClient(testToken)).Returns(mockGitHubClient.Object);
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock.Get(mockPipelineContext.Object.SharedOptions).Setup(s => s.DryRun).Returns(true);
+            Mock.Get(mockPipelineContext.Object.PipelineOptions).Setup(s => s.DryRun).Returns(true);
 
             GitHubPlugin plugin = new GitHubPlugin(mockGitHubClientFactory.Object);
 

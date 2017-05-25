@@ -45,8 +45,8 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             });
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
-            mockSharedOptions.Setup(s => s.DryRun).Returns(false);
+            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            mockPipelineOptions.Setup(s => s.DryRun).Returns(false);
 
             Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
             mockMSBuildClient.Setup(m => m.Build(testFile, testSwitches));
@@ -68,8 +68,8 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<SharedOptions> mockSharedOptions = Mock.Get(mockPipelineContext.Object.SharedOptions);
-            mockSharedOptions.Setup(s => s.DryRun).Returns(true);
+            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
 
             Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
 

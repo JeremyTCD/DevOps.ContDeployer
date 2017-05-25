@@ -58,7 +58,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 
             foreach (NewRelease newRelease in _options.NewReleases)
             {
-                if (!_pipelineContext.SharedOptions.DryRun)
+                if (!_pipelineContext.PipelineOptions.DryRun)
                 {
                     _gitHubClient.Repository.Release.Create(_options.Owner, _options.Repository, newRelease);
                 }
@@ -79,7 +79,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub
 
             foreach (ModifiedRelease modifiedRelease in _options.ModifiedReleases)
             {
-                if (!_pipelineContext.SharedOptions.DryRun)
+                if (!_pipelineContext.PipelineOptions.DryRun)
                 {
                     _gitHubClient.Repository.Release.Edit(_options.Owner, _options.Repository, modifiedRelease.Id,
                         modifiedRelease.ReleaseUpdate);

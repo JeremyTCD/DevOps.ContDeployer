@@ -44,7 +44,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.Git
             //  - specifiy message
             //  - change message
             // TODO Double check time for consistency with what LibGit2Sharp expects
-            if (!pipelineContext.SharedOptions.DryRun)
+            if (!pipelineContext.PipelineOptions.DryRun)
             {
                 Signature signature = new Signature(options.Name, options.Email, DateTimeOffset.Now);
                 GitObject target = _repository.Lookup(options.Commitish);
