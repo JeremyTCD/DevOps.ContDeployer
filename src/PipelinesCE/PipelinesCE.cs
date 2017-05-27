@@ -24,7 +24,7 @@ namespace JeremyTCD.PipelinesCE
         }
 
         /// <summary>
-        /// Runs pipeline specified by <see cref="PipelineOptions.PipelineName"/>
+        /// Runs pipeline specified by <see cref="PipelineOptions.Pipeline"/>
         /// </summary>
         /// <param name="pipelineOptions">
         /// Options provided by caller. Typically arguments to the command line application.
@@ -38,11 +38,11 @@ namespace JeremyTCD.PipelinesCE
             IDictionary<string, Type> pipelineFactoryTypes = GetPipelineFactoryTypes(projectDirectory);
 
             List<IPipeline> pipelines = new List<IPipeline>();
-            pipelineFactoryTypes.TryGetValue(pipelineOptions.PipelineName, out Type type);
+            pipelineFactoryTypes.TryGetValue(pipelineOptions.Pipeline, out Type type);
 
             if (type == null)
             {
-                throw new InvalidOperationException($"No pipeline with name \"{pipelineOptions.PipelineName}\"");
+                throw new InvalidOperationException($"No pipeline with name \"{pipelineOptions.Pipeline}\"");
             }
             else
             {

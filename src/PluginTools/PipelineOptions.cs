@@ -2,7 +2,9 @@
 {
     public class PipelineOptions
     {
-        public virtual string PipelineName { get; set; }
-        public virtual bool DryRun { get; set; } = false;
+        public virtual bool Verbose { get; set; }
+        public virtual string Project { get; set; }
+        public virtual string Pipeline { get; set; }
+        public virtual bool DryRun { get; set; } 
     }
 }
