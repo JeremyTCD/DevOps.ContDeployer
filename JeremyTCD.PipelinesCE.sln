@@ -62,7 +62,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipelinesCE", "build\Pipeli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Configuration", "src\Configuration\JeremyTCD.PipelinesCE.Plugin.Configuration.csproj", "{F4613FFC-2A59-4FF9-9DB7-78022E065AD6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.ConsoleApplication", "src\ConsoleApplication\JeremyTCD.PipelinesCE.ConsoleApplication.csproj", "{CF057720-DF46-40B5-9E7C-6E36B448738B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.CommandLineApp", "src\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.csproj", "{CF057720-DF46-40B5-9E7C-6E36B448738B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

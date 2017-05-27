@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.ConsoleApplication;
+﻿using JeremyTCD.PipelinesCE.CommandLineApp;
 using Microsoft.Extensions.Logging;
 using StructureMap;
 using System.IO;
