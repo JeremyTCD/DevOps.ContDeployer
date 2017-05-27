@@ -1,24 +1,19 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
-using StructureMap;
 using System.Net.Http;
 
 namespace JeremyTCD.PipelinesCE
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddPipelinesCE(this IContainer main)
+        public static void AddPipelinesCE(this IServiceCollection services)
         {
-            ServiceCollection services = new ServiceCollection();
-            AssemblyService assemblyService = new AssemblyService();
-
             services.
                 AddLogging().
                 AddOptions().
-                AddSingleton<IAssemblyService>(assemblyService).
-                AddSingleton<HttpClient>().
-                AddSingleton(main);
+                AddSingleton<IAssemblyService>().
+                AddSingleton<HttpClient>();
 
             services.
                 AddSingleton<PipelinesCE>().
@@ -52,8 +47,6 @@ namespace JeremyTCD.PipelinesCE
             //    pluginContainers.Add(pluginStartupType.Name.Replace("Startup", ""), child);
             //}
             //services.AddSingleton<IDictionary<string, IContainer>>(pluginContainers);
-
-            main.Populate(services);
         }
     }
 }
