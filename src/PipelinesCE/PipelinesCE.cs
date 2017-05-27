@@ -14,13 +14,15 @@ namespace JeremyTCD.PipelinesCE
     {
         private IProcessService _processService { get; }
         private IAssemblyService _assemblyService { get; }
-        private IContainer _mainContainer { get; }
+        private IPipeline _pipeline { get; }
 
-        public PipelinesCE(IProcessService processService, IAssemblyService assemblyService, IContainer mainContainer)
+        public PipelinesCE(IProcessService processService,
+            IAssemblyService assemblyService,
+            IPipeline pipeline)
         {
             _processService = processService;
             _assemblyService = assemblyService;
-            _mainContainer = mainContainer;
+            _pipeline = pipeline;
         }
 
         /// <summary>
@@ -31,39 +33,37 @@ namespace JeremyTCD.PipelinesCE
         /// </param>
         public void Run(PipelineOptions pipelineOptions)
         {
-            string projectFile = GetPipelinesCEProjectFile();
+            string projectFile = GetProjectFile();
             string projectDirectory = Directory.GetParent(projectFile).FullName;
 
-            BuildPipelinesCEProject(projectFile);
-            IDictionary<string, Type> pipelineFactoryTypes = GetPipelineFactoryTypes(projectDirectory);
+            BuildProject(projectFile);
+            IPipelineFactory factory = GetPipelineFactory(projectDirectory, pipelineOptions.Pipeline);
+            IEnumerable<IStep> steps = factory.CreatePipeline();
 
-            List<IPipeline> pipelines = new List<IPipeline>();
-            pipelineFactoryTypes.TryGetValue(pipelineOptions.Pipeline, out Type type);
-
-            if (type == null)
-            {
-                throw new InvalidOperationException($"No pipeline with name \"{pipelineOptions.Pipeline}\"");
-            }
-            else
-            {
-                IPipelineFactory factory = (IPipelineFactory)Activator.CreateInstance(type);
-                IEnumerable<IStep> steps = factory.CreatePipeline();
-                IPipeline pipeline = _mainContainer.GetInstance<IPipeline>();
-
-                pipeline.Run(steps, pipelineOptions);
-            }
+            _pipeline.Run(steps, pipelineOptions);
         }
 
-        private IDictionary<string, Type> GetPipelineFactoryTypes(string projectDirectory)
+        private IPipelineFactory GetPipelineFactory(string projectDirectory, string pipeline)
         {
             // TODO what if framework version changes?
             IEnumerable<Assembly> assemblies = _assemblyService.LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Releases/netcoreapp1.1"), true);
-            IEnumerable<Type> pipelineFactoryTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPipelineFactory));
+            IDictionary<string, Type> pipelineFactoryTypes = _assemblyService.
+                GetAssignableTypes(assemblies, typeof(IPipelineFactory)).
+                ToDictionary(t => t.Name.Replace("PipelineFactory", ""));
 
-            return pipelineFactoryTypes.ToDictionary(t => t.Name.Replace("PipelineFactory", ""));
+            // TODO if Pipeline is null
+            pipelineFactoryTypes.TryGetValue(pipeline, out Type pipelineFactoryType);
+
+            if (pipelineFactoryType == null)
+            {
+                throw new InvalidOperationException($"No pipeline with name \"{pipeline}\"");
+            }
+
+            IPipelineFactory factory = (IPipelineFactory)Activator.CreateInstance(pipelineFactoryType);
+            return factory;
         }
 
-        private void BuildPipelinesCEProject(string projectFile)
+        private void BuildProject(string projectFile)
         {
             string arguments = $"/t:restore,build /p:Configuration=Release {projectFile}";
             int result = _processService.Run("msbuild.exe", arguments);
@@ -86,7 +86,7 @@ namespace JeremyTCD.PipelinesCE
         /// <exception cref="InvalidOperationException">
         /// Thrown if more than 1 files with name PipelinesCE.csproj exists in current directory or its children.
         /// </exception>
-        private string GetPipelinesCEProjectFile()
+        private string GetProjectFile()
         {
             // Should eventually be specifiable
             string fileName = "PipelinesCE.csproj";
