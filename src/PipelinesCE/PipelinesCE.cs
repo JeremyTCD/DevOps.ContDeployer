@@ -1,7 +1,6 @@
 ﻿
 using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
-using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +30,7 @@ namespace JeremyTCD.PipelinesCE
         /// <param name="pipelineOptions">
         /// Options provided by caller. Typically arguments to the command line application.
         /// </param>
-        public void Run(PipelineOptions pipelineOptions)
+        public virtual void Run(PipelineOptions pipelineOptions)
         {
             string projectFile = GetProjectFile();
             string projectDirectory = Directory.GetParent(projectFile).FullName;
