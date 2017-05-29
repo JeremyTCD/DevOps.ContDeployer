@@ -1,18 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StructureMap;
+﻿using JeremyTCD.DotNetCore.Utils;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     public class Startup
     { 
-        public void ConfigureServices(IContainer mainContainer)
+        public void ConfigureServices(IServiceCollection services)
         {
-            IServiceCollection services = new ServiceCollection();
             services.AddPipelinesCE();
-            services.AddSingleton<DefaultCommand>();
-            services.AddSingleton<RunCommand>();
-
-            mainContainer.Populate(services);
+            services.AddSingleton<RootCommand>();
+            services.AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>();
         }
     }
 }

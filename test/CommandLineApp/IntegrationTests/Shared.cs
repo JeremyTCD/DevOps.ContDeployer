@@ -1,4 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE.CommandLineApp;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StructureMap;
 using System.IO;
@@ -23,13 +24,17 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public IContainer GetContainer()
         {
             Startup startup = new Startup();
-            IContainer main = new Container();
-            startup.ConfigureServices(main);
+            IServiceCollection services = new ServiceCollection();
+            startup.ConfigureServices(services);
+
+            // Wrap services in a StructureMap container to utilize its multi-tenancy features
+            IContainer mainContainer = new Container();
+            mainContainer.Populate(services);
 
             // TODO this should be configured by PipelinesCE
             //main.GetInstance<ILoggerFactory>().AddDebug();
 
-            return main;
+            return mainContainer;
         }
 
         // Deletes entire temp directory, recreates it and inits git repository
