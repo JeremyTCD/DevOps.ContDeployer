@@ -21,9 +21,16 @@ PipelinesCE is built using .net core for cross platform support.
 PipelinesCE keeps all relevant data within the project or solution being worked on. This means that there is no need to configure and manager a central server with
 plugins.
 
-## Architecture
+## System Architecture
+The PipelinesCE system consists of four separate levels.
+### PipelinesCE
+PipelinesCE is the heart of the system. It manages plugins and provides an interface for user facing clients like the command line application.
+### PluginTools
+Plugin tools are types utilizes by plugins. These types are also referenced in PipelinesCE, therefore, to avoid circular dependencies, they cannot be part of PipelinesCE.
 ### Plugins
 - Dependency 
 - Runtime data (e.g plugin options, remaining steps) 
   - Provide through api method parameters. Messing with services at runtime or using complex factories causes inflexibility and convolution.
     Good write up on handling runtime data: https://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=99.
+### CommandLineApp
+The command line application provides a simple way for end users to utilize PipelinesCE.
