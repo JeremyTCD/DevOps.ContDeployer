@@ -11,7 +11,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             IContainer mainContainer = new Container();
             startup.ConfigureServices(mainContainer);
 
-            DefaultCommand defaultCommand = mainContainer.GetInstance<DefaultCommand>();
+            RootCommand defaultCommand = mainContainer.GetInstance<RootCommand>();
             args = args.Select(s => s.ToLowerInvariant()).ToArray();
             defaultCommand.Execute(args);
         }

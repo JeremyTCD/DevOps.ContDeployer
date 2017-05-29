@@ -1,13 +1,18 @@
-﻿using Microsoft.Extensions.CommandLineUtils;
+﻿using JeremyTCD.DotNetCore.Utils;
+using Microsoft.Extensions.CommandLineUtils;
 using System;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
-    public class DefaultCommand : CommandLineApplication
+    /// <summary>
+    /// Contains basic options such as --version and options shared by all commands, such as --verbose. All
+    /// other commands are children of this command.
+    /// </summary>
+    public class RootCommand : CommandLineApplication
     {
         public CommandOption _verbose { get; }
 
-        public DefaultCommand(PipelinesCE pipelinesCE, RunCommand runCommand)
+        public RootCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService)
         {
             Description = "PipelinesCE, a continuous everything tool.";
             _verbose = Option("-o | --options",
@@ -17,7 +22,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             // TODO need to inject version into assembly on build
             VersionOption("-v | --version", "");
 
-            Commands.Add(runCommand);
+            Commands.Add(new RunCommand(pipelinesCE, cluService) { Parent = this });
 
             OnExecute((Func<int>)Run);
         }
