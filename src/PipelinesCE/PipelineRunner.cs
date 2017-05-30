@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace JeremyTCD.PipelinesCE
 {
-    public class Pipeline : IPipeline
+    public class PipelineRunner : IPipelineRunner
     {
-        private ILogger<Pipeline> _logger { get; }
+        private ILogger<PipelineRunner> _logger { get; }
         private IPluginFactory _pluginFactory { get; }
         private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
 
-        public Pipeline(ILogger<Pipeline> logger, 
+        public PipelineRunner(ILogger<PipelineRunner> logger, 
             IPluginFactory pluginFactory, 
             IStepContextFactory stepContextFactory,
             IPipelineContextFactory pipelineContextFactory,
@@ -26,9 +26,6 @@ namespace JeremyTCD.PipelinesCE
             _pipelineContextFactory = pipelineContextFactory;
         }
 
-        /// <summary>
-        /// Runs each pipeline step serially
-        /// </summary>
         public void Run(IEnumerable<IStep> steps, PipelineOptions pipelineOptions)
         {
             IPipelineContext pipelineContext = _pipelineContextFactory.

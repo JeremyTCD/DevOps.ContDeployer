@@ -13,15 +13,15 @@ namespace JeremyTCD.PipelinesCE
     {
         private IProcessService _processService { get; }
         private IAssemblyService _assemblyService { get; }
-        private IPipeline _pipeline { get; }
+        private IPipelineRunner _pipelineRunner { get; }
 
         public PipelinesCE(IProcessService processService,
             IAssemblyService assemblyService,
-            IPipeline pipeline)
+            IPipelineRunner pipelineRunner)
         {
             _processService = processService;
             _assemblyService = assemblyService;
-            _pipeline = pipeline;
+            _pipelineRunner = pipelineRunner;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace JeremyTCD.PipelinesCE
             IPipelineFactory factory = GetPipelineFactory(projectDirectory, pipelineOptions.Pipeline);
             IEnumerable<IStep> steps = factory.CreatePipeline();
 
-            _pipeline.Run(steps, pipelineOptions);
+            _pipelineRunner.Run(steps, pipelineOptions);
         }
 
         private IPipelineFactory GetPipelineFactory(string projectDirectory, string pipeline)

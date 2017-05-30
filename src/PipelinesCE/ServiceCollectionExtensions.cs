@@ -19,7 +19,7 @@ namespace JeremyTCD.PipelinesCE
                 AddSingleton<PipelinesCE>().
                 AddSingleton<IProcessService, ProcessService>().
                 AddSingleton<IPluginFactory, PluginFactory>().
-                AddSingleton<IPipeline, Pipeline>().
+                AddSingleton<IPipelineRunner, PipelineRunner>().
                 AddSingleton<IPipelineContext, PipelineContext>();
 
             //// Load assemblies in plugins directory
