@@ -35,7 +35,7 @@ namespace JeremyTCD.PipelinesCE
         /// </param>
         public virtual void Run(PipelineOptions pipelineOptions)
         {
-            string projectFile = GetProjectFile();
+            string projectFile = GetProjectFile(pipelineOptions.Project);
             string projectDirectory = Directory.GetParent(projectFile).FullName;
 
             BuildProject(projectFile);
@@ -77,40 +77,57 @@ namespace JeremyTCD.PipelinesCE
         }
 
         /// <summary>
-        /// Gets file with name PipelinesCE.csproj. Looks in current directory and its children."/>
+        /// Gets file with name PipelinesCE project file."/>
         /// </summary>
+        /// <param name="file">
+        /// Name or path of project file. If a name is provided, PipelinesCE locates the file via a recursive search in the
+        /// current directory.
+        /// </param>
         /// <returns>
         /// File name
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if no file with name PipelinesCE.csproj exists in current directory or its children.
+        /// Thrown if no file does not exist
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if more than 1 files with name PipelinesCE.csproj exists in current directory or its children.
+        /// Thrown if more than 1 file exists in current directory or its children
         /// </exception>
-        private string GetProjectFile()
+        private string GetProjectFile(string file)
         {
-            // Should eventually be specifiable
-            string fileName = "PipelinesCE.csproj";
-            string directory = Directory.GetCurrentDirectory();
-            string[] projectFiles = Directory.GetFiles(directory, fileName, SearchOption.AllDirectories);
-
-            if (projectFiles.Length == 0)
+            if (file.Contains('\\') || file.Contains('/'))
             {
-                throw new InvalidOperationException($"No file with name \"{fileName}\" in directory \"{directory}\" or its children");
-            }
-
-            if (projectFiles.Length > 1)
-            {
-                string message = $"Multiple files with name \"{fileName}\" found in directory \"{directory}\":\n";
-                foreach (string file in projectFiles)
+                if (!Path.IsPathRooted(file))
                 {
-                    message += $"{file}\n";
+                    file = Path.Combine(Directory.GetCurrentDirectory(), file);
                 }
-                throw new InvalidOperationException(message);
+
+                if (!File.Exists(file))
+                {
+                    throw new InvalidOperationException($"No file at path \"{file}\"");
+                }
+            }
+            else
+            {
+                string directory = Directory.GetCurrentDirectory();
+                string[] projectFiles = Directory.GetFiles(directory, file, SearchOption.AllDirectories);
+
+                if (projectFiles.Length == 0)
+                {
+                    throw new InvalidOperationException($"No file with name \"{file}\" in directory \"{directory}\" or its children");
+                }
+
+                if (projectFiles.Length > 1)
+                {
+                    string message = $"Multiple files with name \"{file}\" found in directory \"{directory}\":\n";
+                    foreach (string projectFile in projectFiles)
+                    {
+                        message += $"{projectFile}\n";
+                    }
+                    throw new InvalidOperationException(message);
+                }
             }
 
-            return projectFiles[0];
+            return file;
         }
-    }
+}
 }
