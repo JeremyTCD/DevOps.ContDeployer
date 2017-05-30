@@ -34,3 +34,20 @@ Plugin tools are types utilizes by plugins. These types are also referenced in P
     Good write up on handling runtime data: https://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=99.
 ### CommandLineApp
 The command line application provides a simple way for end users to utilize PipelinesCE.
+#### Commands
+##### Name
+Should be a lowercase verb, for example "run". 
+##### Full Name
+Name but with case intact, for example "Run".
+##### Description
+Should be of the form <what it does><elaboration/notes>.
+#### Options
+##### Long Name
+An option that requires values should have a noun for its long name. For example, "pipeline" or "project". 
+An option that does not take a value can be a verb or a noun. For example, "dryrun" or "version".
+##### Short Name
+An option's short name should be the first alphabet of its long name. If multiple options have the same first alphabet for their long names, the
+first alphabet of each option's second syllable should be added to their short names. For example, "pj" for "project" and "pl" for "pipeline".
+##### Description
+If options is a noun, its description should be in the following format: <what it is><elaboration/notes><default value>. If options is a verb, its description
+should be in the following format: <what it does><elaboration/notes>.
