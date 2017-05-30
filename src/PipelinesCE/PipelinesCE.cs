@@ -1,6 +1,6 @@
-﻿
-using JeremyTCD.DotNetCore.Utils;
+﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,14 +14,17 @@ namespace JeremyTCD.PipelinesCE
         private IProcessService _processService { get; }
         private IAssemblyService _assemblyService { get; }
         private IPipelineRunner _pipelineRunner { get; }
+        private ILogger<PipelinesCE> _logger { get; }
 
         public PipelinesCE(IProcessService processService,
             IAssemblyService assemblyService,
-            IPipelineRunner pipelineRunner)
+            IPipelineRunner pipelineRunner, 
+            ILogger<PipelinesCE> logger)
         {
             _processService = processService;
             _assemblyService = assemblyService;
             _pipelineRunner = pipelineRunner;
+            _logger = logger;
         }
 
         /// <summary>
