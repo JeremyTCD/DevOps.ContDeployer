@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
+using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
@@ -10,26 +11,38 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     /// </summary>
     public class RootCommand : CommandLineApplication
     {
-        public CommandOption _verbose { get; }
+        private PipelinesCE _pipelinesCE { get; }
+        private ICommandLineUtilsService _cluService { get; }
 
         public RootCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService)
         {
-            Description = "PipelinesCE, a continuous everything tool.";
-            _verbose = Option("-o | --options",
-                "Console output verbosity. If specified, outputs debug level logs.",
-                CommandOptionType.NoValue,
-                true);
-            // TODO need to inject version into assembly on build
-            VersionOption("-v | --version", "");
+            _cluService = cluService;
+            _pipelinesCE = pipelinesCE;
 
-            Commands.Add(new RunCommand(pipelinesCE, cluService) { Parent = this });
-
+            Description = Strings.RunCommandDescription;
+            Name = nameof(PipelinesCE).ToLowerInvariant();
+            FullName = nameof(PipelinesCE);
+            SetupCommands();
+            SetupOptions();
             OnExecute((Func<int>)Run);
+        }
+
+        private void SetupCommands()
+        {
+            Commands.Add(new RunCommand(_pipelinesCE, _cluService) { Parent = this });
+        }
+
+        private void SetupOptions()
+        {
+            HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName));
+            VersionOption(_cluService.CreateOptionTemplate(Strings.VersionOptionShortName, Strings.VersionOptionLongName), 
+                typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
         }
 
         private int Run()
         {
-            // TODO if version option provided, get and print version from pipelines CE
+            ShowHelp(); 
+
             return 0;
         }
     }

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DryRunDescription" xml:space="preserve">
-    <value>Run pipeline in dry run mode. </value>
+    <value>Run pipeline in dry run mode</value>
   </data>
   <data name="DryRunOptionLongName" xml:space="preserve">
     <value>dryrun</value>
@@ -136,7 +136,7 @@
     <value>?</value>
   </data>
   <data name="PipelineOptionDescription" xml:space="preserve">
-    <value>Name of pipeline to run. By convention, a pipeline's name is its factories name less "PipelineFactory". For example, "MainPipelineFactory" produces a pipeline with name "Main". If this option is unspecified and only one pipeline has been defined, runs said pipeline.</value>
+    <value>Name of the pipeline to run. By convention, a pipeline's name is its factories name less "PipelineFactory". For example, "MainPipelineFactory" produces a pipeline named "Main". If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline.</value>
   </data>
   <data name="PipelineOptionLongName" xml:space="preserve">
     <value>pipeline</value>
@@ -145,7 +145,7 @@
     <value>pl</value>
   </data>
   <data name="ProjectOptionDescription" xml:space="preserve">
-    <value>Project file (.csproj) of project used to define pipeline(s). Defaults to "PipelinesCE.csproj".</value>
+    <value>Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for "PipelinesCE.csproj" in the current directory.</value>
   </data>
   <data name="ProjectOptionLongName" xml:space="preserve">
     <value>project</value>
@@ -153,14 +153,20 @@
   <data name="ProjectOptionShortName" xml:space="preserve">
     <value>pj</value>
   </data>
+  <data name="RootCommandDescription" xml:space="preserve">
+    <value>PipelinesCE, a continuous everything tool.</value>
+  </data>
   <data name="RunCommandDescription" xml:space="preserve">
-    <value>Runs a pipeline. Usage: "pipelinesce run [--project &lt;project&gt;] [--pipeline &lt;pipeline&gt;] [--verbose] [--dryrun]"</value>
+    <value>Runs a pipeline</value>
+  </data>
+  <data name="VerboseOptionDescription" xml:space="preserve">
+    <value>Write verbose output to console</value>
   </data>
   <data name="VerboseOptionLongName" xml:space="preserve">
     <value>verbose</value>
   </data>
   <data name="VerboseOptionShortName" xml:space="preserve">
-    <value>v</value>
+    <value>vb</value>
   </data>
   <data name="VersionOptionLongName" xml:space="preserve">
     <value>version</value>

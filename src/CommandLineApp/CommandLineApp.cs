@@ -1,13 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using StructureMap;
+using System;
 using System.Linq;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     public class CommandLineApp
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
+
             Startup startup = new Startup();
             IServiceCollection services = new ServiceCollection();
             startup.ConfigureServices(services);
@@ -16,10 +19,23 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             IContainer mainContainer = new Container();
             mainContainer.Populate(services);
 
-            RootCommand defaultCommand = mainContainer.GetInstance<RootCommand>();
+            ILogger<CommandLineApp> logger = mainContainer.GetInstance<ILogger<CommandLineApp>>();
+            RootCommand rootCommand = mainContainer.GetInstance<RootCommand>();
             args = args.Select(s => s.ToLowerInvariant()).ToArray();
-            defaultCommand.Execute(args);
+
+            try
+            {
+                rootCommand.Execute(args);
+            }
+            catch (Exception e)
+            {
+                // Catch unhandled exceptions and log them using logger. This ensures that unhandled exceptions are logged by all
+                // logging providers (such as file, debug etc - not just console).
+                logger.LogError(e.ToString());
+                return 1;
+            }
+
+            return 0;
         }
     }
 }
- 

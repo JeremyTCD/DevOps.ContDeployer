@@ -11,6 +11,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _project { get; set; }
         private CommandOption _pipeline { get; set; }
         private CommandOption _dryRun { get; set; }
+        public CommandOption _verbose { get; set; }
 
         private PipelinesCE _pipelinesCE { get; }
         private ICommandLineUtilsService _cluService { get; }
@@ -22,37 +23,39 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             Description = Strings.RunCommandDescription;
             Name = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
+            FullName = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
             SetupOptions();
             OnExecute((Func<int>)Run);
         }
 
         private void SetupOptions()
         {
+            HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName));
+
             _project = Option(_cluService.CreateOptionTemplate(Strings.ProjectOptionShortName, Strings.ProjectOptionLongName),
                 Strings.ProjectOptionDescription,
                 CommandOptionType.SingleValue);
             _pipeline = Option(_cluService.CreateOptionTemplate(Strings.PipelineOptionShortName, Strings.PipelineOptionLongName),
-                Strings.ProjectOptionDescription,
+                Strings.PipelineOptionDescription,
                 CommandOptionType.SingleValue);
             _dryRun = Option(_cluService.CreateOptionTemplate(Strings.DryRunOptionShortName, Strings.DryRunOptionLongName),
                 Strings.DryRunDescription,
                 CommandOptionType.NoValue);
-            HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName, Strings.HelpOptionSymbolName));
+            _verbose = Option(_cluService.CreateOptionTemplate(Strings.VerboseOptionShortName, Strings.VerboseOptionLongName),
+                Strings.VerboseOptionDescription,
+                CommandOptionType.NoValue);
         }
 
         private int Run()
         {
-            RootCommand defaultCommand = (RootCommand)Parent;
-
             PipelineOptions pipelineOptions = new PipelineOptions
             {
-                Verbose = defaultCommand._verbose.HasValue(),
+                Verbose = _verbose.HasValue(),
                 DryRun = _dryRun.HasValue(),
                 Project = _project.Value(),
                 Pipeline = _pipeline.Value()
             };
 
-            // TODO get options from command line arguments
             _pipelinesCE.Run(pipelineOptions);
 
             return 0;

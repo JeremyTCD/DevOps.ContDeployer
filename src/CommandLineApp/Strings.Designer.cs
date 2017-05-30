@@ -62,7 +62,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run pipeline in dry run mode. .
+        ///   Looks up a localized string similar to Run pipeline in dry run mode.
         /// </summary>
         public static string DryRunDescription {
             get {
@@ -116,7 +116,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name of pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline with name &quot;Main&quot;. If this option is unspecified and only one pipeline has been defined, runs said pipeline..
+        ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline named &quot;Main&quot;. If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline..
         /// </summary>
         public static string PipelineOptionDescription {
             get {
@@ -143,7 +143,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project file (.csproj) of project used to define pipeline(s). Defaults to &quot;PipelinesCE.csproj&quot;..
+        ///   Looks up a localized string similar to Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for &quot;PipelinesCE.csproj&quot; in the current directory..
         /// </summary>
         public static string ProjectOptionDescription {
             get {
@@ -170,11 +170,29 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Runs a pipeline. Usage: &quot;pipelinesce run [--project &lt;project&gt;] [--pipeline &lt;pipeline&gt;] [--verbose] [--dryrun]&quot;.
+        ///   Looks up a localized string similar to PipelinesCE, a continuous everything tool..
+        /// </summary>
+        public static string RootCommandDescription {
+            get {
+                return ResourceManager.GetString("RootCommandDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runs a pipeline.
         /// </summary>
         public static string RunCommandDescription {
             get {
                 return ResourceManager.GetString("RunCommandDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write verbose output to console.
+        /// </summary>
+        public static string VerboseOptionDescription {
+            get {
+                return ResourceManager.GetString("VerboseOptionDescription", resourceCulture);
             }
         }
         
@@ -188,7 +206,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to v.
+        ///   Looks up a localized string similar to vb.
         /// </summary>
         public static string VerboseOptionShortName {
             get {
