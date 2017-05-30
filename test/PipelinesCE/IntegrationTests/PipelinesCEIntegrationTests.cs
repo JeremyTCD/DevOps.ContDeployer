@@ -37,8 +37,10 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             _tempDir = fixture.TempDir;
         }
 
+        // TODO test GetProjectFile for absolute, relative paths and file name
+
         [Fact]
-        public void Start_ThrowsExceptionIfPipelinesCEProjectFileDoesNotExist()
+        public void Run_ThrowsExceptionIfPipelinesCEProjectFileDoesNotExist()
         {
             // Arrange
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
@@ -48,7 +50,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         }
 
         [Fact]
-        public void Start_ThrowsExceptionIfMoreThanOnePipelinesCEProjectFilesExist()
+        public void Run_ThrowsExceptionIfMoreThanOnePipelinesCEProjectFilesExist()
         {
             // Arrange
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
@@ -61,7 +63,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         }
 
         [Fact]
-        public void Start_BuildsPipelinesCEProject()
+        public void Run_BuildsPipelinesCEProject()
         {
             // Arrange
             File.WriteAllText(_projectFileName, _testProj);
