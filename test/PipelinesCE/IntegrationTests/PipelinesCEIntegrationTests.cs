@@ -1,10 +1,13 @@
 ﻿using StructureMap;
-using System;
-using System.IO;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 {
+    // TODO read up on how to test service configuration for structuremap?
+    /// <summary>
+    /// The goal of these tests is to ensure that <see cref="ServiceCollectionExtensions"/> configures PipelinesCE
+    /// services properly.
+    /// </summary>
     [Collection(nameof(PipelinesCECollection))]
     public class PipelinesCEIntegrationTests
     {
@@ -37,30 +40,6 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             _tempDir = fixture.TempDir;
         }
 
-        // TODO test GetProjectFile for absolute, relative paths and file name
-
-        [Fact]
-        public void Run_ThrowsExceptionIfPipelinesCEProjectFileDoesNotExist()
-        {
-            // Arrange
-            PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
-
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(null));
-        }
-
-        [Fact]
-        public void Run_ThrowsExceptionIfMoreThanOnePipelinesCEProjectFilesExist()
-        {
-            // Arrange
-            PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
-            File.WriteAllText(_projectFileName, "");
-            Directory.CreateDirectory("test");
-            File.WriteAllText("test/PipelinesCE.csproj", "");
-
-            // Act and Asssert
-            Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(null));
-        }
 
         [Fact]
         public void Run_BuildsPipelinesCEProject()

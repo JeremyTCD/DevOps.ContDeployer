@@ -12,7 +12,10 @@ namespace JeremyTCD.PipelinesCE
             services.
                 AddLogging().
                 AddOptions().
-                AddSingleton<IAssemblyService>().
+                AddSingleton<IAssemblyService, AssemblyService>().
+                AddSingleton<IPathService, PathService>().
+                AddSingleton<IDirectoryService, DirectoryService>().
+                AddSingleton<IMSBuildService, MSBuildService>().
                 AddSingleton<HttpClient>();
 
             services.
