@@ -1,4 +1,5 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -7,11 +8,11 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 {
     public class MSBuildPlugin : IPlugin
     {
-        private IMSBuildClient _msBuildClient { get; }
+        private IMSBuildService _msBuildService { get; }
 
-        public MSBuildPlugin(IMSBuildClient msBuildClient)
+        public MSBuildPlugin(IMSBuildService msBuildService)
         {
-            _msBuildClient = msBuildClient;
+            _msBuildService = msBuildService;
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
 
             if (!pipelineContext.PipelineOptions.DryRun)
             {
-                _msBuildClient.Build(options.ProjOrSlnFile, options.Switches);
+                _msBuildService.Build(options.ProjOrSlnFile, options.Switches);
             }
 
             string logMessage = String.Concat("MSBuild.exe executed",

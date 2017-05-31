@@ -7,7 +7,6 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IMSBuildClient, MSBuildClient>();
         }
     }
 }
