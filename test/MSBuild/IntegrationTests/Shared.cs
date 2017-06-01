@@ -14,7 +14,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.IntegrationTests
 
         public MSBuildFixture()
         {
-            TempDir = Path.Combine(Path.GetTempPath(), "MSBuildClientTemp");
+            TempDir = Path.Combine(Path.GetTempPath(), "MSBuildServiceTemp");
         }
 
         // Deletes entire temp directory then recreates it

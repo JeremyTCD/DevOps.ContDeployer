@@ -1,4 +1,5 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
 using System;
 using Xunit;
@@ -21,9 +22,9 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
             mockStepContext.Setup(s => s.PluginOptions).Returns((IPluginOptions)null);
 
-            Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
+            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => plugin.Run(null, mockStepContext.Object));
@@ -31,7 +32,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_CallsMSBuildClientBuildWithSpecifiedArguments()
+        public void Run_CallsMSBuildServiceBuildWithSpecifiedArguments()
         {
             // Arrange
             string testFile = "testFile";
@@ -48,10 +49,10 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(false);
 
-            Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
-            mockMSBuildClient.Setup(m => m.Build(testFile, testSwitches));
+            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
+            mockMSBuildService.Setup(m => m.Build(testFile, testSwitches));
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
 
             // Act
             plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
@@ -71,16 +72,16 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
 
-            Mock<IMSBuildClient> mockMSBuildClient = _mockRepository.Create<IMSBuildClient>();
+            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildClient.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
 
             // Act
             plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
             _mockRepository.VerifyAll();
-            mockMSBuildClient.
+            mockMSBuildService.
                 Verify(m => m.Build(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
     }
