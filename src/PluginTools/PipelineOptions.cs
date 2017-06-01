@@ -4,7 +4,11 @@
     {
         private bool? _verbose;
         private bool? _dryRun;
+        private string _project;
 
+        /// <summary>
+        /// Defaults to false
+        /// </summary>
         public virtual bool Verbose
         {
             get
@@ -16,6 +20,10 @@
                 _verbose = value;
             }
         }
+
+        /// <summary>
+        /// Defaults to false
+        /// </summary>
         public virtual bool DryRun
         {
             get
@@ -27,7 +35,25 @@
                 _dryRun = value;
             }
         }
-        public virtual string Project { get; set; }
+
+        /// <summary>
+        /// Defaults to PipelinesCE.csproj
+        /// </summary>
+        public virtual string Project
+        {
+            get
+            {
+                return _project ?? "PipelinesCE.csproj";
+            }
+            set
+            {
+                _project = value;
+            }
+        }
+
+        /// <summary>
+        /// If there is only 1 <see cref="IPipelineFactory"/>, defaults to the sole <see cref="Pipeline"/>
+        /// </summary>
         public virtual string Pipeline { get; set; }
 
         /// <summary>
