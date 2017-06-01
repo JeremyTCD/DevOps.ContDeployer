@@ -16,6 +16,7 @@ namespace JeremyTCD.PipelinesCE
                 AddSingleton<IPathService, PathService>().
                 AddSingleton<IDirectoryService, DirectoryService>().
                 AddSingleton<IMSBuildService, MSBuildService>().
+                AddSingleton<IActivatorService, ActivatorService>().
                 AddSingleton<HttpClient>();
 
             services.
