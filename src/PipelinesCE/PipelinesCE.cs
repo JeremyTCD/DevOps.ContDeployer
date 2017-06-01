@@ -49,8 +49,8 @@ namespace JeremyTCD.PipelinesCE
 
             _msBuildService.Build(projectFile, $"/t:restore,build /p:Configuration=Release {projectFile}");
 
-            IPipelineFactory factory = GetPipelineFactory(projectDirectory, pipelineOptions.Pipeline);
-            IEnumerable<IStep> steps = factory.CreatePipeline();
+            IPipelineFactory factory = GetPipelineFactory(projectFile, pipelineOptions.Pipeline);
+            Pipeline pipeline = factory.CreatePipeline();
 
             // TODO create a container for each plugin 
 

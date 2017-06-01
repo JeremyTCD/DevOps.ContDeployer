@@ -26,12 +26,12 @@ namespace JeremyTCD.PipelinesCE
             _pipelineContextFactory = pipelineContextFactory;
         }
 
-        public void Run(IEnumerable<IStep> steps, PipelineOptions pipelineOptions)
+        public void Run(Pipeline pipeline)
         {
             IPipelineContext pipelineContext = _pipelineContextFactory.
-                AddPipelineOptions(pipelineOptions).
+                AddPipelineOptions(pipeline.Options).
                 CreatePipelineContext();
-            LinkedList<IStep> remainingSteps = new LinkedList<IStep>(steps);
+            LinkedList<IStep> remainingSteps = new LinkedList<IStep>(pipeline.Steps);
 
             _logger.LogInformation("=== Running pipeline ===");
 
