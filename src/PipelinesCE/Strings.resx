@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidProjectPath" xml:space="preserve">
-    <value>Invalid project file path "{0}"</value>
+  <data name="MultiplePipelineFactories" xml:space="preserve">
+    <value>Multiple pipeline factories found:\n{0}</value>
+  </data>
+  <data name="NoPipelineFactories" xml:space="preserve">
+    <value>No pipeline factories in project "{0}"</value>
+  </data>
+  <data name="NoPipelineFactory" xml:space="preserve">
+    <value>No pipeline factory builds a pipeline with name "{0}"</value>
+  </data>
+  <data name="PipelinesCEProjectMSBuildSwitches" xml:space="preserve">
+    <value>/t:restore,build /p:Configuration=Release</value>
   </data>
 </root>

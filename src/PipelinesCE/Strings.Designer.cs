@@ -62,11 +62,38 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid project file path &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Multiple pipeline factories found:\n{0}.
         /// </summary>
-        public static string InvalidProjectPath {
+        public static string MultiplePipelineFactories {
             get {
-                return ResourceManager.GetString("InvalidProjectPath", resourceCulture);
+                return ResourceManager.GetString("MultiplePipelineFactories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No pipeline factories in project &quot;{0}&quot;.
+        /// </summary>
+        public static string NoPipelineFactories {
+            get {
+                return ResourceManager.GetString("NoPipelineFactories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No pipeline factory builds a pipeline with name &quot;{0}&quot;.
+        /// </summary>
+        public static string NoPipelineFactory {
+            get {
+                return ResourceManager.GetString("NoPipelineFactory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /t:restore,build /p:Configuration=Release.
+        /// </summary>
+        public static string PipelinesCEProjectMSBuildSwitches {
+            get {
+                return ResourceManager.GetString("PipelinesCEProjectMSBuildSwitches", resourceCulture);
             }
         }
     }

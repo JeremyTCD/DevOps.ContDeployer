@@ -11,29 +11,29 @@ namespace JeremyTCD.PipelinesCE
 {
     public class PipelinesCE
     {
-        private IProcessService _processService { get; }
         private IAssemblyService _assemblyService { get; }
-        //private IPipelineRunner _pipelineRunner { get; }
+        private IPipelineRunner _pipelineRunner { get; }
         private ILogger<PipelinesCE> _logger { get; }
         private IPathService _pathService { get; }
         private IDirectoryService _directoryService { get; }
         private IMSBuildService _msBuildService { get; }
+        private IActivatorService _activatorService { get; }
 
-        public PipelinesCE(IProcessService processService,
+        public PipelinesCE(IActivatorService activatorService,
             IAssemblyService assemblyService,
             IPathService pathService,
             IDirectoryService directoryService,
             IMSBuildService msBuildService,
-            //IPipelineRunner pipelineRunner, 
+            IPipelineRunner pipelineRunner,
             ILogger<PipelinesCE> logger)
         {
             _msBuildService = msBuildService;
             _pathService = pathService;
-            _processService = processService;
             _assemblyService = assemblyService;
-            //_pipelineRunner = pipelineRunner;
+            _pipelineRunner = pipelineRunner;
             _directoryService = directoryService;
             _logger = logger;
+            _activatorService = activatorService;
         }
 
         /// <summary>
@@ -45,37 +45,76 @@ namespace JeremyTCD.PipelinesCE
         public virtual void Run(PipelineOptions pipelineOptions)
         {
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
-            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
 
-            _msBuildService.Build(projectFile, $"/t:restore,build /p:Configuration=Release {projectFile}");
+            _msBuildService.Build(projectFile, Strings.PipelinesCEProjectMSBuildSwitches);
 
             IPipelineFactory factory = GetPipelineFactory(projectFile, pipelineOptions.Pipeline);
             Pipeline pipeline = factory.CreatePipeline();
+            pipeline.Options = pipelineOptions.Combine(pipeline.Options);
+
 
             // TODO create a container for each plugin 
 
-            //_pipelineRunner.Run(steps, pipelineOptions);
+            _pipelineRunner.Run(pipeline);
         }
 
-        private IPipelineFactory GetPipelineFactory(string projectDirectory, string pipeline)
+        /// <summary>
+        /// Gets <see cref="IPipelineFactory"/> from project defined by <paramref name="projectFile"/> that creates a pipeline with name 
+        /// <paramref name="pipeline"/>. If <paramref name="pipeline"/> is null and there is only one <see cref="IPipelineFactory"/> 
+        /// implementation, returns an instance of the sole implementation.
+        /// </summary>
+        /// <param name="projectFile"></param>
+        /// <param name="pipeline"></param>
+        /// <returns>
+        /// <see cref="IPipelineFactory"/>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if project does not contain any <see cref="IPipelineFactory"/> implementations
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if <paramref name="pipeline"/> is null and there are multiple pipeline factories
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipeline"/>
+        /// </exception>
+        private IPipelineFactory GetPipelineFactory(string projectFile, string pipeline)
         {
-            // TODO handle case where pipeline is null
-            // TODO what if framework version changes?
+            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
+
+            // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             IEnumerable<Assembly> assemblies = _assemblyService.LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Releases/netcoreapp1.1"), true);
             IDictionary<string, Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory)).
-                ToDictionary(t => t.Name.Replace("PipelineFactory", ""));
+                ToDictionary(t => t.Name.Replace("PipelineFactory", "").ToLowerInvariant());
 
-            // TODO if Pipeline is null
-            pipelineFactoryTypes.TryGetValue(pipeline, out Type pipelineFactoryType);
-
-            if (pipelineFactoryType == null)
+            if (pipelineFactoryTypes.Count == 0)
             {
-                throw new InvalidOperationException($"No pipeline with name \"{pipeline}\"");
+                throw new InvalidOperationException(string.Format(Strings.NoPipelineFactories, projectFile));
             }
 
-            // TODO ActivatorService
-            IPipelineFactory factory = (IPipelineFactory)Activator.CreateInstance(pipelineFactoryType);
+            Type pipelineFactoryType;
+            if (pipeline == null)
+            {
+                if (pipelineFactoryTypes.Count == 1)
+                {
+                    pipelineFactoryType = pipelineFactoryTypes.First().Value;
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format(Strings.MultiplePipelineFactories, 
+                        string.Join("\n", pipelineFactoryTypes.Values)));
+                }
+            }
+            else
+            {
+                pipelineFactoryTypes.TryGetValue(pipeline.ToLowerInvariant(), out pipelineFactoryType);
+                if (pipelineFactoryType == null)
+                {
+                    throw new InvalidOperationException(string.Format(Strings.NoPipelineFactory, pipeline));
+                }
+            }
+
+            IPipelineFactory factory = (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
             return factory;
         }
     }
