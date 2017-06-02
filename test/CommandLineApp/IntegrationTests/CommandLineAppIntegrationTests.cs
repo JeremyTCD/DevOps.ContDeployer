@@ -169,7 +169,7 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
         public void RunCommand_CallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool verbose, string pipeline, string project)
         {
             // Arrange
-            Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null);
+            Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
                 Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Verbose == verbose && o.Pipeline == pipeline && o.Project == project)));
 
@@ -186,8 +186,9 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
         {
             string testProject = "testProject";
             string testPipeline = "testPipeline";
+            string defaultProject = (new PipelineOptions()).Project;
 
-            yield return new object[] { new string[] { _runCommandName }, false, false, null, null };
+            yield return new object[] { new string[] { _runCommandName }, false, false, null, defaultProject};
             yield return new object[] {new string[] {_runCommandName,
                 $"-{Strings.VerboseOptionShortName}", $"-{Strings.DryRunOptionShortName}",
                 $"-{Strings.ProjectOptionShortName}", testProject,
