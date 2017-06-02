@@ -71,7 +71,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No pipeline factories in project &quot;{0}&quot;.
+        ///   Looks up a localized string similar to No pipeline factories .
         /// </summary>
         public static string NoPipelineFactories {
             get {

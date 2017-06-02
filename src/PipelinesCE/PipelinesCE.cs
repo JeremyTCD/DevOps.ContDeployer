@@ -1,6 +1,8 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,7 @@ namespace JeremyTCD.PipelinesCE
         private IDirectoryService _directoryService { get; }
         private IMSBuildService _msBuildService { get; }
         private IActivatorService _activatorService { get; }
+        private IContainer _mainContainer { get; }
 
         public PipelinesCE(IActivatorService activatorService,
             IAssemblyService assemblyService,
@@ -25,8 +28,10 @@ namespace JeremyTCD.PipelinesCE
             IDirectoryService directoryService,
             IMSBuildService msBuildService,
             IPipelineRunner pipelineRunner,
+            IContainer mainContainer,
             ILogger<PipelinesCE> logger)
         {
+            _mainContainer = mainContainer;
             _msBuildService = msBuildService;
             _pathService = pathService;
             _assemblyService = assemblyService;
@@ -45,21 +50,54 @@ namespace JeremyTCD.PipelinesCE
         public virtual void Run(PipelineOptions pipelineOptions)
         {
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
+            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
 
+            // Build project
             _msBuildService.Build(projectFile, Strings.PipelinesCEProjectMSBuildSwitches);
 
-            IPipelineFactory factory = GetPipelineFactory(projectFile, pipelineOptions.Pipeline);
+            // Load assemblies
+            IEnumerable<Assembly> assemblies = _assemblyService.
+                LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Releases/netcoreapp1.1"), true);
+
+            // Create plugin containers
+            CreatePluginContainers(assemblies);
+
+            // Create pipeline
+            IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions.Pipeline);
             Pipeline pipeline = factory.CreatePipeline();
             pipeline.Options = pipelineOptions.Combine(pipeline.Options);
-
-
-            // TODO create a container for each plugin 
 
             _pipelineRunner.Run(pipeline);
         }
 
+        private void CreatePluginContainers(IEnumerable<Assembly> assemblies)
+        {
+            List<Type> pluginTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPlugin)).ToList();
+            IDictionary<string, Type> pluginStartupTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPluginStartup)).ToDictionary(t => t.Name);
+            foreach (Type pluginType in pluginTypes)
+            {
+                // Configure services
+                ServiceCollection services = new ServiceCollection();
+                pluginStartupTypes.TryGetValue($"{pluginType.Name}Startup", out Type pluginStartupType);
+                if (pluginStartupType != null)
+                {
+                    IPluginStartup pluginStartup = (IPluginStartup)_activatorService.CreateInstance(pluginStartupType);
+                    pluginStartup.ConfigureServices(services);
+                }
+                services.AddTransient(pluginType);
+
+                _mainContainer.Configure(configurationExpression =>
+                {
+                    configurationExpression.Profile(pluginType.Name, registry =>
+                    {
+                        ((Registry)registry).Populate(services);
+                    });
+                });
+            }
+        }
+
         /// <summary>
-        /// Gets <see cref="IPipelineFactory"/> from project defined by <paramref name="projectFile"/> that creates a pipeline with name 
+        /// Gets <see cref="IPipelineFactory"/> from project assemblies that creates a pipeline with name 
         /// <paramref name="pipeline"/>. If <paramref name="pipeline"/> is null and there is only one <see cref="IPipelineFactory"/> 
         /// implementation, returns an instance of the sole implementation.
         /// </summary>
@@ -77,19 +115,16 @@ namespace JeremyTCD.PipelinesCE
         /// <exception cref="InvalidOperationException">
         /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipeline"/>
         /// </exception>
-        private IPipelineFactory GetPipelineFactory(string projectFile, string pipeline)
+        private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, string pipeline)
         {
-            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
-
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
-            IEnumerable<Assembly> assemblies = _assemblyService.LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Releases/netcoreapp1.1"), true);
             IDictionary<string, Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory)).
                 ToDictionary(t => t.Name.Replace("PipelineFactory", "").ToLowerInvariant());
 
             if (pipelineFactoryTypes.Count == 0)
             {
-                throw new InvalidOperationException(string.Format(Strings.NoPipelineFactories, projectFile));
+                throw new InvalidOperationException(Strings.NoPipelineFactories);
             }
 
             Type pipelineFactoryType;
@@ -101,7 +136,7 @@ namespace JeremyTCD.PipelinesCE
                 }
                 else
                 {
-                    throw new InvalidOperationException(string.Format(Strings.MultiplePipelineFactories, 
+                    throw new InvalidOperationException(string.Format(Strings.MultiplePipelineFactories,
                         string.Join("\n", pipelineFactoryTypes.Values)));
                 }
             }

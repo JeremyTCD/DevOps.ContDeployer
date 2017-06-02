@@ -1,11 +1,13 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 {
@@ -50,7 +52,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Returns(new Type[0]);
 
             PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null);
+                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
@@ -91,7 +93,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Returns(dummyTypes);
 
             PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null);
+                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
@@ -136,7 +138,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Returns(dummyTypes);
 
             PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null);
+                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
@@ -145,7 +147,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_CallsPipelineRunnerRunWithSpecifiedOptions()
+        public void Run_ConfiguresServicesAndCallsPipelineRunnerRunWithSpecifiedOptions()
         {
             // Arrange
             string testProject = "testProject";
@@ -175,15 +177,28 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockAssemblyService.
                 Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
                 Returns(new Type[] { typeof(StubPipelineFactory)});
+            mockAssemblyService.
+                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPlugin))).
+                Returns(new Type[] { typeof(DummyPlugin) });
+            mockAssemblyService.
+                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPluginStartup))).
+                Returns(new Type[] { typeof(DummyPluginStartup) });
+
+            Mock<IPluginStartup> mockPluginStartup = _mockRepository.Create<IPluginStartup>();
+            mockPluginStartup.Setup(p => p.ConfigureServices(It.IsAny<ServiceCollection>()));
 
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(typeof(StubPipelineFactory))).Returns(new StubPipelineFactory());
+            mockActivatorService.Setup(a => a.CreateInstance(typeof(DummyPluginStartup))).Returns(mockPluginStartup.Object);
+
+            Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
+            mockContainer.Setup(c => c.Configure(It.IsAny<Action<ConfigurationExpression>>()));
 
             Mock<IPipelineRunner> mockPipelineRunner = _mockRepository.Create<IPipelineRunner>();
             mockPipelineRunner.Setup(p => p.Run(It.IsAny<Pipeline>()));
 
             PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, null);
+                mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, mockContainer.Object, null);
 
             // Act 
             pipelinesCE.Run(mockPipelineOptions.Object);
@@ -197,6 +212,22 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             public Pipeline CreatePipeline()
             {
                 return new Pipeline(null);
+            }
+        }
+
+        private class DummyPluginStartup : IPluginStartup
+        {
+            public void ConfigureServices(IServiceCollection services)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class DummyPlugin : IPlugin
+        {
+            public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
+            {
+                throw new NotImplementedException();
             }
         }
 

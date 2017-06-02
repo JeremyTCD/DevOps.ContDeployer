@@ -121,7 +121,7 @@
     <value>Multiple pipeline factories found:\n{0}</value>
   </data>
   <data name="NoPipelineFactories" xml:space="preserve">
-    <value>No pipeline factories in project "{0}"</value>
+    <value>No pipeline factories </value>
   </data>
   <data name="NoPipelineFactory" xml:space="preserve">
     <value>No pipeline factory builds a pipeline with name "{0}"</value>
