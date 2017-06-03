@@ -1,9 +1,4 @@
-﻿using NuGet.Common;
-using NuGet.Protocol.Core.Types;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using Xunit;
+﻿using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.IntegrationTests
 {
@@ -11,15 +6,12 @@ namespace JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.IntegrationTests
     /// Nuget.Client api isn't stable yet (as of 4.0.0-rc-netstandard2.0). All functions that utilize the api
     /// should be put through thorough integration tests.
     /// </summary>
-    [Collection("NugetCollection")]
     public class NugetClientIntegrationTests
     {
         private string _tempDir { get; set; }
 
-        public NugetClientIntegrationTests(NugetFixture fixture)
+        public NugetClientIntegrationTests()
         {
-            fixture.ResetTempDir();
-            _tempDir = fixture.TempDir;
         }
 
         [Fact]
