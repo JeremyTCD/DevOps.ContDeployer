@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.csproj" />
     <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
   </ItemGroup>
 
