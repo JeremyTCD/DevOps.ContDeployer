@@ -1,6 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-
-namespace JeremyTCD.PipelinesCE
+﻿namespace JeremyTCD.PipelinesCE
 {
     public interface IPipelineRunner 
     {
