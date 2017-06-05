@@ -24,7 +24,9 @@ namespace JeremyTCD.PipelinesCE
                 AddSingleton<IProcessService, ProcessService>().
                 AddSingleton<IPluginFactory, PluginFactory>().
                 AddSingleton<IPipelineRunner, PipelineRunner>().
-                AddSingleton<IPipelineContext, PipelineContext>();
+                AddSingleton<IPipelineContext, PipelineContext>().
+                AddSingleton<IStepContextFactory, StepContextFactory>().
+                AddSingleton<IPipelineContextFactory, PipelineContextFactory>();
         }
     }
 }
