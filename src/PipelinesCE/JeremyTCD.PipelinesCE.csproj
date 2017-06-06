@@ -25,9 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--https://blogs.msdn.microsoft.com/kirillosenkov/2015/04/04/how-to-have-a-project-reference-without-referencing-the-actual-binary/-->
-    <!--https://github.com/Microsoft/msbuild/issues/1916-->
-    <!--https://github.com/dotnet/sdk/issues/1020-->
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
   </ItemGroup>
