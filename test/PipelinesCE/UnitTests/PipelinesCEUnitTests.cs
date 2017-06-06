@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 {
@@ -37,7 +38,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -45,7 +46,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             IEnumerable<Assembly> assemblies = new Assembly[0];
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Releases/netcoreapp1.1"), true)).
+                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
                 Returns(assemblies);
             mockAssemblyService.
                 Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
@@ -77,7 +78,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -86,7 +87,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Type[] dummyTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Releases/netcoreapp1.1"), true)).
+                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
                 Returns(assemblies);
             mockAssemblyService.
                 Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
@@ -98,7 +99,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
             Assert.
-                Equal(string.Format(Strings.Exception_MultiplePipelineFactories, string.Join<Type>("\n", dummyTypes)), 
+                Equal(string.Format(Strings.Exception_MultiplePipelineFactories, string.Join("\n", dummyTypes.Select(t => t.Name))), 
                     exception.Message);
             _mockRepository.VerifyAll();
         }
@@ -122,7 +123,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -131,7 +132,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Type[] dummyTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Releases/netcoreapp1.1"), true)).
+                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
                 Returns(assemblies);
             mockAssemblyService.
                 Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
@@ -164,7 +165,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -172,7 +173,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             IEnumerable<Assembly> assemblies = new Assembly[0];
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Releases/netcoreapp1.1"), true)).
+                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
                 Returns(assemblies);
             mockAssemblyService.
                 Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
