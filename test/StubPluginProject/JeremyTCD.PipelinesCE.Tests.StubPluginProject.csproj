@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0-preview1-final" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\Jeremy\Documents\Visual Studio 2017\Projects\JeremyTCD.PipelinesCE\src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
   </ItemGroup>
 
 </Project>
