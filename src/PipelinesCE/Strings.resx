@@ -126,7 +126,19 @@
   <data name="NoPipelineFactory" xml:space="preserve">
     <value>No pipeline factory builds a pipeline with name "{0}"</value>
   </data>
+  <data name="PipelineComplete" xml:space="preserve">
+    <value>=== Pipeline "{0}" complete ===</value>
+  </data>
   <data name="PipelinesCEProjectMSBuildSwitches" xml:space="preserve">
     <value>/t:restore,build /p:Configuration=Release</value>
+  </data>
+  <data name="PluginComplete" xml:space="preserve">
+    <value>== Plugin "{0}" complete ==</value>
+  </data>
+  <data name="RunningPipeline" xml:space="preserve">
+    <value>=== Running pipeline "{0}" ===</value>
+  </data>
+  <data name="RunningPlugin" xml:space="preserve">
+    <value>== Running plugin "{0}" ==</value>
   </data>
 </root>

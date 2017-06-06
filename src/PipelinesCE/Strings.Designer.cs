@@ -89,11 +89,47 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to === Pipeline &quot;{0}&quot; complete ===.
+        /// </summary>
+        public static string PipelineComplete {
+            get {
+                return ResourceManager.GetString("PipelineComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /t:restore,build /p:Configuration=Release.
         /// </summary>
         public static string PipelinesCEProjectMSBuildSwitches {
             get {
                 return ResourceManager.GetString("PipelinesCEProjectMSBuildSwitches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to == Plugin &quot;{0}&quot; complete ==.
+        /// </summary>
+        public static string PluginComplete {
+            get {
+                return ResourceManager.GetString("PluginComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to === Running pipeline &quot;{0}&quot; ===.
+        /// </summary>
+        public static string RunningPipeline {
+            get {
+                return ResourceManager.GetString("RunningPipeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to == Running plugin &quot;{0}&quot; ==.
+        /// </summary>
+        public static string RunningPlugin {
+            get {
+                return ResourceManager.GetString("RunningPlugin", resourceCulture);
             }
         }
     }
