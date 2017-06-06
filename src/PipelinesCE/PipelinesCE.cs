@@ -63,7 +63,7 @@ namespace JeremyTCD.PipelinesCE
             CreatePluginContainers(assemblies);
 
             // Create pipeline
-            IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions.Pipeline);
+            IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions);
             Pipeline pipeline = factory.CreatePipeline();
             pipeline.Options = pipelineOptions.Combine(pipeline.Options);
 
@@ -98,11 +98,11 @@ namespace JeremyTCD.PipelinesCE
 
         /// <summary>
         /// Gets <see cref="IPipelineFactory"/> from project assemblies that creates a pipeline with name 
-        /// <paramref name="pipeline"/>. If <paramref name="pipeline"/> is null and there is only one <see cref="IPipelineFactory"/> 
+        /// <paramref name="pipelineOptions"/>. If <paramref name="pipelineOptions"/> is null and there is only one <see cref="IPipelineFactory"/> 
         /// implementation, returns an instance of the sole implementation.
         /// </summary>
         /// <param name="projectFile"></param>
-        /// <param name="pipeline"></param>
+        /// <param name="pipelineOptions"></param>
         /// <returns>
         /// <see cref="IPipelineFactory"/>
         /// </returns>
@@ -110,47 +110,64 @@ namespace JeremyTCD.PipelinesCE
         /// Thrown if project does not contain any <see cref="IPipelineFactory"/> implementations
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if <paramref name="pipeline"/> is null and there are multiple pipeline factories
+        /// Thrown if <paramref name="pipelineOptions"/> is null and there are multiple pipeline factories
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipeline"/>
+        /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipelineOptions"/>
         /// </exception>
-        private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, string pipeline)
+        private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
-            IDictionary<string, Type> pipelineFactoryTypes = _assemblyService.
-                GetAssignableTypes(assemblies, typeof(IPipelineFactory)).
-                ToDictionary(t => t.Name.Replace("PipelineFactory", "").ToLowerInvariant());
+            IEnumerable<Type> pipelineFactoryTypes = _assemblyService.
+                GetAssignableTypes(assemblies, typeof(IPipelineFactory));
 
-            if (pipelineFactoryTypes.Count == 0)
+            if (pipelineFactoryTypes.Count() == 0)
             {
                 throw new InvalidOperationException(Strings.NoPipelineFactories);
             }
 
             Type pipelineFactoryType;
-            if (pipeline == null)
+            if (pipelineOptions.Pipeline == null)
             {
-                if (pipelineFactoryTypes.Count == 1)
+                if (pipelineFactoryTypes.Count() == 1)
                 {
-                    pipelineFactoryType = pipelineFactoryTypes.First().Value;
+                    pipelineFactoryType = pipelineFactoryTypes.First();
+                    pipelineOptions.Pipeline = PipelineFactoryPipelineName(pipelineFactoryType);
                 }
                 else
                 {
                     throw new InvalidOperationException(string.Format(Strings.MultiplePipelineFactories,
-                        string.Join("\n", pipelineFactoryTypes.Values)));
+                        string.Join("\n", pipelineFactoryTypes.Select(t => t.Name))));
                 }
             }
             else
             {
-                pipelineFactoryTypes.TryGetValue(pipeline.ToLowerInvariant(), out pipelineFactoryType);
-                if (pipelineFactoryType == null)
+                IEnumerable<Type> types = pipelineFactoryTypes.
+                    Where(t => string.Equals(PipelineFactoryPipelineName(t), pipelineOptions.Pipeline, StringComparison.OrdinalIgnoreCase));
+                if (types.Count() == 0)
                 {
-                    throw new InvalidOperationException(string.Format(Strings.NoPipelineFactory, pipeline));
+                    throw new InvalidOperationException(string.Format(Strings.NoPipelineFactory, pipelineOptions.Pipeline));
                 }
+                if (types.Count() > 1)
+                {
+                    throw new InvalidOperationException($"Multiple pipeline factories build a pipeline with name \"{pipelineOptions.Pipeline}\":\n" +
+                        $"{string.Join("\n", types.Select(t => t.Name))}");
+                }
+                pipelineFactoryType = types.First();
             }
 
             IPipelineFactory factory = (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
             return factory;
+        }
+
+        private string PipelineFactoryPipelineName(Type pipelineFactoryType) 
+        {
+            if (!typeof(IPipelineFactory).IsAssignableFrom(pipelineFactoryType))
+            {
+                throw new InvalidOperationException($"Type \"{pipelineFactoryType.Name}\" does not implement {nameof(IPipelineFactory)} ");
+            }
+
+            return pipelineFactoryType.Name.Replace("PipelineFactory", "");
         }
     }
 }
