@@ -57,7 +57,7 @@ namespace JeremyTCD.PipelinesCE
 
             // Load assemblies
             IEnumerable<Assembly> assemblies = _assemblyService.
-                LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Releases/netcoreapp1.1"), true);
+                LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1"), true);
 
             // Create plugin containers
             CreatePluginContainers(assemblies);
