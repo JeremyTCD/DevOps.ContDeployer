@@ -64,27 +64,27 @@ namespace JeremyTCD.PipelinesCE {
         /// <summary>
         ///   Looks up a localized string similar to Multiple pipeline factories found:\n{0}.
         /// </summary>
-        public static string MultiplePipelineFactories {
+        public static string Exception_MultiplePipelineFactories {
             get {
-                return ResourceManager.GetString("MultiplePipelineFactories", resourceCulture);
+                return ResourceManager.GetString("Exception_MultiplePipelineFactories", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to No pipeline factories .
         /// </summary>
-        public static string NoPipelineFactories {
+        public static string Exception_NoPipelineFactories {
             get {
-                return ResourceManager.GetString("NoPipelineFactories", resourceCulture);
+                return ResourceManager.GetString("Exception_NoPipelineFactories", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to No pipeline factory builds a pipeline with name &quot;{0}&quot;.
         /// </summary>
-        public static string NoPipelineFactory {
+        public static string Exception_NoPipelineFactory {
             get {
-                return ResourceManager.GetString("NoPipelineFactory", resourceCulture);
+                return ResourceManager.GetString("Exception_NoPipelineFactory", resourceCulture);
             }
         }
         

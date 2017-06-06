@@ -55,6 +55,7 @@ namespace JeremyTCD.PipelinesCE
             // Build project
             _msBuildService.Build(projectFile, Strings.PipelinesCEProjectMSBuildSwitches);
 
+            // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies
             IEnumerable<Assembly> assemblies = _assemblyService.
                 LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1"), true);
@@ -117,13 +118,12 @@ namespace JeremyTCD.PipelinesCE
         /// </exception>
         private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
-            // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             IEnumerable<Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory));
 
             if (pipelineFactoryTypes.Count() == 0)
             {
-                throw new InvalidOperationException(Strings.NoPipelineFactories);
+                throw new InvalidOperationException(Strings.Exception_NoPipelineFactories);
             }
 
             Type pipelineFactoryType;
@@ -136,7 +136,7 @@ namespace JeremyTCD.PipelinesCE
                 }
                 else
                 {
-                    throw new InvalidOperationException(string.Format(Strings.MultiplePipelineFactories,
+                    throw new InvalidOperationException(string.Format(Strings.Exception_MultiplePipelineFactories,
                         string.Join("\n", pipelineFactoryTypes.Select(t => t.Name))));
                 }
             }
@@ -146,7 +146,7 @@ namespace JeremyTCD.PipelinesCE
                     Where(t => string.Equals(PipelineFactoryPipelineName(t), pipelineOptions.Pipeline, StringComparison.OrdinalIgnoreCase));
                 if (types.Count() == 0)
                 {
-                    throw new InvalidOperationException(string.Format(Strings.NoPipelineFactory, pipelineOptions.Pipeline));
+                    throw new InvalidOperationException(string.Format(Strings.Exception_NoPipelineFactory, pipelineOptions.Pipeline));
                 }
                 if (types.Count() > 1)
                 {

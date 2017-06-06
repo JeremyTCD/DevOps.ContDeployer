@@ -56,7 +56,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
-            Assert.Equal(string.Format(Strings.NoPipelineFactories, testProjectFile), exception.Message);
+            Assert.Equal(string.Format(Strings.Exception_NoPipelineFactories, testProjectFile), exception.Message);
             _mockRepository.VerifyAll();
         }
 
@@ -98,7 +98,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
             Assert.
-                Equal(string.Format(Strings.MultiplePipelineFactories, string.Join<Type>("\n", dummyTypes)), 
+                Equal(string.Format(Strings.Exception_MultiplePipelineFactories, string.Join<Type>("\n", dummyTypes)), 
                     exception.Message);
             _mockRepository.VerifyAll();
         }
@@ -142,7 +142,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
-            Assert.Equal(string.Format(Strings.NoPipelineFactory, testPipeline), exception.Message);
+            Assert.Equal(string.Format(Strings.Exception_NoPipelineFactory, testPipeline), exception.Message);
             _mockRepository.VerifyAll();
         }
 
