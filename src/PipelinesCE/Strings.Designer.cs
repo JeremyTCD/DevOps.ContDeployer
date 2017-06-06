@@ -80,6 +80,15 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No container for plugin type with name &quot;{0}&quot;.
+        /// </summary>
+        public static string Exception_NoContainerForPluginType {
+            get {
+                return ResourceManager.GetString("Exception_NoContainerForPluginType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No pipeline factories .
         /// </summary>
         public static string Exception_NoPipelineFactories {
@@ -94,6 +103,15 @@ namespace JeremyTCD.PipelinesCE {
         public static string Exception_NoPipelineFactory {
             get {
                 return ResourceManager.GetString("Exception_NoPipelineFactory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No service for plugin type with name &quot;{0}&quot;.
+        /// </summary>
+        public static string Exception_NoServiceForPluginType {
+            get {
+                return ResourceManager.GetString("Exception_NoServiceForPluginType", resourceCulture);
             }
         }
         
@@ -130,6 +148,15 @@ namespace JeremyTCD.PipelinesCE {
         public static string PluginComplete {
             get {
                 return ResourceManager.GetString("PluginComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin &quot;{0}&quot; successfully built.
+        /// </summary>
+        public static string PluginSuccessfullyBuilt {
+            get {
+                return ResourceManager.GetString("PluginSuccessfullyBuilt", resourceCulture);
             }
         }
         

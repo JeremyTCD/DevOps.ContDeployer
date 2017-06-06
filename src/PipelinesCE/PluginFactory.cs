@@ -25,17 +25,17 @@ namespace JeremyTCD.PipelinesCE
 
             if(container == null)
             {
-                throw new Exception($"No container for plugin type with name \"{pluginName}\"");
+                throw new Exception(string.Format(Strings.Exception_NoContainerForPluginType, pluginName));
             }
 
             IPlugin plugin = container.GetInstance(pluginType) as IPlugin;
 
             if(plugin == null)
             {
-                throw new Exception($"No service for plugin type with name \"{pluginName}\"");
+                throw new Exception(string.Format(Strings.Exception_NoServiceForPluginType, pluginName));
             }
 
-            _logger.LogInformation($"Plugin \"{pluginName}\" successfully built");
+            _logger.LogInformation(string.Format(Strings.PluginSuccessfullyBuilt, pluginName));
 
             return plugin;
         }
