@@ -138,22 +138,22 @@
   <data name="Exception_TypeDoesNotImplement" xml:space="preserve">
     <value>Type "{0}" does not implement "{1}"</value>
   </data>
-  <data name="PipelineComplete" xml:space="preserve">
+  <data name="Log_PipelineComplete" xml:space="preserve">
     <value>=== Pipeline "{0}" complete ===</value>
   </data>
-  <data name="PipelinesCEProjectMSBuildSwitches" xml:space="preserve">
+  <data name="Log_PipelinesCEProjectMSBuildSwitches" xml:space="preserve">
     <value>/t:restore,build /p:Configuration=Release</value>
   </data>
-  <data name="PluginComplete" xml:space="preserve">
+  <data name="Log_PluginComplete" xml:space="preserve">
     <value>== Plugin "{0}" complete ==</value>
   </data>
-  <data name="PluginSuccessfullyBuilt" xml:space="preserve">
+  <data name="Log_PluginSuccessfullyBuilt" xml:space="preserve">
     <value>Plugin "{0}" successfully built</value>
   </data>
-  <data name="RunningPipeline" xml:space="preserve">
+  <data name="Log_RunningPipeline" xml:space="preserve">
     <value>=== Running pipeline "{0}" ===</value>
   </data>
-  <data name="RunningPlugin" xml:space="preserve">
+  <data name="Log_RunningPlugin" xml:space="preserve">
     <value>== Running plugin "{0}" ==</value>
   </data>
 </root>

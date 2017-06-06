@@ -35,7 +35,7 @@ namespace JeremyTCD.PipelinesCE
                 throw new Exception(string.Format(Strings.Exception_NoServiceForPluginType, pluginName));
             }
 
-            _logger.LogInformation(string.Format(Strings.PluginSuccessfullyBuilt, pluginName));
+            _logger.LogInformation(string.Format(Strings.Log_PluginSuccessfullyBuilt, pluginName));
 
             return plugin;
         }

@@ -127,54 +127,54 @@ namespace JeremyTCD.PipelinesCE {
         /// <summary>
         ///   Looks up a localized string similar to === Pipeline &quot;{0}&quot; complete ===.
         /// </summary>
-        public static string PipelineComplete {
+        public static string Log_PipelineComplete {
             get {
-                return ResourceManager.GetString("PipelineComplete", resourceCulture);
+                return ResourceManager.GetString("Log_PipelineComplete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to /t:restore,build /p:Configuration=Release.
         /// </summary>
-        public static string PipelinesCEProjectMSBuildSwitches {
+        public static string Log_PipelinesCEProjectMSBuildSwitches {
             get {
-                return ResourceManager.GetString("PipelinesCEProjectMSBuildSwitches", resourceCulture);
+                return ResourceManager.GetString("Log_PipelinesCEProjectMSBuildSwitches", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to == Plugin &quot;{0}&quot; complete ==.
         /// </summary>
-        public static string PluginComplete {
+        public static string Log_PluginComplete {
             get {
-                return ResourceManager.GetString("PluginComplete", resourceCulture);
+                return ResourceManager.GetString("Log_PluginComplete", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Plugin &quot;{0}&quot; successfully built.
         /// </summary>
-        public static string PluginSuccessfullyBuilt {
+        public static string Log_PluginSuccessfullyBuilt {
             get {
-                return ResourceManager.GetString("PluginSuccessfullyBuilt", resourceCulture);
+                return ResourceManager.GetString("Log_PluginSuccessfullyBuilt", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to === Running pipeline &quot;{0}&quot; ===.
         /// </summary>
-        public static string RunningPipeline {
+        public static string Log_RunningPipeline {
             get {
-                return ResourceManager.GetString("RunningPipeline", resourceCulture);
+                return ResourceManager.GetString("Log_RunningPipeline", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to == Running plugin &quot;{0}&quot; ==.
         /// </summary>
-        public static string RunningPlugin {
+        public static string Log_RunningPlugin {
             get {
-                return ResourceManager.GetString("RunningPlugin", resourceCulture);
+                return ResourceManager.GetString("Log_RunningPlugin", resourceCulture);
             }
         }
     }
