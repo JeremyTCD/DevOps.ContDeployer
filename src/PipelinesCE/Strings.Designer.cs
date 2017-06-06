@@ -62,11 +62,20 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple pipeline factories found:\n{0}.
+        ///   Looks up a localized string similar to Multiple pipeline factories found, please specify one:\n{0}.
         /// </summary>
         public static string Exception_MultiplePipelineFactories {
             get {
                 return ResourceManager.GetString("Exception_MultiplePipelineFactories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple pipeline factories build a pipeline with name &quot;{0}&quot;:\n{1}.
+        /// </summary>
+        public static string Exception_MultiplePipelineFactoriesWithSameName {
+            get {
+                return ResourceManager.GetString("Exception_MultiplePipelineFactoriesWithSameName", resourceCulture);
             }
         }
         
@@ -85,6 +94,15 @@ namespace JeremyTCD.PipelinesCE {
         public static string Exception_NoPipelineFactory {
             get {
                 return ResourceManager.GetString("Exception_NoPipelineFactory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &quot;{0}&quot; does not implement &quot;{1}&quot;.
+        /// </summary>
+        public static string Exception_TypeDoesNotImplement {
+            get {
+                return ResourceManager.GetString("Exception_TypeDoesNotImplement", resourceCulture);
             }
         }
         

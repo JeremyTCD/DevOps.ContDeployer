@@ -118,13 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Exception_MultiplePipelineFactories" xml:space="preserve">
-    <value>Multiple pipeline factories found:\n{0}</value>
+    <value>Multiple pipeline factories found, please specify one:\n{0}</value>
+  </data>
+  <data name="Exception_MultiplePipelineFactoriesWithSameName" xml:space="preserve">
+    <value>Multiple pipeline factories build a pipeline with name "{0}":\n{1}</value>
   </data>
   <data name="Exception_NoPipelineFactories" xml:space="preserve">
     <value>No pipeline factories </value>
   </data>
   <data name="Exception_NoPipelineFactory" xml:space="preserve">
     <value>No pipeline factory builds a pipeline with name "{0}"</value>
+  </data>
+  <data name="Exception_TypeDoesNotImplement" xml:space="preserve">
+    <value>Type "{0}" does not implement "{1}"</value>
   </data>
   <data name="PipelineComplete" xml:space="preserve">
     <value>=== Pipeline "{0}" complete ===</value>

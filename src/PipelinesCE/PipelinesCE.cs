@@ -150,8 +150,9 @@ namespace JeremyTCD.PipelinesCE
                 }
                 if (types.Count() > 1)
                 {
-                    throw new InvalidOperationException($"Multiple pipeline factories build a pipeline with name \"{pipelineOptions.Pipeline}\":\n" +
-                        $"{string.Join("\n", types.Select(t => t.Name))}");
+                    throw new InvalidOperationException(string.Format(Strings.Exception_MultiplePipelineFactoriesWithSameName,
+                        pipelineOptions.Pipeline,
+                        string.Join("\n", pipelineFactoryTypes.Select(t => t.FullName))));
                 }
                 pipelineFactoryType = types.First();
             }
@@ -162,9 +163,10 @@ namespace JeremyTCD.PipelinesCE
 
         private string PipelineFactoryPipelineName(Type pipelineFactoryType) 
         {
+            // Can't use generics since type is not known at compile time
             if (!typeof(IPipelineFactory).IsAssignableFrom(pipelineFactoryType))
             {
-                throw new InvalidOperationException($"Type \"{pipelineFactoryType.Name}\" does not implement {nameof(IPipelineFactory)} ");
+                throw new InvalidOperationException(string.Format(Strings.Exception_TypeDoesNotImplement, pipelineFactoryType.Name, nameof(IPipelineFactory)));
             }
 
             return pipelineFactoryType.Name.Replace("PipelineFactory", "");
