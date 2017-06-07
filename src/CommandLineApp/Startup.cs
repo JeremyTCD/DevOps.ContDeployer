@@ -9,7 +9,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         {
             services.AddPipelinesCE();
             services.AddSingleton<RootCommand>();
+            services.AddSingleton<RunCommand>();
             services.AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>();
+            services.AddOptions();
         }
     }
 }
