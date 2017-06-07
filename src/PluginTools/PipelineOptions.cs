@@ -2,24 +2,8 @@
 {
     public class PipelineOptions
     {
-        private bool? _verbose;
         private bool? _dryRun;
         private string _project;
-
-        /// <summary>
-        /// Defaults to false
-        /// </summary>
-        public virtual bool Verbose
-        {
-            get
-            {
-                return _verbose ?? false;
-            }
-            set
-            {
-                _verbose = value;
-            }
-        }
 
         /// <summary>
         /// Defaults to false
@@ -62,11 +46,6 @@
         /// <param name="secondary"></param>
         public virtual PipelineOptions Combine(PipelineOptions secondary)
         {
-            if (_verbose == null)
-            {
-                Verbose = secondary.Verbose;
-            }
-
             if (_dryRun == null)
             {
                 DryRun = secondary.DryRun;
