@@ -14,7 +14,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private PipelinesCE _pipelinesCE { get; }
         private ICommandLineUtilsService _cluService { get; }
 
-        public RootCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService)
+        public RootCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService,
+            RunCommand runCommand)
         {
             _cluService = cluService;
             _pipelinesCE = pipelinesCE;
@@ -22,26 +23,27 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             Description = Strings.RunCommandDescription;
             Name = nameof(PipelinesCE).ToLowerInvariant();
             FullName = nameof(PipelinesCE);
-            SetupCommands();
+            SetupCommands(runCommand);
             SetupOptions();
             OnExecute((Func<int>)Run);
         }
 
-        private void SetupCommands()
+        private void SetupCommands(RunCommand runCommand)
         {
-            Commands.Add(new RunCommand(_pipelinesCE, _cluService) { Parent = this });
+            runCommand.Parent = this;
+            Commands.Add(runCommand);
         }
 
         private void SetupOptions()
         {
             HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName));
-            VersionOption(_cluService.CreateOptionTemplate(Strings.VersionOptionShortName, Strings.VersionOptionLongName), 
+            VersionOption(_cluService.CreateOptionTemplate(Strings.VersionOptionShortName, Strings.VersionOptionLongName),
                 typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
         }
 
         private int Run()
         {
-            ShowHelp(); 
+            ShowHelp();
 
             return 0;
         }
