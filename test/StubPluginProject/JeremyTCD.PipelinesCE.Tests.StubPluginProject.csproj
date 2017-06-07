@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Jeremy\Documents\Visual Studio 2017\Projects\JeremyTCD.PipelinesCE\src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
+    <ProjectReference Include="..\..\src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
   </ItemGroup>
 
 </Project>

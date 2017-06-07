@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Jeremy\Documents\Visual Studio 2017\Projects\JeremyTCD.PipelinesCE\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
+    <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
     <ProjectReference Include="..\StubPluginProject\JeremyTCD.PipelinesCE.Tests.StubPluginProject.csproj" />
   </ItemGroup>
-
 </Project>
