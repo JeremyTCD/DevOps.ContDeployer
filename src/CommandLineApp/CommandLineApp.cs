@@ -10,21 +10,28 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public static int Main(string[] args)
         {
-
-            Startup startup = new Startup();
-            IServiceCollection services = new ServiceCollection();
-            startup.ConfigureServices(services);
-
-            // Wrap services in a StructureMap container to utilize its multi-tenancy features
-            IContainer mainContainer = new Container();
-            mainContainer.Populate(services);
-
-            ILogger<CommandLineApp> logger = mainContainer.GetInstance<ILogger<CommandLineApp>>();
-            RootCommand rootCommand = mainContainer.GetInstance<RootCommand>();
-            args = args.Select(s => s.ToLowerInvariant()).ToArray();
+            // Instantiate catchall logger
+            LoggerFactory loggerFactory = new LoggerFactory();
+            CommandLineAppOptions claOptions = new CommandLineAppOptions();
+            loggerFactory.
+                AddConsole(claOptions.DefaultMinLogLevel).
+                AddFile(claOptions.LogFileFormat, claOptions.DefaultMinLogLevel).
+                AddDebug(claOptions.DefaultMinLogLevel);
+            ILogger<CommandLineApp> logger = loggerFactory.CreateLogger<CommandLineApp>();
 
             try
             {
+                Startup startup = new Startup();
+                IServiceCollection services = new ServiceCollection();
+                startup.ConfigureServices(services);
+
+                // Wrap services in a StructureMap container to utilize its multi-tenancy features
+                IContainer mainContainer = new Container();
+                mainContainer.Populate(services);
+
+                RootCommand rootCommand = mainContainer.GetInstance<RootCommand>();
+                args = args.Select(s => s.ToLowerInvariant()).ToArray();
+
                 rootCommand.Execute(args);
             }
             catch (Exception e)
