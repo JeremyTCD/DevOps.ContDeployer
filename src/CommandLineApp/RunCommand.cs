@@ -1,6 +1,8 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
@@ -13,11 +15,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _dryRun { get; set; }
         public CommandOption _verbose { get; set; }
 
+        private CommandLineAppOptions _claOptions { get; }
         private PipelinesCE _pipelinesCE { get; }
         private ICommandLineUtilsService _cluService { get; }
+        private ILoggerFactory _loggerFactory { get; }
 
-        public RunCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService)
+        public RunCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService, ILoggerFactory loggerFactory,
+            IOptions<CommandLineAppOptions> claOptionsAccessor)
         {
+            _claOptions = claOptionsAccessor.Value;
+            _loggerFactory = loggerFactory;
             _pipelinesCE = pipelinesCE;
             _cluService = cluService;
 
@@ -48,9 +55,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
+            // TODO verify that configuring logger factory here affects loggers in _pipelinesCE's dependency tree
+            LogLevel logLevel = _verbose.HasValue() ? _claOptions.VerboseMinLogLevel : _claOptions.DefaultMinLogLevel;
+
+            _loggerFactory.
+                AddFile(_claOptions.LogFileFormat, logLevel).
+                AddConsole(logLevel).
+                AddDebug(logLevel);
+
             PipelineOptions pipelineOptions = new PipelineOptions
             {
-                Verbose = _verbose.HasValue(),
                 DryRun = _dryRun.HasValue(),
                 Project = _project.Value(),
                 Pipeline = _pipeline.Value()
