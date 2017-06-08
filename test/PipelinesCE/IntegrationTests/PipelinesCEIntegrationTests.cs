@@ -30,7 +30,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 
         /// <summary>
         /// This test covers the full breadth of <see cref="PipelinesCE"/>. In particular, it verifies that
-        /// <see cref="ServiceCollectionExtensions.AddPipelinesCE(IServiceCollection)"/> configures default PipelinesCE
+        /// <see cref="PipelinesCEServiceCollectionExtensions.AddPipelinesCE(IServiceCollection)"/> configures default PipelinesCE
         /// services properly as well as that <see cref="PipelinesCE.Run(PipelineOptions)"/> configures per plugin
         /// services properly.
         /// </summary>

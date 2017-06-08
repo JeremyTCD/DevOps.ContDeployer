@@ -5,7 +5,7 @@ using System.Net.Http;
 
 namespace JeremyTCD.PipelinesCE
 {
-    public static class ServiceCollectionExtensions
+    public static class PipelinesCEServiceCollectionExtensions
     {
         public static void AddPipelinesCE(this IServiceCollection services)
         {
