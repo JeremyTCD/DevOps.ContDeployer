@@ -33,7 +33,7 @@ namespace JeremyTCD.PipelinesCE
                 CreatePipelineContext();
             LinkedList<IStep> remainingSteps = new LinkedList<IStep>(pipeline.Steps);
 
-            _logger.LogInformation(string.Format(Strings.Log_RunningPipeline, pipeline.Options.Pipeline));
+            _logger.LogInformation(Strings.Log_RunningPipeline, pipeline.Options.Pipeline);
 
             while (remainingSteps.Count > 0)
             {
@@ -48,12 +48,12 @@ namespace JeremyTCD.PipelinesCE
                     AddLogger(logger).
                     CreateStepContext();
 
-                _logger.LogInformation(string.Format(Strings.Log_RunningPlugin, step.PluginType.Name));
+                _logger.LogInformation(Strings.Log_RunningPlugin, step.PluginType.Name);
                 plugin.Run(pipelineContext, stepContext);
-                _logger.LogInformation(string.Format(Strings.Log_PluginComplete, step.PluginType.Name));
+                _logger.LogInformation(Strings.Log_PluginComplete, step.PluginType.Name);
             }
 
-            _logger.LogInformation(string.Format(Strings.Log_PipelineComplete, pipeline.Options.Pipeline));
+            _logger.LogInformation(Strings.Log_PipelineComplete, pipeline.Options.Pipeline);
         }
     }
 }
