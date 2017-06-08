@@ -11,14 +11,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     /// </summary>
     public class RootCommand : CommandLineApplication
     {
-        private PipelinesCE _pipelinesCE { get; }
         private ICommandLineUtilsService _cluService { get; }
 
-        public RootCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService,
-            RunCommand runCommand)
+        public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand)
         {
             _cluService = cluService;
-            _pipelinesCE = pipelinesCE;
 
             Description = Strings.RunCommandDescription;
             Name = nameof(PipelinesCE).ToLowerInvariant();

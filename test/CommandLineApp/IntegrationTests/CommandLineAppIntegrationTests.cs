@@ -1,7 +1,11 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,10 +24,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         private static string _runCommandFullName { get; } = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
         private static string _rootCommandName { get; } = nameof(PipelinesCE).ToLowerInvariant();
         private static string _rootCommandFullName { get; } = nameof(PipelinesCE);
+        private IServiceProvider _serviceProvider { get; }
 
         public CommandsIntegrationTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
+
+            Startup startup = new Startup();
+            IServiceCollection services = new ServiceCollection();
+            startup.ConfigureServices(services);
+            _serviceProvider = services.BuildServiceProvider();
         }
 
         [Fact]
@@ -33,7 +43,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
@@ -51,7 +61,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(new string[0]);
@@ -85,7 +95,7 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
@@ -114,7 +124,7 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
@@ -153,7 +163,7 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
@@ -166,20 +176,29 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
 
         [Theory]
         [MemberData(nameof(RunCommandData))]
-        public void RunCommand_CallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool verbose, string pipeline, string project)
+        public void RunCommand_CallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, LogLevel logLevel, string pipeline, string project)
         {
             // Arrange
             Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
-                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Verbose == verbose && o.Pipeline == pipeline && o.Project == project)));
+                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
 
-            RootCommand rootCommand = new RootCommand(mockPipelinesCE.Object, _cluService);
+            ICommandLineUtilsService cluService = _serviceProvider.GetService<ICommandLineUtilsService>();
+            IOptions<CommandLineAppOptions> claOptionsAccessor = _serviceProvider.GetService<IOptions<CommandLineAppOptions>>();
+            IContainer container = _serviceProvider.GetService<IContainer>();
+            IContainer childContainer = container.CreateChildContainer();
+            childContainer.Configure(registry => registry.For<PipelinesCE>().Use(mockPipelinesCE.Object));
+            RunCommand runCommand = new RunCommand(cluService, claOptionsAccessor, childContainer);
+
+            RootCommand rootCommand = new RootCommand(cluService, runCommand);
 
             // Act
             rootCommand.Execute(arguments);
 
             // Assert
             _mockRepository.VerifyAll();
+            ILogger<CommandLineApp> logger = childContainer.GetInstance<ILogger<CommandLineApp>>();
+            Assert.True(logger.IsEnabled(logLevel) && (logLevel == LogLevel.Trace || !logger.IsEnabled(logLevel - 1)));
         }
 
         public static IEnumerable<object[]> RunCommandData()
@@ -187,18 +206,19 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
             string testProject = "testProject";
             string testPipeline = "testPipeline";
             string defaultProject = (new PipelineOptions()).Project;
+            CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { _runCommandName }, false, false, null, defaultProject};
+            yield return new object[] { new string[] { _runCommandName }, false, claOptions.DefaultMinLogLevel, null, defaultProject};
             yield return new object[] {new string[] {_runCommandName,
                 $"-{Strings.VerboseOptionShortName}", $"-{Strings.DryRunOptionShortName}",
                 $"-{Strings.ProjectOptionShortName}", testProject,
                 $"-{Strings.PipelineOptionShortName}", testPipeline },
-                true, true, testPipeline, testProject};
+                true, claOptions.VerboseMinLogLevel, testPipeline, testProject};
             yield return new object[] {new string[] {_runCommandName,
                 $"--{Strings.VerboseOptionLongName}", $"--{Strings.DryRunOptionLongName}",
                 $"--{Strings.ProjectOptionLongName}", testProject,
                 $"--{Strings.PipelineOptionLongName}", testPipeline },
-                true, true, testPipeline, testProject};
+                true, claOptions.VerboseMinLogLevel, testPipeline, testProject};
         }
 
         [Theory]
@@ -209,7 +229,7 @@ Use ""{_rootCommandName} [command] --help"" for more information about a command
             StringWriter stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
 
-            RootCommand rootCommand = new RootCommand(null, _cluService);
+            RootCommand rootCommand = _serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);

@@ -3,6 +3,7 @@ using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StructureMap;
 using System;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
@@ -16,17 +17,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         public CommandOption _verbose { get; set; }
 
         private CommandLineAppOptions _claOptions { get; }
-        private PipelinesCE _pipelinesCE { get; }
         private ICommandLineUtilsService _cluService { get; }
-        private ILoggerFactory _loggerFactory { get; }
+        private IContainer _container { get; }
 
-        public RunCommand(PipelinesCE pipelinesCE, ICommandLineUtilsService cluService, ILoggerFactory loggerFactory,
-            IOptions<CommandLineAppOptions> claOptionsAccessor)
+        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, IContainer container)
         {
             _claOptions = claOptionsAccessor.Value;
-            _loggerFactory = loggerFactory;
-            _pipelinesCE = pipelinesCE;
             _cluService = cluService;
+            _container = container;
 
             Description = Strings.RunCommandDescription;
             Name = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
@@ -55,22 +53,23 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
-            // TODO verify that configuring logger factory here affects loggers in _pipelinesCE's dependency tree
+            // Configure logging
+            // PipelinesCE and its plugins simply log using microsoft.extensions.logging. Calling libraries or
+            // applications determine what providers to use and the verbosity level.
+            ILoggerFactory loggerFactory = _container.GetInstance<ILoggerFactory>();
             LogLevel logLevel = _verbose.HasValue() ? _claOptions.VerboseMinLogLevel : _claOptions.DefaultMinLogLevel;
-
-            _loggerFactory.
+            loggerFactory.
                 AddFile(_claOptions.LogFileFormat, logLevel).
                 AddConsole(logLevel).
                 AddDebug(logLevel);
 
-            PipelineOptions pipelineOptions = new PipelineOptions
+            PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
+            pipelinesCE.Run(new PipelineOptions
             {
                 DryRun = _dryRun.HasValue(),
                 Project = _project.Value(),
                 Pipeline = _pipeline.Value()
-            };
-
-            _pipelinesCE.Run(pipelineOptions);
+            });
 
             return 0;
         }
