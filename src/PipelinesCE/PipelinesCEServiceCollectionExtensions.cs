@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Net.Http;
 
 namespace JeremyTCD.PipelinesCE
@@ -17,6 +18,7 @@ namespace JeremyTCD.PipelinesCE
                 AddSingleton<IDirectoryService, DirectoryService>().
                 AddSingleton<IMSBuildService, MSBuildService>().
                 AddSingleton<IActivatorService, ActivatorService>().
+                AddSingleton(typeof(ILoggingService<>), typeof(LoggingService<>)).
                 AddSingleton<HttpClient>();
 
             services.
