@@ -38,7 +38,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -78,7 +78,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -123,7 +123,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
@@ -165,7 +165,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches));
+            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
             mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));

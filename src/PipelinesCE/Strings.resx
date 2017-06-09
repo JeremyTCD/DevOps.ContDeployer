@@ -141,9 +141,6 @@
   <data name="Log_PipelineComplete" xml:space="preserve">
     <value>=== Pipeline "{0}" complete ===</value>
   </data>
-  <data name="Log_PipelinesCEProjectMSBuildSwitches" xml:space="preserve">
-    <value>/t:restore,build /p:Configuration=Release</value>
-  </data>
   <data name="Log_PluginComplete" xml:space="preserve">
     <value>== Plugin "{0}" complete ==</value>
   </data>

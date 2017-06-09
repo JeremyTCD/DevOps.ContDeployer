@@ -53,7 +53,7 @@ namespace JeremyTCD.PipelinesCE
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
 
             // Build project
-            _msBuildService.Build(projectFile, Strings.Log_PipelinesCEProjectMSBuildSwitches);
+            _msBuildService.Build(projectFile, "/t:restore,build /p:Configuration=Release");
 
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies

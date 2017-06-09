@@ -134,15 +134,6 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /t:restore,build /p:Configuration=Release.
-        /// </summary>
-        public static string Log_PipelinesCEProjectMSBuildSwitches {
-            get {
-                return ResourceManager.GetString("Log_PipelinesCEProjectMSBuildSwitches", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to == Plugin &quot;{0}&quot; complete ==.
         /// </summary>
         public static string Log_PluginComplete {
