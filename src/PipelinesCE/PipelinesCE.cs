@@ -157,8 +157,7 @@ namespace JeremyTCD.PipelinesCE
                 pipelineFactoryType = types.First();
             }
 
-            IPipelineFactory factory = (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
-            return factory;
+            return (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
         }
 
         private string PipelineFactoryPipelineName(Type pipelineFactoryType) 
