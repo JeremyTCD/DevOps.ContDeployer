@@ -59,3 +59,23 @@ first alphabet of each option's second syllable should be added to their short n
 ##### Description
 If options is a noun, its description should be in the following format: <what it is><elaboration/notes><default value>. If options is a verb, its description
 should be in the following format: <what it does><elaboration/notes>.
+### Shared Systems
+#### Logging Strategy
+##### Info Level Log
+The goal of messages at this log level is to provide users with a quick way to verify that PipelinesCE is behaving in the expected manner. It is thus a rough 
+overview of what PipelinesCE is doing with an emphasis on operations affected by user input. For example, it should begin by notifying the user that project 
+"example project" has been built since the user specifies which project to use. It should not inform the user that PipelinesCE.Run has been called since the 
+call occurs regardless of user input and is unaffected by user input. Messages at the info log level are essentially part a console application's user 
+interface. Therefore, they should be written to be as user-friendly as possible:
+- Simple and consistent verbs and nouns
+- Every log message that marks the beggining of an operation should have a corresponding end message
+- Messages should explain ambiguous terms
+##### Debug Level Log
+The goal of messages at this log level is to aid in debugging. A common scenario is the throwing of an exception by some lower level library. When this occurs,
+a stack trace and a message gets printed. Those hints alone can be insufficient for determining the problem. For example, an IndexOutOfRangeException can be
+thrown in a function. In such a scenario we would have no clue what the index was, or the contents of the collection. To fill in these gaps, debug level log messages
+should be used to provide context. This means it is insufficient to say "Running pipeline", rather what would be useful would look more like "Running pipeline
+with options <insert options here>". Therefore, log debug level messages wherever additional context can be provided. Often this means logging arguments
+immediately after entering functions. Debug logs are not a magic bullet, sometimes it will be necessary to recreate conditions and run with the debugger attached.
+##### Testing Logging
+The goal of testing logging is ensuring that log messages are written at the expected log levels with the expected interpolations. 
