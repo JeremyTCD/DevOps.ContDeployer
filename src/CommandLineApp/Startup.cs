@@ -28,15 +28,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 AddSingleton(container);
         }
 
-        public void Configure(ILoggerFactory loggerFactory)
+        public void Configure(ILoggerFactory loggerFactory, bool verbose)
         {
-            // If need be, claOptions can be made configurable via microsoft.extensions.configuration 
+            // If need be, claOptions should be made configurable via json (using microsoft.extensions.configuration)
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
+            LogLevel logLevel = verbose ? claOptions.VerboseMinLogLevel : claOptions.DefaultMinLogLevel;
 
             loggerFactory.
-                AddConsole(claOptions.DefaultMinLogLevel).
-                AddFile(claOptions.LogFileFormat, claOptions.DefaultMinLogLevel).
-                AddDebug(claOptions.DefaultMinLogLevel);
+                AddConsole(logLevel).
+                AddFile(claOptions.LogFileFormat, logLevel).
+                AddDebug(logLevel);
         }
     }
 }

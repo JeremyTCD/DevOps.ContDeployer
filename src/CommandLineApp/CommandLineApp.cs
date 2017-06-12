@@ -10,12 +10,22 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public static int Main(string[] args)
         {
+            // Make all args lowercase
+            args = args.Select(s => s.ToLowerInvariant()).ToArray();
+
+            // Create service provider for CLA
             Startup startup = new Startup();
             IServiceCollection services = new ServiceCollection();
             startup.ConfigureServices(services);
             IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            // Configure logging and create logging service
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            startup.Configure(loggerFactory);
+            bool verbose = args.Where(s => s == $"--{Strings.VerboseOptionLongName}" ||
+                s == $"--{Strings.VerboseOptionLongName}=on" ||
+                s == $"-{Strings.VerboseOptionShortName}" ||
+                s == $"-{Strings.VerboseOptionShortName}=on").Count() > 0;
+            startup.Configure(loggerFactory, verbose);
             ILoggingService<CommandLineApp> loggingService = serviceProvider.GetService<ILoggingService<CommandLineApp>>();
 
             try
@@ -26,7 +36,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 }
 
                 RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
-                args = args.Select(s => s.ToLowerInvariant()).ToArray();
                 rootCommand.Execute(args);
             }
             catch (Exception exception)
