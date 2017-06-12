@@ -1,4 +1,5 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +8,20 @@ namespace JeremyTCD.PipelinesCE
 {
     public class PipelineRunner : IPipelineRunner
     {
-        private ILogger<PipelineRunner> _logger { get; }
+        private ILoggingService<PipelineRunner> _loggingService { get; }
         private IPluginFactory _pluginFactory { get; }
         private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
 
-        public PipelineRunner(ILogger<PipelineRunner> logger, 
+        public PipelineRunner(ILoggingService<PipelineRunner> loggingService, 
             IPluginFactory pluginFactory, 
             IStepContextFactory stepContextFactory,
             IPipelineContextFactory pipelineContextFactory,
             ILoggerFactory loggerFactory)
         {
             _stepContextFactory = stepContextFactory;
-            _logger = logger;
+            _loggingService = loggingService;
             _pluginFactory = pluginFactory;
             _loggerFactory = loggerFactory;
             _pipelineContextFactory = pipelineContextFactory;
@@ -33,7 +34,7 @@ namespace JeremyTCD.PipelinesCE
                 CreatePipelineContext();
             LinkedList<IStep> remainingSteps = new LinkedList<IStep>(pipeline.Steps);
 
-            _logger.LogInformation(Strings.Log_RunningPipeline, pipeline.Options.Pipeline);
+            _loggingService.LogInformation(Strings.Log_RunningPipeline, pipeline.Options.Pipeline);
 
             while (remainingSteps.Count > 0)
             {
@@ -48,12 +49,12 @@ namespace JeremyTCD.PipelinesCE
                     AddLogger(logger).
                     CreateStepContext();
 
-                _logger.LogInformation(Strings.Log_RunningPlugin, step.PluginType.Name);
+                _loggingService.LogInformation(Strings.Log_RunningPlugin, step.PluginType.Name);
                 plugin.Run(pipelineContext, stepContext);
-                _logger.LogInformation(Strings.Log_PluginComplete, step.PluginType.Name);
+                _loggingService.LogInformation(Strings.Log_PluginComplete, step.PluginType.Name);
             }
 
-            _logger.LogInformation(Strings.Log_PipelineComplete, pipeline.Options.Pipeline);
+            _loggingService.LogInformation(Strings.Log_PipelineComplete, pipeline.Options.Pipeline);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-using Microsoft.Extensions.Logging;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using StructureMap;
 using System;
 
@@ -7,13 +7,13 @@ namespace JeremyTCD.PipelinesCE
 {
     public class PluginFactory : IPluginFactory
     {
-        private ILogger<PluginFactory> _logger { get; }
+        private ILoggingService<PluginFactory> _loggingService { get; }
         private IContainer _mainContainer { get; }
 
-        public PluginFactory(ILogger<PluginFactory> logger,
+        public PluginFactory(ILoggingService<PluginFactory> loggingService,
             IContainer mainContainer)
         {
-            _logger = logger;
+            _loggingService = loggingService;
             _mainContainer = mainContainer;
         }
 
@@ -35,7 +35,7 @@ namespace JeremyTCD.PipelinesCE
                 throw new Exception(string.Format(Strings.Exception_NoServiceForPluginType, pluginName));
             }
 
-            _logger.LogInformation(string.Format(Strings.Log_PluginSuccessfullyBuilt, pluginName));
+            _loggingService.LogInformation(string.Format(Strings.Log_PluginSuccessfullyBuilt, pluginName));
 
             return plugin;
         }

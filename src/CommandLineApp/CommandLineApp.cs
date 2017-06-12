@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using JeremyTCD.DotNetCore.Utils;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             startup.Configure(loggerFactory);
-            ILogger<CommandLineApp> logger = serviceProvider.GetService<ILogger<CommandLineApp>>();
+            ILoggingService<CommandLineApp> loggingService = serviceProvider.GetService<ILoggingService<CommandLineApp>>();
 
             try
             {
@@ -27,7 +28,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             {
                 // Catch unhandled exceptions and log them using logger. This ensures that unhandled exceptions are logged by all
                 // logging providers (such as file, debug etc - not just console).
-                logger.LogError(exception.ToString());
+                loggingService.LogError(exception.ToString());
                 return 1;
             }
 

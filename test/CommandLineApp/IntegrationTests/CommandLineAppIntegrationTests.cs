@@ -19,7 +19,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
     public class CommandsIntegrationTests
     {
         private MockRepository _mockRepository { get; }
-        private ICommandLineUtilsService _cluService { get; } = new CommandLineUtilsService();
+        private ICommandLineUtilsService _cluService { get; }
         private static string _runCommandName { get; } = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
         private static string _runCommandFullName { get; } = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
         private static string _rootCommandName { get; } = nameof(PipelinesCE).ToLowerInvariant();
@@ -30,6 +30,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
 
+            _cluService = new CommandLineUtilsService(_mockRepository.Create<ILoggingService<CommandLineUtilsService>>().Object);
             Startup startup = new Startup();
             IServiceCollection services = new ServiceCollection();
             startup.ConfigureServices(services);

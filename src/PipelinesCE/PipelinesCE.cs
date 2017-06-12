@@ -1,7 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace JeremyTCD.PipelinesCE
     {
         private IAssemblyService _assemblyService { get; }
         private IPipelineRunner _pipelineRunner { get; }
-        private ILogger<PipelinesCE> _logger { get; }
+        private ILoggingService<PipelinesCE> _loggingService { get; }
         private IPathService _pathService { get; }
         private IDirectoryService _directoryService { get; }
         private IMSBuildService _msBuildService { get; }
@@ -29,7 +28,7 @@ namespace JeremyTCD.PipelinesCE
             IMSBuildService msBuildService,
             IPipelineRunner pipelineRunner,
             IContainer mainContainer,
-            ILogger<PipelinesCE> logger)
+            ILoggingService<PipelinesCE> loggingService)
         {
             _mainContainer = mainContainer;
             _msBuildService = msBuildService;
@@ -37,7 +36,7 @@ namespace JeremyTCD.PipelinesCE
             _assemblyService = assemblyService;
             _pipelineRunner = pipelineRunner;
             _directoryService = directoryService;
-            _logger = logger;
+            _loggingService = loggingService;
             _activatorService = activatorService;
         }
 
@@ -49,6 +48,9 @@ namespace JeremyTCD.PipelinesCE
         /// </param>
         public virtual void Run(PipelineOptions pipelineOptions)
         {
+            // TODO logging in tests for PiplinesCE
+            _loggingService.LogDebug("Running {0}", nameof(PipelinesCE));
+
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
 
@@ -83,10 +85,12 @@ namespace JeremyTCD.PipelinesCE
                 if (pluginStartupType != null)
                 {
                     IPluginStartup pluginStartup = (IPluginStartup)_activatorService.CreateInstance(pluginStartupType);
+                    _loggingService.LogDebug("Configuring services for plugin type \"{0}\" using plugin startup type \"{1}\"", pluginType.Name, pluginStartupType.Name);
                     pluginStartup.ConfigureServices(services);
                 }
                 services.AddTransient(pluginType);
 
+                _loggingService.LogDebug("Creating StructureMap profile for plugin type \"{0}\"", pluginType.Name);
                 _mainContainer.Configure(configurationExpression =>
                 {
                     configurationExpression.Profile(pluginType.Name, registry =>
@@ -118,6 +122,8 @@ namespace JeremyTCD.PipelinesCE
         /// </exception>
         private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
+            _loggingService.LogDebug("Retrieving IPipelineFactory implementation");
+
             IEnumerable<Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory));
 
@@ -160,7 +166,7 @@ namespace JeremyTCD.PipelinesCE
             return (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
         }
 
-        private string PipelineFactoryPipelineName(Type pipelineFactoryType) 
+        private string PipelineFactoryPipelineName(Type pipelineFactoryType)
         {
             // Can't use generics since type is not known at compile time
             if (!typeof(IPipelineFactory).IsAssignableFrom(pipelineFactoryType))

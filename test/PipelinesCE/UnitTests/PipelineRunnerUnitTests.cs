@@ -1,11 +1,9 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-using Microsoft.Extensions.DependencyInjection;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
+using Moq.Sequences;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Tests.UnitTests
@@ -13,16 +11,9 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
     public class PipelineRunnerUnitTests
     {
         private MockRepository _mockRepository { get; }
-        private ILoggerFactory _loggerFactory { get; }
 
         public PipelineRunnerUnitTests()
         {
-            ServiceCollection services = new ServiceCollection();
-            services.AddLogging();
-            IServiceProvider provider = services.BuildServiceProvider();
-            _loggerFactory = provider.GetService<ILoggerFactory>();
-            _loggerFactory.AddConsole();
-
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
@@ -46,7 +37,14 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockPipelineContextFactory.Setup(p => p.AddPipelineOptions(options)).Returns(mockPipelineContextFactory.Object);
             mockPipelineContextFactory.Setup(p => p.CreatePipelineContext()).Returns(mockPipelineContext.Object);
 
-            ILogger<PipelineRunner> logger = _loggerFactory.CreateLogger<PipelineRunner>();
+            Mock<ILoggingService<PipelineRunner>> loggingService = _mockRepository.Create<ILoggingService<PipelineRunner>>();
+            Sequence logSequence = Sequence.Create();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPipeline, testPipeline)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, typeof(StubPlugin1).Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, typeof(StubPlugin1).Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, typeof(StubPlugin2).Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, typeof(StubPlugin2).Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_PipelineComplete, testPipeline)).InSequence();
 
             Mock<IPluginFactory> mockPluginFactory = _mockRepository.Create<IPluginFactory>();
             StubPlugin1 plugin1 = new StubPlugin1();
@@ -72,28 +70,15 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin2Logger.Object)).Returns(mockStepContextFactory.Object);
             mockStepContextFactory.Setup(s => s.CreateStepContext()).Returns(mockStepContext.Object);
 
-            PipelineRunner pipelineRunner = new PipelineRunner(logger, mockPluginFactory.Object, mockStepContextFactory.Object,
+            PipelineRunner pipelineRunner = new PipelineRunner(loggingService.Object, mockPluginFactory.Object, mockStepContextFactory.Object,
                 mockPipelineContextFactory.Object, mockLoggerFactory.Object);
-
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
 
             // Act
             pipelineRunner.Run(pipeline);
 
             // Assert
             _mockRepository.VerifyAll();
-            _loggerFactory.Dispose();
-            stringWriter.Dispose();
-            string output = stringWriter.ToString();
-            output = Regex.Replace(output, @"info: .*?(?:\r\n|\r|\n)\s*", "");
-            string expected = string.Format(Strings.Log_RunningPipeline, testPipeline) + Environment.NewLine +
-                string.Format(Strings.Log_RunningPlugin, typeof(StubPlugin1).Name) + Environment.NewLine +
-                string.Format(Strings.Log_PluginComplete, typeof(StubPlugin1).Name) + Environment.NewLine +
-                string.Format(Strings.Log_RunningPlugin, typeof(StubPlugin2).Name) + Environment.NewLine +
-                string.Format(Strings.Log_PluginComplete, typeof(StubPlugin2).Name) + Environment.NewLine +
-                string.Format(Strings.Log_PipelineComplete, testPipeline) + Environment.NewLine;
-            Assert.Equal(expected, output);
+            logSequence.Dispose();
             Assert.Equal(mockStepContext.Object, plugin1.StepContext);
             Assert.Equal(mockStepContext.Object, plugin2.StepContext);
             Assert.Equal(mockPipelineContext.Object, plugin1.PipelineContext);
