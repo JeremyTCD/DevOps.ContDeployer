@@ -117,19 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DryRunDescription" xml:space="preserve">
-    <value>Run pipeline in dry run mode</value>
-  </data>
-  <data name="DryRunOptionLongName" xml:space="preserve">
-    <value>dryrun</value>
-  </data>
-  <data name="DryRunOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_DryRun" xml:space="preserve">
     <value>d</value>
   </data>
-  <data name="HelpOptionLongName" xml:space="preserve">
+  <data name="OptionLongName_Help" xml:space="preserve">
     <value>help</value>
   </data>
-  <data name="HelpOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_Help" xml:space="preserve">
     <value>h</value>
   </data>
   <data name="HelpOptionSymbolName" xml:space="preserve">
@@ -144,43 +138,49 @@
   <data name="Log_RunningRunCommand" xml:space="preserve">
     <value>Running run command with arguments:\n{0}</value>
   </data>
-  <data name="PipelineOptionDescription" xml:space="preserve">
+  <data name="OptionDescription_DryRun" xml:space="preserve">
+    <value>Run pipeline in dry run mode</value>
+  </data>
+  <data name="OptionLongName_DryRun" xml:space="preserve">
+    <value>dryrun</value>
+  </data>
+  <data name="OptionDescription_Pipeline" xml:space="preserve">
     <value>Name of the pipeline to run. By convention, a pipeline's name is its factories name less "PipelineFactory". For example, "MainPipelineFactory" produces a pipeline named "Main". If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline.</value>
   </data>
-  <data name="PipelineOptionLongName" xml:space="preserve">
+  <data name="OptionLongName_Pipeline" xml:space="preserve">
     <value>pipeline</value>
   </data>
-  <data name="PipelineOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_Pipeline" xml:space="preserve">
     <value>pl</value>
   </data>
-  <data name="ProjectOptionDescription" xml:space="preserve">
+  <data name="OptionDescription_Project" xml:space="preserve">
     <value>Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for "PipelinesCE.csproj" in the current directory.</value>
   </data>
-  <data name="ProjectOptionLongName" xml:space="preserve">
+  <data name="OptionLongName_Project" xml:space="preserve">
     <value>project</value>
   </data>
-  <data name="ProjectOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_Project" xml:space="preserve">
     <value>pj</value>
   </data>
-  <data name="RootCommandDescription" xml:space="preserve">
+  <data name="CommandDescription_Root" xml:space="preserve">
     <value>PipelinesCE, a continuous everything tool.</value>
   </data>
-  <data name="RunCommandDescription" xml:space="preserve">
+  <data name="CommandDescription_Run" xml:space="preserve">
     <value>Runs a pipeline</value>
   </data>
-  <data name="VerboseOptionDescription" xml:space="preserve">
+  <data name="OptionDescription_Verbose" xml:space="preserve">
     <value>Write verbose output to console</value>
   </data>
-  <data name="VerboseOptionLongName" xml:space="preserve">
+  <data name="OptionLongName_Verbose" xml:space="preserve">
     <value>verbose</value>
   </data>
-  <data name="VerboseOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_Verbose" xml:space="preserve">
     <value>vb</value>
   </data>
-  <data name="VersionOptionLongName" xml:space="preserve">
+  <data name="OptionLongName_Version" xml:space="preserve">
     <value>version</value>
   </data>
-  <data name="VersionOptionShortName" xml:space="preserve">
+  <data name="OptionShortName_Version" xml:space="preserve">
     <value>v</value>
   </data>
 </root>

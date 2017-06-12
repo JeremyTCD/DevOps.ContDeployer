@@ -62,47 +62,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run pipeline in dry run mode.
+        ///   Looks up a localized string similar to PipelinesCE, a continuous everything tool..
         /// </summary>
-        public static string DryRunDescription {
+        public static string CommandDescription_Root {
             get {
-                return ResourceManager.GetString("DryRunDescription", resourceCulture);
+                return ResourceManager.GetString("CommandDescription_Root", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dryrun.
+        ///   Looks up a localized string similar to Runs a pipeline.
         /// </summary>
-        public static string DryRunOptionLongName {
+        public static string CommandDescription_Run {
             get {
-                return ResourceManager.GetString("DryRunOptionLongName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to d.
-        /// </summary>
-        public static string DryRunOptionShortName {
-            get {
-                return ResourceManager.GetString("DryRunOptionShortName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to help.
-        /// </summary>
-        public static string HelpOptionLongName {
-            get {
-                return ResourceManager.GetString("HelpOptionLongName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to h.
-        /// </summary>
-        public static string HelpOptionShortName {
-            get {
-                return ResourceManager.GetString("HelpOptionShortName", resourceCulture);
+                return ResourceManager.GetString("CommandDescription_Run", resourceCulture);
             }
         }
         
@@ -143,119 +116,146 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run pipeline in dry run mode.
+        /// </summary>
+        public static string OptionDescription_DryRun {
+            get {
+                return ResourceManager.GetString("OptionDescription_DryRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline named &quot;Main&quot;. If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline..
         /// </summary>
-        public static string PipelineOptionDescription {
+        public static string OptionDescription_Pipeline {
             get {
-                return ResourceManager.GetString("PipelineOptionDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to pipeline.
-        /// </summary>
-        public static string PipelineOptionLongName {
-            get {
-                return ResourceManager.GetString("PipelineOptionLongName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to pl.
-        /// </summary>
-        public static string PipelineOptionShortName {
-            get {
-                return ResourceManager.GetString("PipelineOptionShortName", resourceCulture);
+                return ResourceManager.GetString("OptionDescription_Pipeline", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for &quot;PipelinesCE.csproj&quot; in the current directory..
         /// </summary>
-        public static string ProjectOptionDescription {
+        public static string OptionDescription_Project {
             get {
-                return ResourceManager.GetString("ProjectOptionDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to project.
-        /// </summary>
-        public static string ProjectOptionLongName {
-            get {
-                return ResourceManager.GetString("ProjectOptionLongName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to pj.
-        /// </summary>
-        public static string ProjectOptionShortName {
-            get {
-                return ResourceManager.GetString("ProjectOptionShortName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PipelinesCE, a continuous everything tool..
-        /// </summary>
-        public static string RootCommandDescription {
-            get {
-                return ResourceManager.GetString("RootCommandDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Runs a pipeline.
-        /// </summary>
-        public static string RunCommandDescription {
-            get {
-                return ResourceManager.GetString("RunCommandDescription", resourceCulture);
+                return ResourceManager.GetString("OptionDescription_Project", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Write verbose output to console.
         /// </summary>
-        public static string VerboseOptionDescription {
+        public static string OptionDescription_Verbose {
             get {
-                return ResourceManager.GetString("VerboseOptionDescription", resourceCulture);
+                return ResourceManager.GetString("OptionDescription_Verbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dryrun.
+        /// </summary>
+        public static string OptionLongName_DryRun {
+            get {
+                return ResourceManager.GetString("OptionLongName_DryRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to help.
+        /// </summary>
+        public static string OptionLongName_Help {
+            get {
+                return ResourceManager.GetString("OptionLongName_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pipeline.
+        /// </summary>
+        public static string OptionLongName_Pipeline {
+            get {
+                return ResourceManager.GetString("OptionLongName_Pipeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to project.
+        /// </summary>
+        public static string OptionLongName_Project {
+            get {
+                return ResourceManager.GetString("OptionLongName_Project", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to verbose.
         /// </summary>
-        public static string VerboseOptionLongName {
+        public static string OptionLongName_Verbose {
             get {
-                return ResourceManager.GetString("VerboseOptionLongName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to vb.
-        /// </summary>
-        public static string VerboseOptionShortName {
-            get {
-                return ResourceManager.GetString("VerboseOptionShortName", resourceCulture);
+                return ResourceManager.GetString("OptionLongName_Verbose", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to version.
         /// </summary>
-        public static string VersionOptionLongName {
+        public static string OptionLongName_Version {
             get {
-                return ResourceManager.GetString("VersionOptionLongName", resourceCulture);
+                return ResourceManager.GetString("OptionLongName_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to d.
+        /// </summary>
+        public static string OptionShortName_DryRun {
+            get {
+                return ResourceManager.GetString("OptionShortName_DryRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to h.
+        /// </summary>
+        public static string OptionShortName_Help {
+            get {
+                return ResourceManager.GetString("OptionShortName_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pl.
+        /// </summary>
+        public static string OptionShortName_Pipeline {
+            get {
+                return ResourceManager.GetString("OptionShortName_Pipeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pj.
+        /// </summary>
+        public static string OptionShortName_Project {
+            get {
+                return ResourceManager.GetString("OptionShortName_Project", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to vb.
+        /// </summary>
+        public static string OptionShortName_Verbose {
+            get {
+                return ResourceManager.GetString("OptionShortName_Verbose", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to v.
         /// </summary>
-        public static string VersionOptionShortName {
+        public static string OptionShortName_Version {
             get {
-                return ResourceManager.GetString("VersionOptionShortName", resourceCulture);
+                return ResourceManager.GetString("OptionShortName_Version", resourceCulture);
             }
         }
     }

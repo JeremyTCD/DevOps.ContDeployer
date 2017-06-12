@@ -29,7 +29,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _container = container;
             _loggingService = loggingService;
 
-            Description = Strings.RunCommandDescription;
+            Description = Strings.CommandDescription_Run;
             Name = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
             FullName = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
             SetupOptions();
@@ -38,19 +38,19 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private void SetupOptions()
         {
-            HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName));
+            HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
 
-            _project = Option(_cluService.CreateOptionTemplate(Strings.ProjectOptionShortName, Strings.ProjectOptionLongName),
-                Strings.ProjectOptionDescription,
+            _project = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project),
+                Strings.OptionDescription_Project,
                 CommandOptionType.SingleValue);
-            _pipeline = Option(_cluService.CreateOptionTemplate(Strings.PipelineOptionShortName, Strings.PipelineOptionLongName),
-                Strings.PipelineOptionDescription,
+            _pipeline = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline),
+                Strings.OptionDescription_Pipeline,
                 CommandOptionType.SingleValue);
-            _dryRun = Option(_cluService.CreateOptionTemplate(Strings.DryRunOptionShortName, Strings.DryRunOptionLongName),
-                Strings.DryRunDescription,
+            _dryRun = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun),
+                Strings.OptionDescription_DryRun,
                 CommandOptionType.NoValue);
-            _verbose = Option(_cluService.CreateOptionTemplate(Strings.VerboseOptionShortName, Strings.VerboseOptionLongName),
-                Strings.VerboseOptionDescription,
+            _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
+                Strings.OptionDescription_Verbose,
                 CommandOptionType.NoValue);
         }
 

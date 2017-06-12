@@ -22,7 +22,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _cluService = cluService;
             _loggingService = loggingService;
 
-            Description = Strings.RunCommandDescription;
+            Description = Strings.CommandDescription_Run;
             Name = nameof(PipelinesCE).ToLowerInvariant();
             FullName = nameof(PipelinesCE);
             SetupCommands(runCommand);
@@ -38,8 +38,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private void SetupOptions()
         {
-            HelpOption(_cluService.CreateOptionTemplate(Strings.HelpOptionShortName, Strings.HelpOptionLongName));
-            VersionOption(_cluService.CreateOptionTemplate(Strings.VersionOptionShortName, Strings.VersionOptionLongName),
+            HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
+            VersionOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version),
                 typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
         }
 

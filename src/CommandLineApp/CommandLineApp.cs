@@ -21,10 +21,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             // Configure logging and create logging service
             ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            bool verbose = args.Where(s => s == $"--{Strings.VerboseOptionLongName}" ||
-                s == $"--{Strings.VerboseOptionLongName}=on" ||
-                s == $"-{Strings.VerboseOptionShortName}" ||
-                s == $"-{Strings.VerboseOptionShortName}=on").Count() > 0;
+            bool verbose = args.Where(s => s == $"--{Strings.OptionLongName_Verbose}" ||
+                s == $"--{Strings.OptionLongName_Verbose}=on" ||
+                s == $"-{Strings.OptionShortName_Verbose}" ||
+                s == $"-{Strings.OptionShortName_Verbose}=on").Count() > 0;
             startup.Configure(loggerFactory, verbose);
             ILoggingService<CommandLineApp> loggingService = serviceProvider.GetService<ILoggingService<CommandLineApp>>();
 
