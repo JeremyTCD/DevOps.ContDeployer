@@ -12,7 +12,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             services.
                 AddSingleton<RootCommand>().
                 AddSingleton<RunCommand>().
-                AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>();
+                AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>().
+                AddSingleton(typeof(ILoggingService<>), typeof(LoggingService<>));
 
             services.
                 AddOptions().

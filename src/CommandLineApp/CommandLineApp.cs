@@ -20,6 +20,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             try
             {
+                if (loggingService.IsEnabled(LogLevel.Debug))
+                {
+                    loggingService.LogDebug(Strings.Log_RunningCommandLineApp, string.Join(",", args));
+                }
+
                 RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
                 args = args.Select(s => s.ToLowerInvariant()).ToArray();
                 rootCommand.Execute(args);

@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StructureMap;
 using System;
+using System.Linq;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
-    // TODO each command can actually be tested individually
     public class RunCommand : CommandLineApplication
     {
         private CommandOption _project { get; set; }
@@ -19,12 +19,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
         private IContainer _container { get; }
+        private ILoggingService<RunCommand> _loggingService { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, IContainer container)
+        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, IContainer container,
+            ILoggingService<RunCommand> loggingService)
         {
             _claOptions = claOptionsAccessor.Value;
             _cluService = cluService;
             _container = container;
+            _loggingService = loggingService;
 
             Description = Strings.RunCommandDescription;
             Name = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
@@ -53,6 +56,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
+            if (_loggingService.IsEnabled(LogLevel.Debug))
+            {
+                _loggingService.LogDebug(Strings.Log_RunningRunCommand, string.Join("\n", Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
+            }
+
             // Configure logging
             // PipelinesCE and its plugins simply log using microsoft.extensions.logging. Calling libraries or
             // applications determine what providers to use and the verbosity level.

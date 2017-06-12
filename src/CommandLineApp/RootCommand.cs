@@ -1,6 +1,8 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
@@ -12,10 +14,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     public class RootCommand : CommandLineApplication
     {
         private ICommandLineUtilsService _cluService { get; }
+        private ILoggingService<RunCommand> _loggingService { get; }
 
-        public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand)
+        public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand, ILoggingService<RunCommand> loggingService)
+
         {
             _cluService = cluService;
+            _loggingService = loggingService;
 
             Description = Strings.RunCommandDescription;
             Name = nameof(PipelinesCE).ToLowerInvariant();
@@ -40,6 +45,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
+            if (_loggingService.IsEnabled(LogLevel.Debug))
+            {
+                _loggingService.LogDebug(Strings.Log_RunningRunCommand, string.Join("\n", Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
+            }
+
             ShowHelp();
 
             return 0;

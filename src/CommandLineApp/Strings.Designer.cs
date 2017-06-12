@@ -116,6 +116,33 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Running command line application with arguments: [{0}].
+        /// </summary>
+        public static string Log_RunningCommandLineApp {
+            get {
+                return ResourceManager.GetString("Log_RunningCommandLineApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running root command with arguments:\n{0}.
+        /// </summary>
+        public static string Log_RunningRootCommand {
+            get {
+                return ResourceManager.GetString("Log_RunningRootCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running run command with arguments:\n{0}.
+        /// </summary>
+        public static string Log_RunningRunCommand {
+            get {
+                return ResourceManager.GetString("Log_RunningRunCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline named &quot;Main&quot;. If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline..
         /// </summary>
         public static string PipelineOptionDescription {

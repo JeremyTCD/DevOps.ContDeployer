@@ -135,6 +135,15 @@
   <data name="HelpOptionSymbolName" xml:space="preserve">
     <value>?</value>
   </data>
+  <data name="Log_RunningCommandLineApp" xml:space="preserve">
+    <value>Running command line application with arguments: [{0}]</value>
+  </data>
+  <data name="Log_RunningRootCommand" xml:space="preserve">
+    <value>Running root command with arguments:\n{0}</value>
+  </data>
+  <data name="Log_RunningRunCommand" xml:space="preserve">
+    <value>Running run command with arguments:\n{0}</value>
+  </data>
   <data name="PipelineOptionDescription" xml:space="preserve">
     <value>Name of the pipeline to run. By convention, a pipeline's name is its factories name less "PipelineFactory". For example, "MainPipelineFactory" produces a pipeline named "Main". If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline.</value>
   </data>
