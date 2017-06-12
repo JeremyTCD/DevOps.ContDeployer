@@ -125,11 +125,83 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Building Pipeline &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_BuildingPipeline {
+            get {
+                return ResourceManager.GetString("Log_BuildingPipeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building PipelinesCE project &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_BuildingPipelinesCEProject {
+            get {
+                return ResourceManager.GetString("Log_BuildingPipelinesCEProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuring IOC container for plugin type &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_ConfiguringPluginContainer {
+            get {
+                return ResourceManager.GetString("Log_ConfiguringPluginContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuring services for plugin type &quot;{0}&quot; using plugin startup type &quot;{1}&quot;.
+        /// </summary>
+        public static string Log_ConfiguringPluginServices {
+            get {
+                return ResourceManager.GetString("Log_ConfiguringPluginServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to === Initializing PipelinesCE ===.
+        /// </summary>
+        public static string Log_InitializingPipelinesCE {
+            get {
+                return ResourceManager.GetString("Log_InitializingPipelinesCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to === Pipeline &quot;{0}&quot; complete ===.
         /// </summary>
         public static string Log_PipelineComplete {
             get {
                 return ResourceManager.GetString("Log_PipelineComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PipelinesCE project &quot;{0}&quot; successfully built.
+        /// </summary>
+        public static string Log_PipelinesCEProjectSuccessfullyBuilt {
+            get {
+                return ResourceManager.GetString("Log_PipelinesCEProjectSuccessfullyBuilt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to === PipelinesCE successfully initialized ===.
+        /// </summary>
+        public static string Log_PipelinesCESuccessfullyInitialized {
+            get {
+                return ResourceManager.GetString("Log_PipelinesCESuccessfullyInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pipeline &quot;{0}&quot; successfully built.
+        /// </summary>
+        public static string Log_PipelineSuccessfullyBuilt {
+            get {
+                return ResourceManager.GetString("Log_PipelineSuccessfullyBuilt", resourceCulture);
             }
         }
         
@@ -143,11 +215,38 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IOC container for plugin type &quot;{0}&quot; successfully configured.
+        /// </summary>
+        public static string Log_PluginContainerSuccessfullyConfigured {
+            get {
+                return ResourceManager.GetString("Log_PluginContainerSuccessfullyConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin &quot;{0}&quot; successfully built.
         /// </summary>
         public static string Log_PluginSuccessfullyBuilt {
             get {
                 return ResourceManager.GetString("Log_PluginSuccessfullyBuilt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Pipeline resolved to &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_ResolvedDefaultPipeline {
+            get {
+                return ResourceManager.GetString("Log_ResolvedDefaultPipeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving PipelineFactory for pipeline &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_RetrievingPipelineFactory {
+            get {
+                return ResourceManager.GetString("Log_RetrievingPipelineFactory", resourceCulture);
             }
         }
         

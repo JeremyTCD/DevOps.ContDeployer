@@ -48,15 +48,17 @@ namespace JeremyTCD.PipelinesCE
         /// </param>
         public virtual void Run(PipelineOptions pipelineOptions)
         {
-            // TODO logging in tests for PiplinesCE
-            _loggingService.LogDebug("Running {0}", nameof(PipelinesCE));
+            _loggingService.LogInformation(Strings.Log_InitializingPipelinesCE);
 
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
 
             // Build project
+            _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
             _msBuildService.Build(projectFile, "/t:restore,build /p:Configuration=Release");
+            _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
+            _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline ?? "Default");
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies
             IEnumerable<Assembly> assemblies = _assemblyService.
@@ -70,6 +72,9 @@ namespace JeremyTCD.PipelinesCE
             Pipeline pipeline = factory.CreatePipeline();
             pipeline.Options = pipelineOptions.Combine(pipeline.Options);
 
+            _loggingService.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, pipelineOptions.Pipeline);
+            _loggingService.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized);
+
             _pipelineRunner.Run(pipeline);
         }
 
@@ -80,17 +85,16 @@ namespace JeremyTCD.PipelinesCE
             foreach (Type pluginType in pluginTypes)
             {
                 // Configure services
+                _loggingService.LogDebug(Strings.Log_ConfiguringPluginContainer, pluginType.Name);
                 ServiceCollection services = new ServiceCollection();
                 pluginStartupTypes.TryGetValue($"{pluginType.Name}Startup", out Type pluginStartupType);
                 if (pluginStartupType != null)
                 {
                     IPluginStartup pluginStartup = (IPluginStartup)_activatorService.CreateInstance(pluginStartupType);
-                    _loggingService.LogDebug("Configuring services for plugin type \"{0}\" using plugin startup type \"{1}\"", pluginType.Name, pluginStartupType.Name);
+                    _loggingService.LogDebug(Strings.Log_ConfiguringPluginServices, pluginType.Name, pluginStartupType.Name);
                     pluginStartup.ConfigureServices(services);
                 }
                 services.AddTransient(pluginType);
-
-                _loggingService.LogDebug("Creating StructureMap profile for plugin type \"{0}\"", pluginType.Name);
                 _mainContainer.Configure(configurationExpression =>
                 {
                     configurationExpression.Profile(pluginType.Name, registry =>
@@ -98,6 +102,8 @@ namespace JeremyTCD.PipelinesCE
                         ((Registry)registry).Populate(services);
                     });
                 });
+
+                _loggingService.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, pluginType.Name);
             }
         }
 
@@ -122,7 +128,7 @@ namespace JeremyTCD.PipelinesCE
         /// </exception>
         private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
-            _loggingService.LogDebug("Retrieving IPipelineFactory implementation");
+            _loggingService.LogDebug(Strings.Log_RetrievingPipelineFactory, pipelineOptions.Pipeline ?? "Default");
 
             IEnumerable<Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory));
@@ -139,6 +145,7 @@ namespace JeremyTCD.PipelinesCE
                 {
                     pipelineFactoryType = pipelineFactoryTypes.First();
                     pipelineOptions.Pipeline = PipelineFactoryPipelineName(pipelineFactoryType);
+                    _loggingService.LogDebug(Strings.Log_ResolvedDefaultPipeline, pipelineOptions.Pipeline);
                 }
                 else
                 {
@@ -168,12 +175,6 @@ namespace JeremyTCD.PipelinesCE
 
         private string PipelineFactoryPipelineName(Type pipelineFactoryType)
         {
-            // Can't use generics since type is not known at compile time
-            if (!typeof(IPipelineFactory).IsAssignableFrom(pipelineFactoryType))
-            {
-                throw new InvalidOperationException(string.Format(Strings.Exception_TypeDoesNotImplement, pipelineFactoryType.Name, nameof(IPipelineFactory)));
-            }
-
             return pipelineFactoryType.Name.Replace("PipelineFactory", "");
         }
     }
