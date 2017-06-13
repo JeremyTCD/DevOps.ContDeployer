@@ -12,6 +12,7 @@ using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
+    // TODO Some log messages are verified in a very brittle manner. Find better ways to generate expected log messages.
     /// <summary>
     /// Tests to ensure that <see cref="CommandLineApp"/> commands have been configured correctly
     /// </summary>
@@ -169,23 +170,25 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
         [Theory]
         [MemberData(nameof(RunCommandData))]
-        public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool verbose, string pipeline, 
-            string project)
+        public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool dryRunOff,
+            bool verbose, bool verboseOff, string pipeline, string project)
         {
             // Arrange
             Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
             mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningRunCommand, $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
-                $"{Strings.OptionLongName_Project}={project}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Pipeline}={pipeline}{Environment.NewLine}" +
+                $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
+                $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}"));
+                $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
+                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}{Environment.NewLine}" +
+                $"{Strings.OptionLongName_VerboseOff}={(verboseOff ? "on" : "")}"));
             _services.AddSingleton(mockLoggingService.Object);
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
 
             Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
-                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == (pipeline ?? PipelineOptions.DefaultPipeline) && o.Project == (project ?? PipelineOptions.DefaultProject))));
+                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
 
             IContainer container = serviceProvider.GetService<IContainer>();
             container.Configure(registry => registry.For<PipelinesCE>().Use(mockPipelinesCE.Object));
@@ -209,17 +212,26 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string testPipeline = "testPipeline";
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { _runCommandName }, false, false, null, null};
+            yield return new object[] { new string[] { _runCommandName }, false, false, false, false,
+                PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
             yield return new object[] {new string[] {_runCommandName,
                 $"-{Strings.OptionShortName_Verbose}", $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
-                true, true, testPipeline, testProject};
+                true, false, true, false, testPipeline, testProject};
             yield return new object[] {new string[] {_runCommandName,
                 $"--{Strings.OptionLongName_Verbose}", $"--{Strings.OptionLongName_DryRun}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
-                true, true, testPipeline, testProject};
+                true, false, true, false, testPipeline, testProject};
+            yield return new object[] { new string[] { _runCommandName,
+                    $"-{Strings.OptionShortName_VerboseOff}",
+                    $"-{Strings.OptionShortName_DryRunOff}"
+            }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+            yield return new object[] { new string[] { _runCommandName,
+                    $"--{Strings.OptionLongName_VerboseOff}",
+                    $"--{Strings.OptionLongName_DryRunOff}"
+            }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
         }
 
         [Theory]
@@ -242,11 +254,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string expected = $@"{_runCommandFullName}" + Environment.NewLine + Environment.NewLine +
                         $@"Usage: {_rootCommandName} {_runCommandName} [options]" + Environment.NewLine + Environment.NewLine +
                         $@"Options:" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}       Show help information" + Environment.NewLine +
-                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}   {Strings.OptionDescription_Project}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}  {Strings.OptionDescription_Pipeline}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}     {Strings.OptionDescription_DryRun}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}   {Strings.OptionDescription_Verbose}" + Environment.NewLine + Environment.NewLine;
+                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}         Show help information" + Environment.NewLine +
+                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}     {Strings.OptionDescription_Project}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}    {Strings.OptionDescription_Pipeline}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}       {Strings.OptionDescription_DryRun}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}   {Strings.OptionDescription_DryRunOff}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}     {Strings.OptionDescription_Verbose}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}" + Environment.NewLine + Environment.NewLine;
             Assert.Equal(expected, output);
         }
 

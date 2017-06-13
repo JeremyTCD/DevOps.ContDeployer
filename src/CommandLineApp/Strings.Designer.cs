@@ -125,6 +125,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run pipeline in normal mode.
+        /// </summary>
+        public static string OptionDescription_DryRunOff {
+            get {
+                return ResourceManager.GetString("OptionDescription_DryRunOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline named &quot;Main&quot;. If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline..
         /// </summary>
         public static string OptionDescription_Pipeline {
@@ -152,11 +161,29 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Write normal output to console.
+        /// </summary>
+        public static string OptionDescription_VerboseOff {
+            get {
+                return ResourceManager.GetString("OptionDescription_VerboseOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to dryrun.
         /// </summary>
         public static string OptionLongName_DryRun {
             get {
                 return ResourceManager.GetString("OptionLongName_DryRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dryrunoff.
+        /// </summary>
+        public static string OptionLongName_DryRunOff {
+            get {
+                return ResourceManager.GetString("OptionLongName_DryRunOff", resourceCulture);
             }
         }
         
@@ -197,6 +224,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to verboseoff.
+        /// </summary>
+        public static string OptionLongName_VerboseOff {
+            get {
+                return ResourceManager.GetString("OptionLongName_VerboseOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to version.
         /// </summary>
         public static string OptionLongName_Version {
@@ -211,6 +247,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionShortName_DryRun {
             get {
                 return ResourceManager.GetString("OptionShortName_DryRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to do.
+        /// </summary>
+        public static string OptionShortName_DryRunOff {
+            get {
+                return ResourceManager.GetString("OptionShortName_DryRunOff", resourceCulture);
             }
         }
         
@@ -247,6 +292,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionShortName_Verbose {
             get {
                 return ResourceManager.GetString("OptionShortName_Verbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to vo.
+        /// </summary>
+        public static string OptionShortName_VerboseOff {
+            get {
+                return ResourceManager.GetString("OptionShortName_VerboseOff", resourceCulture);
             }
         }
         

@@ -183,4 +183,22 @@
   <data name="OptionShortName_Version" xml:space="preserve">
     <value>v</value>
   </data>
+  <data name="OptionDescription_DryRunOff" xml:space="preserve">
+    <value>Run pipeline in normal mode</value>
+  </data>
+  <data name="OptionDescription_VerboseOff" xml:space="preserve">
+    <value>Write normal output to console</value>
+  </data>
+  <data name="OptionLongName_DryRunOff" xml:space="preserve">
+    <value>dryrunoff</value>
+  </data>
+  <data name="OptionLongName_VerboseOff" xml:space="preserve">
+    <value>verboseoff</value>
+  </data>
+  <data name="OptionShortName_DryRunOff" xml:space="preserve">
+    <value>do</value>
+  </data>
+  <data name="OptionShortName_VerboseOff" xml:space="preserve">
+    <value>vo</value>
+  </data>
 </root>

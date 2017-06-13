@@ -14,7 +14,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _project { get; set; }
         private CommandOption _pipeline { get; set; }
         private CommandOption _dryRun { get; set; }
-        public CommandOption _verbose { get; set; }
+        private CommandOption _dryRunOff { get; set; }
+        private CommandOption _verbose { get; set; }
+        private CommandOption _verboseOff { get; set; }
 
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
@@ -49,11 +51,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _dryRun = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun),
                 Strings.OptionDescription_DryRun,
                 CommandOptionType.NoValue);
+            _dryRunOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff),
+                Strings.OptionDescription_DryRunOff,
+                CommandOptionType.NoValue);
             _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
                 Strings.OptionDescription_Verbose,
                 CommandOptionType.NoValue);
+            _verboseOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff),
+                Strings.OptionDescription_VerboseOff,
+                CommandOptionType.NoValue);
         }
 
+        // Questions
+        // If optiontype is novalue and a value is provided, is an error thrown? is value made available?
+        // If optiontype is singlevalue and no value is provided, is an error thrown?
         private int Run()
         {
             if (_loggingService.IsEnabled(LogLevel.Debug))
@@ -61,23 +72,40 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 _loggingService.LogDebug(Strings.Log_RunningRunCommand, string.Join(Environment.NewLine, Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
+            PipelineOptions pipelineOptions = new PipelineOptions
+            {
+                Project = _project.Value(),
+                Pipeline = _pipeline.Value(),
+            };
+            if (_dryRun.HasValue())
+            {
+                pipelineOptions.DryRun = true;
+            }
+            else if (_dryRunOff.HasValue())
+            {
+                pipelineOptions.DryRun = false;
+            }
+            if (_verbose.HasValue())
+            {
+                pipelineOptions.Verbose = true;
+            }
+            else if (_verboseOff.HasValue())
+            {
+                pipelineOptions.Verbose = false;
+            }
+
             // Configure logging
             // PipelinesCE and its plugins simply log using microsoft.extensions.logging. Calling libraries or
             // applications determine what providers to use and the verbosity level.
             ILoggerFactory loggerFactory = _container.GetInstance<ILoggerFactory>();
-            LogLevel logLevel = _verbose.HasValue() ? _claOptions.VerboseMinLogLevel : _claOptions.DefaultMinLogLevel;
+            LogLevel logLevel = pipelineOptions.Verbose ? _claOptions.VerboseMinLogLevel : _claOptions.DefaultMinLogLevel;
             loggerFactory.
                 AddFile(_claOptions.LogFileFormat, logLevel).
                 AddConsole(logLevel).
                 AddDebug(logLevel);
 
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
-            pipelinesCE.Run(new PipelineOptions
-            {
-                DryRun = _dryRun.HasValue(),
-                Project = _project.Value(),
-                Pipeline = _pipeline.Value()
-            });
+            pipelinesCE.Run(pipelineOptions);
 
             return 0;
         }
