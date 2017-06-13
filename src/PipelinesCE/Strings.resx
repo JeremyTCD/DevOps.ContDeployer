@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Exception_MultiplePipelineFactories" xml:space="preserve">
-    <value>Multiple pipeline factories found, please specify one:\n{0}</value>
+    <value>Multiple PipelineFactorys found, please specify one:\n{0}</value>
   </data>
   <data name="Exception_MultiplePipelineFactoriesWithSameName" xml:space="preserve">
-    <value>Multiple pipeline factories build a pipeline with name "{0}":\n{1}</value>
+    <value>Multiple PipelineFactorys build a Pipeline with name "{0}":\n{1}</value>
   </data>
   <data name="Exception_NoContainerForPluginType" xml:space="preserve">
-    <value>No container for plugin type with name "{0}"</value>
+    <value>No IoC container for IPlugin implementation with name "{0}"</value>
   </data>
   <data name="Exception_NoPipelineFactories" xml:space="preserve">
-    <value>No pipeline factories </value>
+    <value>No PipelineFactorys</value>
   </data>
   <data name="Exception_NoPipelineFactory" xml:space="preserve">
-    <value>No pipeline factory builds a pipeline with name "{0}"</value>
+    <value>No PipelineFactorys builds a Pipeline with name "{0}"</value>
   </data>
   <data name="Exception_NoServiceForPluginType" xml:space="preserve">
-    <value>No service for plugin type with name "{0}"</value>
+    <value>No service for IPlugin implementation with name "{0}"</value>
   </data>
   <data name="Exception_TypeDoesNotImplement" xml:space="preserve">
     <value>Type "{0}" does not implement "{1}"</value>
@@ -145,45 +145,45 @@
     <value>Building PipelinesCE project "{0}"</value>
   </data>
   <data name="Log_ConfiguringPluginContainer" xml:space="preserve">
-    <value>Configuring IOC container for plugin type "{0}"</value>
+    <value>Configuring IoC container for IPlugin implementation "{0}"</value>
   </data>
   <data name="Log_ConfiguringPluginServices" xml:space="preserve">
-    <value>Configuring services for plugin type "{0}" using plugin startup type "{1}"</value>
+    <value>Configuring ServiceCollection for IPlugin implementation "{0}" using IPluginStartup implementation "{1}"</value>
   </data>
   <data name="Log_InitializingPipelinesCE" xml:space="preserve">
     <value>=== Initializing PipelinesCE ===</value>
   </data>
   <data name="Log_PipelineComplete" xml:space="preserve">
-    <value>=== Pipeline "{0}" complete ===</value>
+    <value>=== Completed Pipeline "{0}" ===</value>
   </data>
   <data name="Log_PipelinesCEProjectSuccessfullyBuilt" xml:space="preserve">
-    <value>PipelinesCE project "{0}" successfully built</value>
+    <value>Successfully built PipelinesCE project "{0}"</value>
   </data>
   <data name="Log_PipelinesCESuccessfullyInitialized" xml:space="preserve">
-    <value>=== PipelinesCE successfully initialized ===</value>
+    <value>=== Successfully initialized PipelinesCE ===</value>
   </data>
   <data name="Log_PipelineSuccessfullyBuilt" xml:space="preserve">
-    <value>Pipeline "{0}" successfully built</value>
+    <value>Successfully built Pipeline "{0}"</value>
   </data>
   <data name="Log_PluginComplete" xml:space="preserve">
-    <value>== Plugin "{0}" complete ==</value>
+    <value>== Completed Plugin "{0}" ==</value>
   </data>
   <data name="Log_PluginContainerSuccessfullyConfigured" xml:space="preserve">
-    <value>IOC container for plugin type "{0}" successfully configured</value>
+    <value>Successfully configured IContainer for IPlugin implementation "{0}"</value>
   </data>
   <data name="Log_BuildingPlugin" xml:space="preserve">
-    <value>Building Plugin of Type "{0}"</value>
+    <value>Building IPlugin implementation "{0}"</value>
   </data>
   <data name="Log_ResolvedDefaultPipeline" xml:space="preserve">
-    <value>Default Pipeline resolved to "{0}"</value>
+    <value>Resolved Default Pipeline to "{0}"</value>
   </data>
   <data name="Log_RetrievingPipelineFactory" xml:space="preserve">
-    <value>Retrieving PipelineFactory for pipeline "{0}"</value>
+    <value>Retrieving PipelineFactory for Pipeline "{0}"</value>
   </data>
   <data name="Log_RunningPipeline" xml:space="preserve">
-    <value>=== Running pipeline "{0}" ===</value>
+    <value>=== Running Pipeline "{0}" ===</value>
   </data>
   <data name="Log_RunningPlugin" xml:space="preserve">
-    <value>== Running plugin "{0}" ==</value>
+    <value>== Running Plugin "{0}" ==</value>
   </data>
 </root>

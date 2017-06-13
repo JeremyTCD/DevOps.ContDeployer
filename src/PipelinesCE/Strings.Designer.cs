@@ -62,7 +62,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple pipeline factories found, please specify one:\n{0}.
+        ///   Looks up a localized string similar to Multiple PipelineFactorys found, please specify one:\n{0}.
         /// </summary>
         public static string Exception_MultiplePipelineFactories {
             get {
@@ -71,7 +71,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple pipeline factories build a pipeline with name &quot;{0}&quot;:\n{1}.
+        ///   Looks up a localized string similar to Multiple PipelineFactorys build a Pipeline with name &quot;{0}&quot;:\n{1}.
         /// </summary>
         public static string Exception_MultiplePipelineFactoriesWithSameName {
             get {
@@ -80,7 +80,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No container for plugin type with name &quot;{0}&quot;.
+        ///   Looks up a localized string similar to No IoC container for IPlugin implementation with name &quot;{0}&quot;.
         /// </summary>
         public static string Exception_NoContainerForPluginType {
             get {
@@ -89,7 +89,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No pipeline factories .
+        ///   Looks up a localized string similar to No PipelineFactorys.
         /// </summary>
         public static string Exception_NoPipelineFactories {
             get {
@@ -98,7 +98,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No pipeline factory builds a pipeline with name &quot;{0}&quot;.
+        ///   Looks up a localized string similar to No PipelineFactorys builds a Pipeline with name &quot;{0}&quot;.
         /// </summary>
         public static string Exception_NoPipelineFactory {
             get {
@@ -107,7 +107,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No service for plugin type with name &quot;{0}&quot;.
+        ///   Looks up a localized string similar to No service for IPlugin implementation with name &quot;{0}&quot;.
         /// </summary>
         public static string Exception_NoServiceForPluginType {
             get {
@@ -143,7 +143,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Building Plugin of Type &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Building IPlugin implementation &quot;{0}&quot;.
         /// </summary>
         public static string Log_BuildingPlugin {
             get {
@@ -152,7 +152,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuring IOC container for plugin type &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Configuring IoC container for IPlugin implementation &quot;{0}&quot;.
         /// </summary>
         public static string Log_ConfiguringPluginContainer {
             get {
@@ -161,7 +161,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuring services for plugin type &quot;{0}&quot; using plugin startup type &quot;{1}&quot;.
+        ///   Looks up a localized string similar to Configuring ServiceCollection for IPlugin implementation &quot;{0}&quot; using IPluginStartup implementation &quot;{1}&quot;.
         /// </summary>
         public static string Log_ConfiguringPluginServices {
             get {
@@ -179,7 +179,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to === Pipeline &quot;{0}&quot; complete ===.
+        ///   Looks up a localized string similar to === Completed Pipeline &quot;{0}&quot; ===.
         /// </summary>
         public static string Log_PipelineComplete {
             get {
@@ -188,7 +188,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PipelinesCE project &quot;{0}&quot; successfully built.
+        ///   Looks up a localized string similar to Successfully built PipelinesCE project &quot;{0}&quot;.
         /// </summary>
         public static string Log_PipelinesCEProjectSuccessfullyBuilt {
             get {
@@ -197,7 +197,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to === PipelinesCE successfully initialized ===.
+        ///   Looks up a localized string similar to === Successfully initialized PipelinesCE ===.
         /// </summary>
         public static string Log_PipelinesCESuccessfullyInitialized {
             get {
@@ -206,7 +206,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pipeline &quot;{0}&quot; successfully built.
+        ///   Looks up a localized string similar to Successfully built Pipeline &quot;{0}&quot;.
         /// </summary>
         public static string Log_PipelineSuccessfullyBuilt {
             get {
@@ -215,7 +215,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Plugin &quot;{0}&quot; complete ==.
+        ///   Looks up a localized string similar to == Completed Plugin &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_PluginComplete {
             get {
@@ -224,7 +224,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IOC container for plugin type &quot;{0}&quot; successfully configured.
+        ///   Looks up a localized string similar to Successfully configured IContainer for IPlugin implementation &quot;{0}&quot;.
         /// </summary>
         public static string Log_PluginContainerSuccessfullyConfigured {
             get {
@@ -233,7 +233,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Default Pipeline resolved to &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Resolved Default Pipeline to &quot;{0}&quot;.
         /// </summary>
         public static string Log_ResolvedDefaultPipeline {
             get {
@@ -242,7 +242,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrieving PipelineFactory for pipeline &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Retrieving PipelineFactory for Pipeline &quot;{0}&quot;.
         /// </summary>
         public static string Log_RetrievingPipelineFactory {
             get {
@@ -251,7 +251,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to === Running pipeline &quot;{0}&quot; ===.
+        ///   Looks up a localized string similar to === Running Pipeline &quot;{0}&quot; ===.
         /// </summary>
         public static string Log_RunningPipeline {
             get {
@@ -260,7 +260,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Running plugin &quot;{0}&quot; ==.
+        ///   Looks up a localized string similar to == Running Plugin &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_RunningPlugin {
             get {
