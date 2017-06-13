@@ -9,12 +9,14 @@ using System.Reflection;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Moq.Sequences;
 
 namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 {
     public class PipelinesCEUnitTests
     {
         private MockRepository _mockRepository { get; }
+        private PipelinesCE _pipelinesCE { get; } = new PipelinesCE(null, null, null, null, null, null, null, null); // For access to PipelineFactoryPipelineName
 
         public PipelinesCEUnitTests()
         {
@@ -22,201 +24,306 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfPipelinesCEProjectDoesNotContainAnyIPipelineFactoryImplementations()
+        public void CreatePluginContainers_CreatesAndPopulatesAnIOCContainerForEachPluginTypeInAssemblies()
         {
             // Arrange
-            string testProject = "testProject";
-            string testProjectFile = "testProjectFile";
-            string testDirectory = Path.GetFullPath("C:/testDirectory"); // Sets slashes to system default
+            Type dummy1PluginType = typeof(Dummy1Plugin);
+            Type dummy2PluginType = typeof(Dummy2Plugin);
+            Type dummy1PluginStartup = typeof(Dummy1PluginStartup);
+            string dummy1PluginName = dummy1PluginType.Name;
+            string dummy2PluginName = dummy2PluginType.Name;
 
-            PipelineOptions options = new PipelineOptions
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPluginTypes = new Type[] { dummy1PluginType, dummy2PluginType };
+            Type[] stubPluginStartupTypes = new Type[] { dummy1PluginStartup };
+
+            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+            mockAssemblyService.Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPlugin))).Returns(stubPluginTypes);
+            mockAssemblyService.Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPluginStartup))).Returns(stubPluginStartupTypes);
+
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            using (Sequence.Create())
             {
-                Project = testProject
-            };
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_ConfiguringPluginContainer, dummy1PluginName)).InSequence();
+                mockLoggingService.
+                    Setup(l => l.LogDebug(Strings.Log_ConfiguringPluginServices, dummy1PluginName, dummy1PluginStartup.Name)).
+                    InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, dummy1PluginName)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_ConfiguringPluginContainer, dummy2PluginName)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, dummy2PluginName)).InSequence();
 
-            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
+                Mock<IPluginStartup> mockPluginStartup = _mockRepository.Create<IPluginStartup>();
+                mockPluginStartup.Setup(p => p.ConfigureServices(It.IsAny<ServiceCollection>()));
 
-            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
+                Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
+                mockActivatorService.Setup(a => a.CreateInstance(dummy1PluginStartup)).Returns(mockPluginStartup.Object);
 
-            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
-            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
+                Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
+                mockContainer.Setup(c => c.Configure(It.IsAny<Action<ConfigurationExpression>>()));
 
-            IEnumerable<Assembly> assemblies = new Assembly[0];
+                PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, mockContainer.Object,
+                    mockLoggingService.Object);
+
+                // Act
+                pipelinesCE.CreatePluginContainers(stubAssemblies);
+
+                // Assert
+                _mockRepository.VerifyAll();
+            }
+        }
+
+        [Fact]
+        public void GetPipelineFactory_ThrowsExceptionIfPipelinesCEProjectDoesNotContainAnyIPipelineFactoryImplementations()
+        {
+            // Arrange
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[0];
+            PipelineOptions stubOptions = new PipelineOptions();
+
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
-                Returns(assemblies);
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
-                Returns(new Type[0]);
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
-            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
-            Assert.Equal(string.Format(Strings.Exception_NoPipelineFactories, testProjectFile), exception.Message);
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
+            Assert.Equal(Strings.Exception_NoPipelineFactories, exception.Message);
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfNoPipelineIsSpecifiedAndMultiplePipelineFactoriesAreFound()
+        public void GetPipelineFactory_ThrowsExceptionIfNoPipelineIsSpecifiedAndMultiplePipelineFactoriesAreFound()
         {
             // Arrange
-            string testProject = "testProject";
-            string testProjectFile = "testProjectFile";
-            string testDirectory = Path.GetFullPath("C:/testDirectory"); // Sets slashes to system default
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
+            PipelineOptions stubOptions = new PipelineOptions();
 
-            PipelineOptions options = new PipelineOptions
-            {
-                Project = testProject
-            };
-
-            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
-
-            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
-
-            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
-            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
-
-            IEnumerable<Assembly> assemblies = new Assembly[0];
-            Type[] dummyTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
-                Returns(assemblies);
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
-                Returns(dummyTypes);
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
-            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
             Assert.
-                Equal(string.Format(Strings.Exception_MultiplePipelineFactories, string.Join("\n", dummyTypes.Select(t => t.Name))), 
+                Equal(string.Format(Strings.Exception_MultiplePipelineFactories, string.Join(Environment.NewLine, stubPipelineFactoryTypes.Select(t => t.Name))),
                     exception.Message);
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfNoPipelineFactoryBuildsPipelineWithSpecifiedName()
+        public void GetPipelineFactory_ThrowsExceptionIfNoPipelineFactoryBuildsPipelineWithSpecifiedName()
         {
             // Arrange
-            string testProject = "testProject";
-            string testPipeline = "testPipeline";
-            string testProjectFile = "testProjectFile";
-            string testDirectory = Path.GetFullPath("C:/testDirectory"); // Sets slashes to system default
-
-            PipelineOptions options = new PipelineOptions
+            string testPipeline = _pipelinesCE.PipelineFactoryPipelineName(typeof(Dummy1PipelineFactory));
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[] { typeof(Dummy2PipelineFactory) };
+            PipelineOptions stubOptions = new PipelineOptions
             {
-                Project = testProject,
                 Pipeline = testPipeline
             };
 
-            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
-
-            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
-
-            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
-            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
-
-            IEnumerable<Assembly> assemblies = new Assembly[0];
-            Type[] dummyTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
-                Returns(assemblies);
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
-                Returns(dummyTypes);
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, null, null, null);
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
-            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.Run(options));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
             Assert.Equal(string.Format(Strings.Exception_NoPipelineFactory, testPipeline), exception.Message);
             _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public void Run_ConfiguresServicesAndCallsPipelineRunnerRunWithSpecifiedOptions()
+        public void GetPipelineFactory_ThrowsExceptionIfMultiplePipelineFactoriesBuildPipelineWithSpecifiedName()
         {
             // Arrange
+            string testPipeline = _pipelinesCE.PipelineFactoryPipelineName(typeof(Dummy1PipelineFactory));
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy1PipelineFactory) };
+            PipelineOptions stubOptions = new PipelineOptions
+            {
+                Pipeline = testPipeline
+            };
+
+            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+            mockAssemblyService.
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
+
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+
+            // Act and Assert
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
+            Assert.Equal(string.Format(Strings.Exception_MultiplePipelineFactoriesWithSameName,
+                testPipeline,
+                string.Join(Environment.NewLine, stubPipelineFactoryTypes.Select(t => t.FullName))),
+                exception.Message);
+            _mockRepository.VerifyAll();
+        }
+
+        [Fact]
+        public void GetPipelineFactory_SetsPipelineAndReturnsPipelineFactoryIfNoPipelineSpecifiedAndOnlyOnePipelineFactoryExists()
+        {
+            // Arrange
+            Type dummy1PipelineFactory = typeof(Dummy1PipelineFactory);
+            string finalPipeline = _pipelinesCE.PipelineFactoryPipelineName(dummy1PipelineFactory);
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[] { dummy1PipelineFactory };
+            PipelineOptions stubOptions = new PipelineOptions();
+            Dummy1PipelineFactory stubDummy1PipelineFactory = new Dummy1PipelineFactory();
+
+            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+            mockAssemblyService.
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
+
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_ResolvedDefaultPipeline, finalPipeline));
+
+            Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
+            mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactory)).Returns(stubDummy1PipelineFactory);
+
+            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+
+            // Act
+            IPipelineFactory result = pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            Assert.Equal(stubDummy1PipelineFactory, result);
+            Assert.Equal(stubOptions.Pipeline, finalPipeline);
+        }
+
+        [Fact]
+        public void GetPipelineFactory_ReturnsPipelineFactoryIfPipelineSpecifiedAndACorrespondingPipelineFactoryExists()
+        {
+            // Arrange
+            Type dummy1PipelineFactory = typeof(Dummy1PipelineFactory);
+            string pipeline = _pipelinesCE.PipelineFactoryPipelineName(dummy1PipelineFactory);
+            Assembly[] stubAssemblies = new Assembly[0];
+            Type[] stubPipelineFactoryTypes = new Type[] { dummy1PipelineFactory };
+            PipelineOptions stubOptions = new PipelineOptions
+            {
+                Pipeline = pipeline
+            };
+            Dummy1PipelineFactory stubDummy1PipelineFactory = new Dummy1PipelineFactory();
+
+            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+            mockAssemblyService.
+                Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
+                Returns(stubPipelineFactoryTypes);
+
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
+
+            Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
+            mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactory)).Returns(stubDummy1PipelineFactory);
+
+            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+
+            // Act
+            IPipelineFactory result = pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            Assert.Equal(stubDummy1PipelineFactory, result);
+        }
+
+        [Fact]
+        public void Run_BuildsProjectBuildPipelineAndCallsPipelineRunnerRun()
+        {
+            // Arrange
+            Type dummy1PluginStartup = typeof(Dummy1PluginStartup);
+            Type dummy1PluginType = typeof(Dummy1Plugin);
             string testProject = "testProject";
-            string testPipeline = nameof(StubPipelineFactory).Replace("PipelineFactory", "");
+            string testPipeline = "testPipeline";
             string testProjectFile = "testProjectFile";
-            string testDirectory = Path.GetFullPath("C:/testDirectory"); // Sets slashes to system default
+            string testDirectory = "testDirectory";
+            Pipeline stubPipeline = new Pipeline(null);
+            DirectoryInfo stubDirectoryInfo = new DirectoryInfo(testDirectory);
+            IEnumerable<Assembly> stubAssemblies = new Assembly[0];
 
             Mock<PipelineOptions> mockPipelineOptions = _mockRepository.Create<PipelineOptions>();
             mockPipelineOptions.Setup(p => p.Project).Returns(testProject);
             mockPipelineOptions.Setup(p => p.Pipeline).Returns(testPipeline);
             mockPipelineOptions.Setup(p => p.Combine(It.IsAny<PipelineOptions>())).Returns(mockPipelineOptions.Object);
 
-            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
-
-            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-            mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
-
-            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
-            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(new DirectoryInfo(testDirectory));
-
-            IEnumerable<Assembly> assemblies = new Assembly[0];
-            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
-            mockAssemblyService.
-                Setup(a => a.LoadAssembliesInDir(Path.Combine(testDirectory, "bin/Release/netcoreapp1.1"), true)).
-                Returns(assemblies);
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPipelineFactory))).
-                Returns(new Type[] { typeof(StubPipelineFactory)});
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPlugin))).
-                Returns(new Type[] { typeof(DummyPlugin) });
-            mockAssemblyService.
-                Setup(a => a.GetAssignableTypes(assemblies, typeof(IPluginStartup))).
-                Returns(new Type[] { typeof(DummyPluginStartup) });
-
-            Mock<IPluginStartup> mockPluginStartup = _mockRepository.Create<IPluginStartup>();
-            mockPluginStartup.Setup(p => p.ConfigureServices(It.IsAny<ServiceCollection>()));
-
-            Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
-            mockActivatorService.Setup(a => a.CreateInstance(typeof(StubPipelineFactory))).Returns(new StubPipelineFactory());
-            mockActivatorService.Setup(a => a.CreateInstance(typeof(DummyPluginStartup))).Returns(mockPluginStartup.Object);
-
-            Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
-            mockContainer.Setup(c => c.Configure(It.IsAny<Action<ConfigurationExpression>>()));
-
-            Mock<IPipelineRunner> mockPipelineRunner = _mockRepository.Create<IPipelineRunner>();
-            mockPipelineRunner.Setup(p => p.Run(It.IsAny<Pipeline>()));
-
-            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, mockPathService.Object,
-                mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, mockContainer.Object, null);
-
-            // Act 
-            pipelinesCE.Run(mockPipelineOptions.Object);
-
-            // Assert
-            _mockRepository.VerifyAll();
-        }
-
-        private class StubPipelineFactory : IPipelineFactory
-        {
-            public Pipeline CreatePipeline()
+            Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
+            using (Sequence.Create())
             {
-                return new Pipeline(null);
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_InitializingPipelinesCE)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipelinesCEProject, testProjectFile)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, testProjectFile)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipeline, testPipeline)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, testPipeline)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized)).InSequence();
+
+                Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+                mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
+
+                Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+                mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
+
+                Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
+                mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
+
+                Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+                mockAssemblyService.
+                    Setup(a => a.LoadAssembliesInDir(Path.Combine(stubDirectoryInfo.FullName, "bin/Release/netcoreapp1.1"), true)).
+                    Returns(stubAssemblies);
+
+                Mock<IPipelineFactory> mockPipelineFactory = _mockRepository.Create<IPipelineFactory>();
+                mockPipelineFactory.Setup(p => p.CreatePipeline()).Returns(stubPipeline);
+
+                Mock<IPipelineRunner> mockPipelineRunner = _mockRepository.Create<IPipelineRunner>();
+                mockPipelineRunner.Setup(p => p.Run(stubPipeline));
+
+                Mock<PipelinesCE> pipelinesCE = _mockRepository.Create<PipelinesCE>(null, mockAssemblyService.Object, mockPathService.Object,
+                    mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, null, mockLoggingService.Object);
+                pipelinesCE.Setup(p => p.CreatePluginContainers(stubAssemblies));
+                pipelinesCE.Setup(p => p.GetPipelineFactory(stubAssemblies, mockPipelineOptions.Object)).Returns(mockPipelineFactory.Object);
+                pipelinesCE.CallBase = true;
+
+                // Act 
+                pipelinesCE.Object.Run(mockPipelineOptions.Object);
+
+                // Assert
+                _mockRepository.VerifyAll();
             }
         }
 
-        private class DummyPluginStartup : IPluginStartup
+        [Fact]
+        public void PipelineFactoryPipelineName_ReturnsCorrespondingPipelineName()
+        {
+            // Act
+            string result = _pipelinesCE.PipelineFactoryPipelineName(typeof(Dummy1PipelineFactory));
+
+            // Assert
+            Assert.Equal("Dummy1", result);
+        }
+
+        private class Dummy1PluginStartup : IPluginStartup
         {
             public void ConfigureServices(IServiceCollection services)
             {
@@ -224,7 +331,15 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             }
         }
 
-        private class DummyPlugin : IPlugin
+        private class Dummy1Plugin : IPlugin
+        {
+            public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class Dummy2Plugin : IPlugin
         {
             public void Run(IPipelineContext pipelineContext, IStepContext stepContext)
             {
