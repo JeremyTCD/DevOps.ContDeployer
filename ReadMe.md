@@ -59,6 +59,10 @@ first alphabet of each option's second syllable should be added to their short n
 ##### Description
 If options is a noun, its description should be in the following format: <what it is><elaboration/notes><default value>. If options is a verb, its description
 should be in the following format: <what it does><elaboration/notes>.
+##### Defaults
+PipelinesCE allows default options to be specified in PipelineFactorys. Therefore, every option must have at least two states: specified or unspecified (overridable by defaults). These states are facilitated
+by creating a nullable field in PipelineOptions for every property. If a field is null, the option is unspecified and can be overridden by defaults. Note that since flag CLA options can only be on or off,
+every flag must have a corresponding "<flag>off" CLA option. 
 ### Shared Systems
 #### Logging Strategy
 ##### Info Level Log
