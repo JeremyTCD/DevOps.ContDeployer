@@ -139,18 +139,18 @@ namespace JeremyTCD.PipelinesCE
             }
 
             Type pipelineFactoryType;
-            if (pipelineOptions.Pipeline == null)
+            if (pipelineOptions.Pipeline == PipelineOptions.DefaultPipeline)
             {
                 if (pipelineFactoryTypes.Count() == 1)
                 {
                     pipelineFactoryType = pipelineFactoryTypes.First();
-                    pipelineOptions.Pipeline = PipelineFactoryPipelineName(pipelineFactoryType);
+                    pipelineOptions.Pipeline = PipelineFactoryPipelineName(pipelineFactoryType); // Set PipelineOptions.Pipeline 
                     _loggingService.LogDebug(Strings.Log_ResolvedDefaultPipeline, pipelineOptions.Pipeline);
                 }
                 else
                 {
                     throw new InvalidOperationException(string.Format(Strings.Exception_MultiplePipelineFactories,
-                        string.Join("\n", pipelineFactoryTypes.Select(t => t.Name))));
+                        string.Join(Environment.NewLine, pipelineFactoryTypes.Select(t => t.Name))));
                 }
             }
             else
@@ -165,7 +165,7 @@ namespace JeremyTCD.PipelinesCE
                 {
                     throw new InvalidOperationException(string.Format(Strings.Exception_MultiplePipelineFactoriesWithSameName,
                         pipelineOptions.Pipeline,
-                        string.Join("\n", pipelineFactoryTypes.Select(t => t.FullName))));
+                        string.Join(Environment.NewLine, pipelineFactoryTypes.Select(t => t.FullName))));
                 }
                 pipelineFactoryType = types.First();
             }
