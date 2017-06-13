@@ -143,6 +143,15 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Building Plugin of Type &quot;{0}&quot;.
+        /// </summary>
+        public static string Log_BuildingPlugin {
+            get {
+                return ResourceManager.GetString("Log_BuildingPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuring IOC container for plugin type &quot;{0}&quot;.
         /// </summary>
         public static string Log_ConfiguringPluginContainer {
@@ -220,15 +229,6 @@ namespace JeremyTCD.PipelinesCE {
         public static string Log_PluginContainerSuccessfullyConfigured {
             get {
                 return ResourceManager.GetString("Log_PluginContainerSuccessfullyConfigured", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Plugin &quot;{0}&quot; successfully built.
-        /// </summary>
-        public static string Log_PluginSuccessfullyBuilt {
-            get {
-                return ResourceManager.GetString("Log_PluginSuccessfullyBuilt", resourceCulture);
             }
         }
         

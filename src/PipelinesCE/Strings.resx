@@ -171,8 +171,8 @@
   <data name="Log_PluginContainerSuccessfullyConfigured" xml:space="preserve">
     <value>IOC container for plugin type "{0}" successfully configured</value>
   </data>
-  <data name="Log_PluginSuccessfullyBuilt" xml:space="preserve">
-    <value>Plugin "{0}" successfully built</value>
+  <data name="Log_BuildingPlugin" xml:space="preserve">
+    <value>Building Plugin of Type "{0}"</value>
   </data>
   <data name="Log_ResolvedDefaultPipeline" xml:space="preserve">
     <value>Default Pipeline resolved to "{0}"</value>
