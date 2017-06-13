@@ -4,7 +4,11 @@
     {
         public const string DefaultPipeline = "Default";
         public const string DefaultProject = "PipelinesCE.csproj";
+        public const bool DefaultDryRun = false;
+        public const bool DefaultVerbose = false;
+
         private bool? _dryRun;
+        private bool? _verbose;
         private string _project;
         private string _pipeline;
 
@@ -15,7 +19,7 @@
         {
             get
             {
-                return _dryRun ?? false;
+                return _dryRun ?? DefaultDryRun;
             }
             set
             {
@@ -50,6 +54,18 @@
             set
             {
                 _pipeline = value;
+            }
+        }
+
+        public bool Verbose
+        {
+            get
+            {
+                return _verbose ?? DefaultVerbose;
+            }
+            set
+            {
+                _verbose = value;
             }
         }
 
