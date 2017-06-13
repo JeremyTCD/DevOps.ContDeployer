@@ -58,7 +58,7 @@ namespace JeremyTCD.PipelinesCE
             _msBuildService.Build(projectFile, "/t:restore,build /p:Configuration=Release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
-            _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline ?? "Default");
+            _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline);
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies
             IEnumerable<Assembly> assemblies = _assemblyService.
@@ -128,7 +128,7 @@ namespace JeremyTCD.PipelinesCE
         /// </exception>
         private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
-            _loggingService.LogDebug(Strings.Log_RetrievingPipelineFactory, pipelineOptions.Pipeline ?? "Default");
+            _loggingService.LogDebug(Strings.Log_RetrievingPipelineFactory, pipelineOptions.Pipeline);
 
             IEnumerable<Type> pipelineFactoryTypes = _assemblyService.
                 GetAssignableTypes(assemblies, typeof(IPipelineFactory));

@@ -185,7 +185,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
-                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == (project ?? (new PipelineOptions()).Project))));
+                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == (pipeline ?? PipelineOptions.DefaultPipeline) && o.Project == (project ?? PipelineOptions.DefaultProject))));
 
             IContainer container = serviceProvider.GetService<IContainer>();
             container.Configure(registry => registry.For<PipelinesCE>().Use(mockPipelinesCE.Object));

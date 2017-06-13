@@ -2,8 +2,11 @@
 {
     public class PipelineOptions
     {
+        public const string DefaultPipeline = "Default";
+        public const string DefaultProject = "PipelinesCE.csproj";
         private bool? _dryRun;
         private string _project;
+        private string _pipeline;
 
         /// <summary>
         /// Defaults to false
@@ -27,7 +30,7 @@
         {
             get
             {
-                return _project ?? "PipelinesCE.csproj";
+                return _project ?? DefaultProject;
             }
             set
             {
@@ -38,7 +41,17 @@
         /// <summary>
         /// If there is only 1 <see cref="IPipelineFactory"/>, defaults to the sole <see cref="Pipeline"/>
         /// </summary>
-        public virtual string Pipeline { get; set; }
+        public virtual string Pipeline
+        {
+            get
+            {
+                return _pipeline ?? DefaultPipeline;
+            }
+            set
+            {
+                _pipeline = value;
+            }
+        }
 
         /// <summary>
         /// Overwrites each property that has not been set with the value of its equivalent property in <paramref name="secondary"/>
@@ -51,12 +64,12 @@
                 DryRun = secondary.DryRun;
             }
 
-            if (Project == null)
+            if (_project == null)
             {
                 Project = secondary.Project;
             }
 
-            if (Pipeline == null)
+            if (_pipeline == null)
             {
                 Pipeline = secondary.Pipeline;
             }

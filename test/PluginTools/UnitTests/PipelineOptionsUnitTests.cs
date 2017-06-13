@@ -30,7 +30,7 @@ namespace JeremyTCD.PipelinesCE.PluginTools.Tests.UnitTests
             // Assert
             Assert.True(primary.DryRun);
             Assert.Equal(testPrimaryProject, primary.Project);
-            Assert.Equal(testSecondaryPipeline, primary.Pipeline);
+            Assert.Equal(testSecondaryPipeline, secondary.Pipeline);
         }
     }
 }
