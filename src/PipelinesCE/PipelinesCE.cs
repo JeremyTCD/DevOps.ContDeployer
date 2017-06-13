@@ -78,7 +78,13 @@ namespace JeremyTCD.PipelinesCE
             _pipelineRunner.Run(pipeline);
         }
 
-        private void CreatePluginContainers(IEnumerable<Assembly> assemblies)
+        // TODO Access modifier should be internal or private but no good way to test if so
+        /// <summary>
+        /// Creates an IOC container for each <see cref="IPlugin"/> implementation in <paramref name="assemblies"/>. Populates containers belonging to plugin types 
+        /// with corresponding <see cref="IPluginStartup"/> implementations.
+        /// </summary>
+        /// <param name="assemblies"></param>
+        public virtual void CreatePluginContainers(IEnumerable<Assembly> assemblies)
         {
             List<Type> pluginTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPlugin)).ToList();
             IDictionary<string, Type> pluginStartupTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPluginStartup)).ToDictionary(t => t.Name);
@@ -107,6 +113,7 @@ namespace JeremyTCD.PipelinesCE
             }
         }
 
+        // TODO Access modifier should be internal or private but no good way to test if so
         /// <summary>
         /// Gets <see cref="IPipelineFactory"/> from project assemblies that creates a pipeline with name 
         /// <paramref name="pipelineOptions"/>. If <paramref name="pipelineOptions"/> is null and there is only one <see cref="IPipelineFactory"/> 
@@ -126,7 +133,7 @@ namespace JeremyTCD.PipelinesCE
         /// <exception cref="InvalidOperationException">
         /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipelineOptions"/>
         /// </exception>
-        private IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
+        public virtual IPipelineFactory GetPipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
         {
             _loggingService.LogDebug(Strings.Log_RetrievingPipelineFactory, pipelineOptions.Pipeline);
 
@@ -173,7 +180,8 @@ namespace JeremyTCD.PipelinesCE
             return (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
         }
 
-        private string PipelineFactoryPipelineName(Type pipelineFactoryType)
+        // TODO Access modifier should be internal or private but no good way to test if so
+        public virtual string PipelineFactoryPipelineName(Type pipelineFactoryType)
         {
             return pipelineFactoryType.Name.Replace("PipelineFactory", "");
         }
