@@ -2,6 +2,7 @@
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using StructureMap;
 using System;
 using System.IO;
@@ -13,16 +14,19 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 {
     public class PipelinesCEIntegrationTests
     {
-        private DirectoryService _directoryService = new DirectoryService();
+        private MockRepository _mockRepository { get; }
+        private DirectoryService _directoryService { get; }
         private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(PipelinesCE)}Temp");
         private IContainer _container { get; }
         private ILoggerFactory _loggerFactory { get; }
 
         public PipelinesCEIntegrationTests()
         {
+            _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
+            _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
             _container = CreateContainer();
             _loggerFactory = _container.GetInstance<ILoggerFactory>();
-            _loggerFactory.AddConsole();
+            _loggerFactory.AddConsole(LogLevel.Information);
             _directoryService.Delete(_tempDir, true);
             _directoryService.Create(_tempDir);
             _directoryService.SetCurrentDirectory(_tempDir);
@@ -35,11 +39,11 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         /// services properly.
         /// </summary>
         [Fact]
-        public void Run_CallsPluginRun()
+        public void Run_RunsPipelineIfServicesAreConfiguredProperly()
         {
             // Arrange
-            // This magic string is unavoidable, can't reference this assembly since it is to be build and loaded by PipelinesCE
             string solutionDir = Path.GetFullPath(typeof(PipelinesCEIntegrationTests).GetTypeInfo().Assembly.Location + "../../../../../../../");
+            // This magic string is unavoidable, can't reference this assembly since it is to be build and loaded by PipelinesCE
             string projectDir = "StubPipelinesCEProject";
             string projectAbsSrcDir = Path.GetFullPath(solutionDir + $"test/{projectDir}");
             string projectAbsDestDir = Path.Combine(_tempDir, projectDir);
