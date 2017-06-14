@@ -1,16 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Also used as exe name -->
+    <AssemblyName>PipelinesCE</AssemblyName>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <OutputType>exe</OutputType>
-    <ApplicationIcon />
-    <OutputTypeEx>exe</OutputTypeEx>
-    <StartupObject />
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
+    <!-- This should not be necessary as it has been added to the default properties: https://github.com/dotnet/sdk/issues/346,
+      https://github.com/dotnet/sdk/commit/829d60a3b584b1413904f0d40ccd81c168147e0f -->
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
