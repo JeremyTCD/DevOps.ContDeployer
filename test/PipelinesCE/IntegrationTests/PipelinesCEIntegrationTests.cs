@@ -35,11 +35,11 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         /// <summary>
         /// This test covers the full breadth of <see cref="PipelinesCE"/>. In particular, it verifies that
         /// <see cref="PipelinesCEServiceCollectionExtensions.AddPipelinesCE(IServiceCollection)"/> configures default PipelinesCE
-        /// services properly as well as that <see cref="PipelinesCE.Run(PipelineOptions)"/> configures per plugin
-        /// services properly.
+        /// services correctly as well as that <see cref="PipelinesCE.Run(PipelineOptions)"/> configures per plugin
+        /// services correctly.
         /// </summary>
         [Fact]
-        public void Run_RunsPipelineIfServicesAreConfiguredProperly()
+        public void Run_RunsPipelineIfServicesAreConfiguredCorrectly()
         {
             // Arrange
             string solutionDir = Path.GetFullPath(typeof(PipelinesCEIntegrationTests).GetTypeInfo().Assembly.Location + "../../../../../../../");
@@ -65,8 +65,8 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             _loggerFactory.Dispose();
             stringWriter.Dispose();
             string output = stringWriter.ToString();
-            // If these two logs were written to console, ServiceCollectionExtensions.AddPipelinesCE configures services properly and PipelinesCE.Run 
-            // configures per plugin services properly
+            // If these two logs were written to console, ServiceCollectionExtensions.AddPipelinesCE configures services correctly and PipelinesCE.Run 
+            // configures per plugin services correctly
             Assert.Contains(string.Format(Strings.Log_PipelineComplete, "Stub"), output);
             Assert.Contains(string.Format(Strings.Log_PluginComplete, "StubPlugin"), output);
         }
