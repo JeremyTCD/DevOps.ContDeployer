@@ -27,6 +27,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             _container = CreateContainer();
             _loggerFactory = _container.GetInstance<ILoggerFactory>();
             _loggerFactory.AddConsole(LogLevel.Information);
+
             _directoryService.Delete(_tempDir, true);
             _directoryService.Create(_tempDir);
             _directoryService.SetCurrentDirectory(_tempDir);
@@ -50,8 +51,8 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             // Copy stub project to temp dir
             _directoryService.Copy(projectAbsSrcDir, projectAbsDestDir, excludePatterns: new string[] { "^bin$", "^obj$" });
             // Replace relevant relative paths
-            string ProjectFile = Path.Combine(projectAbsDestDir, $"JeremyTCD.PipelinesCE.Tests.{projectDir}.csproj");
-            ConvertProjectReferenceRelPathsToAbs(ProjectFile, projectAbsSrcDir);
+            string projectFile = Path.Combine(projectAbsDestDir, $"JeremyTCD.PipelinesCE.Tests.{projectDir}.csproj");
+            ConvertProjectReferenceRelPathsToAbs(projectFile, projectAbsSrcDir);
 
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
 
@@ -59,7 +60,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             Console.SetOut(stringWriter);
 
             // Act
-            pipelinesCE.Run(new PipelineOptions { Project = ProjectFile });
+            pipelinesCE.Run(new PipelineOptions { Project = projectFile });
 
             // Assert
             _loggerFactory.Dispose();
