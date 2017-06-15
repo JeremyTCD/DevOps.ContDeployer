@@ -32,8 +32,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _loggingService = loggingService;
 
             Description = Strings.CommandDescription_Run;
-            Name = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
-            FullName = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
+            Name = Strings.CommandName_Run;
+            FullName = Strings.CommandFullName_Run;
             SetupOptions();
             OnExecute((Func<int>)Run);
         }

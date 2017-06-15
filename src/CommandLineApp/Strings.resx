@@ -201,4 +201,16 @@
   <data name="OptionShortName_VerboseOff" xml:space="preserve">
     <value>vo</value>
   </data>
+  <data name="CommandFullName_Root" xml:space="preserve">
+    <value>PipelinesCE</value>
+  </data>
+  <data name="CommandFullName_Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="CommandName_Root" xml:space="preserve">
+    <value>pipelinesce</value>
+  </data>
+  <data name="CommandName_Run" xml:space="preserve">
+    <value>run</value>
+  </data>
 </root>

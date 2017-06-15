@@ -20,10 +20,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
     {
         private MockRepository _mockRepository { get; }
         private ICommandLineUtilsService _cluService { get; }
-        private static string _runCommandName { get; } = nameof(RunCommand).Replace("Command", "").ToLowerInvariant();
-        private static string _runCommandFullName { get; } = $"{nameof(PipelinesCE)} {nameof(RunCommand).Replace("Command", "")}";
-        private static string _rootCommandName { get; } = nameof(PipelinesCE).ToLowerInvariant();
-        private static string _rootCommandFullName { get; } = nameof(PipelinesCE);
         private IServiceCollection _services { get; }
 
         public CommandsIntegrationTests()
@@ -76,14 +72,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             stringWriter.Dispose();
 
             // Assert
-            string expected = $@"{_rootCommandFullName} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {_rootCommandName} [options] [command]" + Environment.NewLine + Environment.NewLine +
+            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
+                        $@"Usage: {Strings.CommandName_Root} [options] [command]" + Environment.NewLine + Environment.NewLine +
                         $@"Options:" + Environment.NewLine + 
                         $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information" + Environment.NewLine + 
                         $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information" + Environment.NewLine + Environment.NewLine +
                         $@"Commands:" + Environment.NewLine + 
-                        $@"  { _runCommandName}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
-                        $@"Use ""{_rootCommandName} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
+                        $@"  { Strings.CommandName_Run}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
+                        $@"Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
             Assert.Equal(expected, output);
         }
 
@@ -105,7 +101,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Assert
             // TODO test using regex after version format is decided on
-            string expected = $@"{_rootCommandFullName}" + Environment.NewLine +
+            string expected = $@"{Strings.CommandFullName_Root}" + Environment.NewLine +
                         "1.0.0.0" + Environment.NewLine;
             Assert.Equal(expected, output);
         }
@@ -133,14 +129,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             stringWriter.Dispose();
 
             // Assert
-            string expected = $@"{_rootCommandFullName} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {_rootCommandName} [options] [command]" + Environment.NewLine + Environment.NewLine +
+            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
+                        $@"Usage: {Strings.CommandName_Root} [options] [command]" + Environment.NewLine + Environment.NewLine +
                         $@"Options:" + Environment.NewLine +
                         $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information" + Environment.NewLine +
                         $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information" + Environment.NewLine + Environment.NewLine +
                         $@"Commands:" + Environment.NewLine +
-                        $@"  { _runCommandName}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
-                        $@"Use ""{_rootCommandName} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
+                        $@"  { Strings.CommandName_Run}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
+                        $@"Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
             Assert.Equal(expected, output);
         }
 
@@ -212,23 +208,23 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string testPipeline = "testPipeline";
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { _runCommandName }, false, false, false, false,
+            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false, false,
                 PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
-            yield return new object[] {new string[] {_runCommandName,
+            yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}", $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
                 true, false, true, false, testPipeline, testProject};
-            yield return new object[] {new string[] {_runCommandName,
+            yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_Verbose}", $"--{Strings.OptionLongName_DryRun}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
                 true, false, true, false, testPipeline, testProject};
-            yield return new object[] { new string[] { _runCommandName,
+            yield return new object[] { new string[] { Strings.CommandName_Run,
                     $"-{Strings.OptionShortName_VerboseOff}",
                     $"-{Strings.OptionShortName_DryRunOff}"
             }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
-            yield return new object[] { new string[] { _runCommandName,
+            yield return new object[] { new string[] { Strings.CommandName_Run,
                     $"--{Strings.OptionLongName_VerboseOff}",
                     $"--{Strings.OptionLongName_DryRunOff}"
             }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
@@ -251,8 +247,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             stringWriter.Dispose();
 
             // Assert
-            string expected = $@"{_runCommandFullName}" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {_rootCommandName} {_runCommandName} [options]" + Environment.NewLine + Environment.NewLine +
+            string expected = $@"{Strings.CommandFullName_Run}" + Environment.NewLine + Environment.NewLine +
+                        $@"Usage: {Strings.CommandName_Root} {Strings.CommandName_Run} [options]" + Environment.NewLine + Environment.NewLine +
                         $@"Options:" + Environment.NewLine +
                         $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}         Show help information" + Environment.NewLine +
                         $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}     {Strings.OptionDescription_Project}" + Environment.NewLine +
@@ -266,8 +262,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
         public static IEnumerable<object[]> RunCommandHelpData()
         {
-            yield return new object[] { new string[] { _runCommandName, $"-{Strings.OptionShortName_Help}" } };
-            yield return new object[] { new string[] { _runCommandName, $"--{Strings.OptionLongName_Help}" } };
+            yield return new object[] { new string[] { Strings.CommandName_Run, $"-{Strings.OptionShortName_Help}" } };
+            yield return new object[] { new string[] { Strings.CommandName_Run, $"--{Strings.OptionLongName_Help}" } };
         }
     }
 }

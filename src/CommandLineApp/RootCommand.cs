@@ -23,8 +23,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _loggingService = loggingService;
 
             Description = Strings.CommandDescription_Run;
-            Name = nameof(PipelinesCE).ToLowerInvariant();
-            FullName = nameof(PipelinesCE);
+            Name = Strings.CommandName_Root;
+            FullName = Strings.CommandFullName_Root;
             SetupCommands(runCommand);
             SetupOptions();
             OnExecute((Func<int>)Run);

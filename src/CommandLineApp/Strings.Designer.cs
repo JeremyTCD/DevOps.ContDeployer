@@ -80,6 +80,42 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PipelinesCE.
+        /// </summary>
+        public static string CommandFullName_Root {
+            get {
+                return ResourceManager.GetString("CommandFullName_Root", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run.
+        /// </summary>
+        public static string CommandFullName_Run {
+            get {
+                return ResourceManager.GetString("CommandFullName_Run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pipelinesce.
+        /// </summary>
+        public static string CommandName_Root {
+            get {
+                return ResourceManager.GetString("CommandName_Root", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to run.
+        /// </summary>
+        public static string CommandName_Run {
+            get {
+                return ResourceManager.GetString("CommandName_Run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ?.
         /// </summary>
         public static string HelpOptionSymbolName {
