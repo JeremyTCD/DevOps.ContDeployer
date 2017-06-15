@@ -26,7 +26,9 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
             _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
             _container = CreateContainer();
             _loggerFactory = _container.GetInstance<ILoggerFactory>();
-            _loggerFactory.AddConsole(LogLevel.Information);
+            _loggerFactory.
+                AddConsole(LogLevel.Debug).
+                AddDebug(LogLevel.Debug);
 
             _directoryService.Delete(_tempDir, true);
             _directoryService.Create(_tempDir);
