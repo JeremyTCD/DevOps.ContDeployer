@@ -56,7 +56,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
             mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningRootCommand, $"{Strings.OptionLongName_Help}=\n" +
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Root, $"{Strings.OptionLongName_Help}=\n" +
                 $"{Strings.OptionLongName_Verbose}="));
             _services.AddSingleton(mockLoggingService.Object);
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
@@ -172,7 +172,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
             mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningRunCommand, $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
                 $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +

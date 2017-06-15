@@ -132,11 +132,9 @@
   <data name="Log_RunningCommandLineApp" xml:space="preserve">
     <value>Running command line application with arguments: [{0}]</value>
   </data>
-  <data name="Log_RunningRootCommand" xml:space="preserve">
-    <value>Running RootCommand with arguments:\n{0}</value>
-  </data>
-  <data name="Log_RunningRunCommand" xml:space="preserve">
-    <value>Running RunCommand with arguments:\n{0}</value>
+  <data name="Log_RunningCommand" xml:space="preserve">
+    <value>Running {0} Command with arguments:
+{1}</value>
   </data>
   <data name="OptionDescription_DryRun" xml:space="preserve">
     <value>Run Pipeline in dry run mode</value>

@@ -69,7 +69,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         {
             if (_loggingService.IsEnabled(LogLevel.Debug))
             {
-                _loggingService.LogDebug(Strings.Log_RunningRunCommand, string.Join(Environment.NewLine, Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
+                _loggingService.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, string.Join(Environment.NewLine, Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
             PipelineOptions pipelineOptions = new PipelineOptions

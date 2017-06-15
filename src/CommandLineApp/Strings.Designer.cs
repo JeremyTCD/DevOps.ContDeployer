@@ -125,29 +125,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Running {0} Command with arguments:
+        ///{1}.
+        /// </summary>
+        public static string Log_RunningCommand {
+            get {
+                return ResourceManager.GetString("Log_RunningCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Running command line application with arguments: [{0}].
         /// </summary>
         public static string Log_RunningCommandLineApp {
             get {
                 return ResourceManager.GetString("Log_RunningCommandLineApp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Running RootCommand with arguments:\n{0}.
-        /// </summary>
-        public static string Log_RunningRootCommand {
-            get {
-                return ResourceManager.GetString("Log_RunningRootCommand", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Running RunCommand with arguments:\n{0}.
-        /// </summary>
-        public static string Log_RunningRunCommand {
-            get {
-                return ResourceManager.GetString("Log_RunningRunCommand", resourceCulture);
             }
         }
         
