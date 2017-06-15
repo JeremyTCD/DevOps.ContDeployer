@@ -133,19 +133,19 @@
     <value>Running command line application with arguments: [{0}]</value>
   </data>
   <data name="Log_RunningRootCommand" xml:space="preserve">
-    <value>Running root command with arguments:\n{0}</value>
+    <value>Running RootCommand with arguments:\n{0}</value>
   </data>
   <data name="Log_RunningRunCommand" xml:space="preserve">
-    <value>Running run command with arguments:\n{0}</value>
+    <value>Running RunCommand with arguments:\n{0}</value>
   </data>
   <data name="OptionDescription_DryRun" xml:space="preserve">
-    <value>Run pipeline in dry run mode</value>
+    <value>Run Pipeline in dry run mode</value>
   </data>
   <data name="OptionLongName_DryRun" xml:space="preserve">
     <value>dryrun</value>
   </data>
   <data name="OptionDescription_Pipeline" xml:space="preserve">
-    <value>Name of the pipeline to run. By convention, a pipeline's name is its factories name less "PipelineFactory". For example, "MainPipelineFactory" produces a pipeline named "Main". If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline.</value>
+    <value>Name of the pipeline to run. By convention, a Pipeline's name is its PipelineFactorys name less "PipelineFactory". For example, "MainPipelineFactory" produces a Pipeline named "Main". If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline.</value>
   </data>
   <data name="OptionLongName_Pipeline" xml:space="preserve">
     <value>pipeline</value>
@@ -166,10 +166,10 @@
     <value>PipelinesCE, a continuous everything tool.</value>
   </data>
   <data name="CommandDescription_Run" xml:space="preserve">
-    <value>Runs a pipeline</value>
+    <value>Runs a Pipeline</value>
   </data>
   <data name="OptionDescription_Verbose" xml:space="preserve">
-    <value>Write verbose output to console</value>
+    <value>Output verbose logs</value>
   </data>
   <data name="OptionLongName_Verbose" xml:space="preserve">
     <value>verbose</value>
@@ -184,10 +184,10 @@
     <value>v</value>
   </data>
   <data name="OptionDescription_DryRunOff" xml:space="preserve">
-    <value>Run pipeline in normal mode</value>
+    <value>Run Pipeline in normal mode</value>
   </data>
   <data name="OptionDescription_VerboseOff" xml:space="preserve">
-    <value>Write normal output to console</value>
+    <value>Output normal logs</value>
   </data>
   <data name="OptionLongName_DryRunOff" xml:space="preserve">
     <value>dryrunoff</value>

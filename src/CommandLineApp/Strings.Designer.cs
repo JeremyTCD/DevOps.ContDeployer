@@ -71,7 +71,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Runs a pipeline.
+        ///   Looks up a localized string similar to Runs a Pipeline.
         /// </summary>
         public static string CommandDescription_Run {
             get {
@@ -98,7 +98,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Running root command with arguments:\n{0}.
+        ///   Looks up a localized string similar to Running RootCommand with arguments:\n{0}.
         /// </summary>
         public static string Log_RunningRootCommand {
             get {
@@ -107,7 +107,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Running run command with arguments:\n{0}.
+        ///   Looks up a localized string similar to Running RunCommand with arguments:\n{0}.
         /// </summary>
         public static string Log_RunningRunCommand {
             get {
@@ -116,7 +116,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run pipeline in dry run mode.
+        ///   Looks up a localized string similar to Run Pipeline in dry run mode.
         /// </summary>
         public static string OptionDescription_DryRun {
             get {
@@ -125,7 +125,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run pipeline in normal mode.
+        ///   Looks up a localized string similar to Run Pipeline in normal mode.
         /// </summary>
         public static string OptionDescription_DryRunOff {
             get {
@@ -134,7 +134,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a pipeline&apos;s name is its factories name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a pipeline named &quot;Main&quot;. If this option is ommitted and only one pipeline has been defined, PipelinesCE will run the lone pipeline..
+        ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a Pipeline&apos;s name is its PipelineFactorys name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a Pipeline named &quot;Main&quot;. If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline..
         /// </summary>
         public static string OptionDescription_Pipeline {
             get {
@@ -152,7 +152,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Write verbose output to console.
+        ///   Looks up a localized string similar to Output verbose logs.
         /// </summary>
         public static string OptionDescription_Verbose {
             get {
@@ -161,7 +161,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Write normal output to console.
+        ///   Looks up a localized string similar to Output normal logs.
         /// </summary>
         public static string OptionDescription_VerboseOff {
             get {
