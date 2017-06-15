@@ -118,10 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Exception_MultiplePipelineFactories" xml:space="preserve">
-    <value>Multiple PipelineFactorys found, please specify one:\n{0}</value>
+    <value>Multiple PipelineFactorys found, please specify one:
+{0}</value>
   </data>
   <data name="Exception_MultiplePipelineFactoriesWithSameName" xml:space="preserve">
-    <value>Multiple PipelineFactorys build a Pipeline with name {0}:\n{1}</value>
+    <value>Multiple PipelineFactorys build a Pipeline with name {0}:
+{1}</value>
   </data>
   <data name="Exception_NoContainerForPluginType" xml:space="preserve">
     <value>No IoC container for IPlugin implementation with name {0}</value>

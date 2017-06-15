@@ -62,7 +62,8 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple PipelineFactorys found, please specify one:\n{0}.
+        ///   Looks up a localized string similar to Multiple PipelineFactorys found, please specify one:
+        ///{0}.
         /// </summary>
         public static string Exception_MultiplePipelineFactories {
             get {
@@ -71,7 +72,8 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple PipelineFactorys build a Pipeline with name {0}:\n{1}.
+        ///   Looks up a localized string similar to Multiple PipelineFactorys build a Pipeline with name {0}:
+        ///{1}.
         /// </summary>
         public static string Exception_MultiplePipelineFactoriesWithSameName {
             get {
