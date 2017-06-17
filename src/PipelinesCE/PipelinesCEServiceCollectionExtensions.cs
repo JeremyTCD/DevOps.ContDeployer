@@ -1,7 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Net.Http;
 
 namespace JeremyTCD.PipelinesCE
@@ -24,7 +23,6 @@ namespace JeremyTCD.PipelinesCE
             services.
                 AddSingleton<PipelinesCE>().
                 AddSingleton<IProcessService, ProcessService>().
-                AddSingleton<IPluginFactory, PluginFactory>().
                 AddSingleton<IPipelineRunner, PipelineRunner>().
                 AddSingleton<IPipelineContext, PipelineContext>().
                 AddSingleton<IStepContextFactory, StepContextFactory>().
