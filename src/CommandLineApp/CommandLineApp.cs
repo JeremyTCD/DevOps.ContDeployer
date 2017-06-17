@@ -1,6 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StructureMap;
 using System;
 using System.Linq;
 
@@ -10,43 +10,60 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public static int Main(string[] args)
         {
-            // Make all args lowercase
-            args = args.Select(s => s.ToLowerInvariant()).ToArray();
-
-            // Create service provider for CLA
-            Startup startup = new Startup();
-            IServiceCollection services = new ServiceCollection();
-            startup.ConfigureServices(services);
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            // Configure logging and create logging service
-            ILoggerFactory loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            bool verbose = args.Where(s => s == $"--{Strings.OptionLongName_Verbose}" ||
-                s == $"--{Strings.OptionLongName_Verbose}=on" ||
-                s == $"-{Strings.OptionShortName_Verbose}" ||
-                s == $"-{Strings.OptionShortName_Verbose}=on").Count() > 0;
-            startup.Configure(loggerFactory, verbose);
-            ILoggingService<CommandLineApp> loggingService = serviceProvider.GetService<ILoggingService<CommandLineApp>>();
+            ILoggingService<CommandLineApp> loggingService = null;
+            IContainer mainContainer = null;
+            IContainer claContainer = null;
+            int exitCode = 1;
 
             try
             {
+                // Make all args lowercase
+                args = args.Select(s => s.ToLowerInvariant()).ToArray();
+
+                // Create service provider for CLA
+                Startup startup = new Startup();
+                mainContainer = startup.ConfigureServices();
+                claContainer = mainContainer.GetProfile(nameof(CommandLineApp)); 
+                // TODO does child container overwrite IContainer service? if it does then register
+                // IContainer service manually for child container
+
+                // Configure logging and create logging service
+                ILoggerFactory loggerFactory = mainContainer.GetInstance<ILoggerFactory>();
+                startup.Configure(loggerFactory, args);
+                loggingService = mainContainer.GetInstance<ILoggingService<CommandLineApp>>();
+
                 if (loggingService.IsEnabled(LogLevel.Debug))
                 {
                     loggingService.LogDebug(Strings.Log_RunningCommandLineApp, string.Join(",", args));
                 }
 
-                RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+                RootCommand rootCommand = claContainer.GetInstance<RootCommand>();
                 rootCommand.Execute(args);
+                exitCode = 0;
             }
             catch (Exception exception)
             {
                 // Catch unhandled exceptions and log them using logger. This ensures that unhandled exceptions are logged by all
                 // logging providers (such as file, debug etc - not just console).
-                loggingService.LogError(exception.ToString());
-                return 1;
+                if (loggingService != null)
+                {
+                    loggingService.LogError(exception.ToString());
+                }
+            }
+            finally
+            {
+                if (mainContainer != null)
+                {
+                    mainContainer.Dispose();
+                    // TODO Ensure that everything is disposed
+                }
+                if(claContainer != null)
+                {
+                    claContainer.Dispose();
+                }
             }
 
-            return 0;
+            return exitCode;
         }
     }
 }

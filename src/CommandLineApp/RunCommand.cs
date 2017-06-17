@@ -94,16 +94,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 pipelineOptions.Verbose = false;
             }
 
-            // Configure logging
-            // PipelinesCE and its plugins simply log using microsoft.extensions.logging. Calling libraries or
-            // applications determine what providers to use and the verbosity level.
-            ILoggerFactory loggerFactory = _container.GetInstance<ILoggerFactory>();
-            LogLevel logLevel = pipelineOptions.Verbose ? _claOptions.VerboseMinLogLevel : _claOptions.DefaultMinLogLevel;
-            loggerFactory.
-                AddFile(_claOptions.LogFileFormat, logLevel).
-                AddConsole(logLevel).
-                AddDebug(logLevel);
-
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
             pipelinesCE.Run(pipelineOptions);
 
