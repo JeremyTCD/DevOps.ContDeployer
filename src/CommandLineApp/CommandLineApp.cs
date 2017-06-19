@@ -11,7 +11,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         public static int Main(string[] args)
         {
             ILoggingService<CommandLineApp> loggingService = null;
-            IContainer mainContainer = null;
             IContainer claContainer = null;
             int exitCode = 1;
 
@@ -22,15 +21,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
                 // Create service provider for CLA
                 Startup startup = new Startup();
-                mainContainer = startup.ConfigureServices();
-                claContainer = mainContainer.GetProfile(nameof(CommandLineApp)); 
+                claContainer = startup.ConfigureServices();
                 // TODO does child container overwrite IContainer service? if it does then register
                 // IContainer service manually for child container
 
                 // Configure logging and create logging service
-                ILoggerFactory loggerFactory = mainContainer.GetInstance<ILoggerFactory>();
+                ILoggerFactory loggerFactory = claContainer.GetInstance<ILoggerFactory>();
                 startup.Configure(loggerFactory, args);
-                loggingService = mainContainer.GetInstance<ILoggingService<CommandLineApp>>();
+                loggingService = claContainer.GetInstance<ILoggingService<CommandLineApp>>();
 
                 if (loggingService.IsEnabled(LogLevel.Debug))
                 {
@@ -52,14 +50,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             }
             finally
             {
-                if (mainContainer != null)
-                {
-                    mainContainer.Dispose();
-                    // TODO Ensure that everything is disposed
-                }
-                if(claContainer != null)
+                if (claContainer != null)
                 {
                     claContainer.Dispose();
+                    // TODO does this dispose of pipeilnesce container?
                 }
             }
 

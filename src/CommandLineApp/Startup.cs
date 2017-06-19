@@ -8,28 +8,30 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     public class Startup
     {
+        /// <summary>
+        /// Configures services and returns <see cref="IContainer"/> containing CLA services
+        /// </summary>
+        /// <returns>
+        /// <see cref="IContainer"/>
+        /// </returns>
         public IContainer ConfigureServices()
         {
             IServiceCollection pipelinesCEServices = new ServiceCollection();
             pipelinesCEServices.AddPipelinesCE();
-            IContainer mainContainer = new Container(); // Use StructureMap for its multi-tenancy features
-            mainContainer.Populate(pipelinesCEServices);
+            IContainer pipelinesCEContainer = new Container(); // Use StructureMap for its multi-tenancy features
+            pipelinesCEContainer.Populate(pipelinesCEServices);
 
             // Use a StructureMap profile so that these CLA services are not exposed to plugins
             IServiceCollection claServices = new ServiceCollection();
             claServices.
                 AddSingleton<RootCommand>().
                 AddSingleton<RunCommand>().
-                AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>();
-            mainContainer.Configure(configurationExpression =>
-            {
-                configurationExpression.Profile(nameof(CommandLineApp), registry =>
-                {
-                    ((Registry)registry).Populate(claServices);
-                });
-            });
+                AddSingleton<ICommandLineUtilsService, CommandLineUtilsService>().
+                AddSingleton(pipelinesCEContainer);
+            IContainer claContainer = pipelinesCEContainer.CreateChildContainer();
+            claContainer.Populate(claServices);
 
-            return mainContainer;
+            return claContainer;
         }
 
         public void Configure(ILoggerFactory loggerFactory, string[] args)
