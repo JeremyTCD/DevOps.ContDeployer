@@ -11,7 +11,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         public static int Main(string[] args)
         {
             ILoggingService<CommandLineApp> loggingService = null;
-            IContainer claContainer = null;
+            IContainer container = null;
             int exitCode = 1;
 
             try
@@ -19,23 +19,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 // Make all args lowercase
                 args = args.Select(s => s.ToLowerInvariant()).ToArray();
 
-                // Create service provider for CLA
-                Startup startup = new Startup();
-                claContainer = startup.ConfigureServices();
-                // TODO does child container overwrite IContainer service? if it does then register
-                // IContainer service manually for child container
-
+                // Initialize container
+                container = new Container(new CommandLineAppRegistry());
+                    
                 // Configure logging and create logging service
-                ILoggerFactory loggerFactory = claContainer.GetInstance<ILoggerFactory>();
+                Startup startup = new Startup();
+                ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
                 startup.Configure(loggerFactory, args);
-                loggingService = claContainer.GetInstance<ILoggingService<CommandLineApp>>();
+                loggingService = container.GetInstance<ILoggingService<CommandLineApp>>();
 
                 if (loggingService.IsEnabled(LogLevel.Debug))
                 {
                     loggingService.LogDebug(Strings.Log_RunningCommandLineApp, string.Join(",", args));
                 }
 
-                RootCommand rootCommand = claContainer.GetInstance<RootCommand>();
+                RootCommand rootCommand = container.GetInstance<RootCommand>();
                 rootCommand.Execute(args);
                 exitCode = 0;
             }
@@ -50,10 +48,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             }
             finally
             {
-                if (claContainer != null)
+                if (container != null)
                 {
-                    claContainer.Dispose();
-                    // TODO does this dispose of pipeilnesce container?
+                    container.Dispose();
                 }
             }
 

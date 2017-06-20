@@ -3,7 +3,6 @@ using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StructureMap;
 using System;
 using System.Linq;
 
@@ -20,15 +19,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
-        private IContainer _container { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
+        private PipelinesCE _pipelinesCE { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, IContainer container,
+        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, PipelinesCE pipelinesCE,
             ILoggingService<RunCommand> loggingService)
         {
             _claOptions = claOptionsAccessor.Value;
             _cluService = cluService;
-            _container = container;
+            _pipelinesCE = pipelinesCE;
             _loggingService = loggingService;
 
             Description = Strings.CommandDescription_Run;
@@ -94,8 +93,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 pipelineOptions.Verbose = false;
             }
 
-            PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
-            pipelinesCE.Run(pipelineOptions);
+            _pipelinesCE.Run(pipelineOptions);
 
             return 0;
         }
