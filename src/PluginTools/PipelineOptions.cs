@@ -8,7 +8,6 @@
         public const bool DefaultVerbose = false;
 
         private bool? _dryRun;
-        private bool? _verbose;
         private string _project;
         private string _pipeline;
 
@@ -57,17 +56,6 @@
             }
         }
 
-        public bool Verbose
-        {
-            get
-            {
-                return _verbose ?? DefaultVerbose;
-            }
-            set
-            {
-                _verbose = value;
-            }
-        }
 
         /// <summary>
         /// Overwrites each property that has not been set with the value of its equivalent property in <paramref name="secondary"/>

@@ -12,10 +12,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         private CommandOption _project { get; set; }
         private CommandOption _pipeline { get; set; }
+        // TODO consider converting to a shared (inherited) option registered under root
+        private CommandOption _verbose { get; set; }
         private CommandOption _dryRun { get; set; }
         private CommandOption _dryRunOff { get; set; }
-        private CommandOption _verbose { get; set; }
-        private CommandOption _verboseOff { get; set; }
 
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
@@ -56,9 +56,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
                 Strings.OptionDescription_Verbose,
                 CommandOptionType.NoValue);
-            _verboseOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff),
-                Strings.OptionDescription_VerboseOff,
-                CommandOptionType.NoValue);
         }
 
         // Questions
@@ -83,14 +80,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             else if (_dryRunOff.HasValue())
             {
                 pipelineOptions.DryRun = false;
-            }
-            if (_verbose.HasValue())
-            {
-                pipelineOptions.Verbose = true;
-            }
-            else if (_verboseOff.HasValue())
-            {
-                pipelineOptions.Verbose = false;
             }
 
             _pipelinesCE.Run(pipelineOptions);
