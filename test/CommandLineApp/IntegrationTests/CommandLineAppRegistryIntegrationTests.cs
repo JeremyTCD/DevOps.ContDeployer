@@ -6,29 +6,27 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
     /// <summary>
     /// Tests to ensure that <see cref="Startup"/> handles service configuration correctly
     /// </summary>
-    public class StartupIntegrationTests
+    public class CommandLineAppRegistryIntegrationTests
     {
         [Fact]
         public void ConfigureServices_ConfiguresServicesCorrectly()
         {
             // Arrange
-            Startup startup = new Startup();
 
             // Act
-            IContainer claContainer = startup.ConfigureServices();
+            IContainer container = new Container(new CommandLineAppRegistry());
 
             // Assert
-            IContainer pipelinesCEContainer = claContainer.GetInstance<IContainer>();
+            IContainer pipelinesCEContainer = container.GetInstance<IContainer>();
         }
 
         [Fact]
         public void ConfigureServices_GeneratedContainerDisposesCorrectly()
         {
             // Arrange
-            Startup startup = new Startup();
 
             // Act
-            IContainer claContainer = startup.ConfigureServices();
+            IContainer claContainer = new Container(new CommandLineAppRegistry());
 
             // Assert
             IContainer pipelinesCEContainer = claContainer.GetInstance<IContainer>();
