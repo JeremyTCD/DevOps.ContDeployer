@@ -13,22 +13,19 @@ namespace JeremyTCD.PipelinesCE
         private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
-        private IContainer _mainContainer { get; }
 
         public PipelineRunner(ILoggingService<PipelineRunner> loggingService,
             IStepContextFactory stepContextFactory,
             IPipelineContextFactory pipelineContextFactory,
-            ILoggerFactory loggerFactory,
-            IContainer mainContainer)
+            ILoggerFactory loggerFactory)
         {
-            _mainContainer = mainContainer;
             _stepContextFactory = stepContextFactory;
             _loggingService = loggingService;
             _loggerFactory = loggerFactory;
             _pipelineContextFactory = pipelineContextFactory;
         }
 
-        public void Run(Pipeline pipeline)
+        public void Run(Pipeline pipeline, IDictionary<string, IContainer> pluginContainers)
         {
             IPipelineContext pipelineContext = _pipelineContextFactory.
                 AddPipelineOptions(pipeline.Options).
@@ -42,20 +39,18 @@ namespace JeremyTCD.PipelinesCE
                 IStep step = remainingSteps.First();
                 remainingSteps.RemoveFirst();
 
-                using (IContainer container = _mainContainer.GetProfile(step.PluginType.Name))
-                {
-                    IPlugin plugin = container.GetInstance(step.PluginType) as IPlugin;
-                    ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
+                IContainer container = pluginContainers[step.PluginType.Name];
+                IPlugin plugin = container.GetInstance(step.PluginType) as IPlugin;
+                ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
 
-                    IStepContext stepContext = _stepContextFactory.
-                        AddPluginOptions(step.PluginOptions).
-                        AddRemainingSteps(remainingSteps).
-                        AddLogger(logger).
-                        CreateStepContext();
+                IStepContext stepContext = _stepContextFactory.
+                    AddPluginOptions(step.PluginOptions).
+                    AddRemainingSteps(remainingSteps).
+                    AddLogger(logger).
+                    CreateStepContext();
 
-                    _loggingService.LogInformation(Strings.Log_RunningPlugin, step.PluginType.Name);
-                    plugin.Run(pipelineContext, stepContext);
-                }
+                _loggingService.LogInformation(Strings.Log_RunningPlugin, step.PluginType.Name);
+                plugin.Run(pipelineContext, stepContext);
 
                 _loggingService.LogInformation(Strings.Log_PluginComplete, step.PluginType.Name);
             }

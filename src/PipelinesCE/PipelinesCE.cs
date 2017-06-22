@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE
 {
-    public class PipelinesCE
+    public class PipelinesCE : IDisposable
     {
         private IAssemblyService _assemblyService { get; }
         private IPipelineRunner _pipelineRunner { get; }
@@ -20,6 +20,7 @@ namespace JeremyTCD.PipelinesCE
         private IMSBuildService _msBuildService { get; }
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
+        private IDictionary<string, IContainer> _pluginContainers { get; }
 
         public PipelinesCE(IActivatorService activatorService,
             IAssemblyService assemblyService,
@@ -75,7 +76,7 @@ namespace JeremyTCD.PipelinesCE
             _loggingService.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, pipelineOptions.Pipeline);
             _loggingService.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized);
 
-            _pipelineRunner.Run(pipeline);
+            _pipelineRunner.Run(pipeline, _pluginContainers);
         }
 
         // TODO Access modifier should be internal or private but no good way to test if so
@@ -100,14 +101,13 @@ namespace JeremyTCD.PipelinesCE
                     _loggingService.LogDebug(Strings.Log_ConfiguringPluginServices, pluginType.Name, pluginStartupType.Name);
                     pluginStartup.ConfigureServices(services);
                 }
-                services.AddTransient(pluginType);
-                _mainContainer.Configure(configurationExpression =>
+                services.AddSingleton(pluginType);
+                IContainer pluginContainer = _mainContainer.CreateChildContainer();
+                pluginContainer.Configure(registry =>
                 {
-                    configurationExpression.Profile(pluginType.Name, registry =>
-                    {
-                        ((Registry)registry).Populate(services);
-                    });
+                    ((Registry)registry).Populate(services);
                 });
+                _pluginContainers.Add(pluginType.Name, pluginContainer);
 
                 _loggingService.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, pluginType.Name);
             }
@@ -184,6 +184,17 @@ namespace JeremyTCD.PipelinesCE
         public virtual string PipelineFactoryPipelineName(Type pipelineFactoryType)
         {
             return pipelineFactoryType.Name.Replace("PipelineFactory", "");
+        }
+
+        public void Dispose()
+        {
+            if(_pluginContainers != null)
+            {
+                foreach(IContainer container in _pluginContainers.Values)
+                {
+                    container.Dispose();
+                }
+            }
         }
     }
 }
