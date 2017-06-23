@@ -23,6 +23,7 @@ namespace JeremyTCD.PipelinesCE
             For(typeof(ILoggingService<>)).Singleton().Use(typeof(LoggingService<>));
             For<IProcessService>().Singleton().Use<ProcessService>();
 
+            For<PipelinesCE>().Singleton().Use<PipelinesCE>();
             For<IPipelineRunner>().Singleton().Use<PipelineRunner>();
             For<IPipelineContext>().Singleton().Use<PipelineContext>();
             For<IStepContextFactory>().Singleton().Use<StepContextFactory>();
