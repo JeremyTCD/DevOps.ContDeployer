@@ -297,7 +297,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 mockPipelineFactory.Setup(p => p.CreatePipeline()).Returns(stubPipeline);
 
                 Mock<IPipelineRunner> mockPipelineRunner = _mockRepository.Create<IPipelineRunner>();
-                mockPipelineRunner.Setup(p => p.Run(stubPipeline));
+                mockPipelineRunner.Setup(p => p.Run(stubPipeline, It.IsAny<IDictionary<string, IContainer>>()));
 
                 Mock<PipelinesCE> pipelinesCE = _mockRepository.Create<PipelinesCE>(null, mockAssemblyService.Object, mockPathService.Object,
                     mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, null, mockLoggingService.Object);

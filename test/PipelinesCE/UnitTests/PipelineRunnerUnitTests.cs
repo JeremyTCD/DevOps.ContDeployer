@@ -3,6 +3,7 @@ using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Sequences;
+using StructureMap;
 using System.Collections.Generic;
 using Xunit;
 
@@ -22,6 +23,8 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
         {
             // Arrange
             string testPipeline = "testPipeline";
+            string stubPlugin1Name = typeof(StubPlugin1).Name;
+            string stubPlugin2Name = typeof(StubPlugin2).Name;
             StubPlugin1Options plugin1Options = new StubPlugin1Options();
             StubPlugin2Options plugin2Options = new StubPlugin2Options();
             IEnumerable<IStep> steps = new IStep[] {
@@ -40,23 +43,27 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<ILoggingService<PipelineRunner>> loggingService = _mockRepository.Create<ILoggingService<PipelineRunner>>();
             Sequence logSequence = Sequence.Create();
             loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPipeline, testPipeline)).InSequence();
-            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, typeof(StubPlugin1).Name)).InSequence();
-            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, typeof(StubPlugin1).Name)).InSequence();
-            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, typeof(StubPlugin2).Name)).InSequence();
-            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, typeof(StubPlugin2).Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, stubPlugin1Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, stubPlugin1Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPlugin, stubPlugin2Name)).InSequence();
+            loggingService.Setup(l => l.LogInformation(Strings.Log_PluginComplete, stubPlugin2Name)).InSequence();
             loggingService.Setup(l => l.LogInformation(Strings.Log_PipelineComplete, testPipeline)).InSequence();
 
-            Mock<IPluginFactory> mockPluginFactory = _mockRepository.Create<IPluginFactory>();
             StubPlugin1 plugin1 = new StubPlugin1();
             StubPlugin2 plugin2 = new StubPlugin2();
-            mockPluginFactory.Setup(p => p.CreatePlugin(typeof(StubPlugin1))).Returns(plugin1);
-            mockPluginFactory.Setup(p => p.CreatePlugin(typeof(StubPlugin2))).Returns(plugin2);
+            Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
+            mockContainer.Setup(c => c.GetInstance(typeof(StubPlugin1))).Returns(plugin1);
+            mockContainer.Setup(c => c.GetInstance(typeof(StubPlugin2))).Returns(plugin2);
+
+            Mock<IDictionary<string, IContainer>> mockContainers = _mockRepository.Create<IDictionary<string, IContainer>>();
+            mockContainers.Setup(c => c[stubPlugin1Name]).Returns(mockContainer.Object);
+            mockContainers.Setup(c => c[stubPlugin2Name]).Returns(mockContainer.Object);
 
             Mock<ILogger> mockPlugin1Logger = _mockRepository.Create<ILogger>();
             Mock<ILogger> mockPlugin2Logger = _mockRepository.Create<ILogger>();
 
             Mock<ILoggerFactory> mockLoggerFactory = _mockRepository.Create<ILoggerFactory>();
-            mockLoggerFactory.Setup(l => l.CreateLogger(typeof(StubPlugin1).Name)).Returns(mockPlugin1Logger.Object);
+            mockLoggerFactory.Setup(l => l.CreateLogger(stubPlugin1Name)).Returns(mockPlugin1Logger.Object);
             mockLoggerFactory.Setup(l => l.CreateLogger(typeof(StubPlugin2).Name)).Returns(mockPlugin2Logger.Object);
 
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
@@ -70,11 +77,10 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin2Logger.Object)).Returns(mockStepContextFactory.Object);
             mockStepContextFactory.Setup(s => s.CreateStepContext()).Returns(mockStepContext.Object);
 
-            PipelineRunner pipelineRunner = new PipelineRunner(loggingService.Object, mockPluginFactory.Object, mockStepContextFactory.Object,
-                mockPipelineContextFactory.Object, mockLoggerFactory.Object);
+            PipelineRunner pipelineRunner = new PipelineRunner(loggingService.Object, mockStepContextFactory.Object, mockPipelineContextFactory.Object, mockLoggerFactory.Object);
 
             // Act
-            pipelineRunner.Run(pipeline);
+            pipelineRunner.Run(pipeline, mockContainers.Object);
 
             // Assert
             _mockRepository.VerifyAll();
