@@ -1,7 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
 using Microsoft.Extensions.CommandLineUtils;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StructureMap;
@@ -12,40 +11,37 @@ using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
+    // TODO integration test that includes Main
     // TODO Some log messages are verified in a very brittle manner. Find better ways to generate expected log messages.
     /// <summary>
-    /// Tests to ensure that <see cref="CommandLineApp"/> commands have been configured correctly
+    /// Tests to ensure that <see cref="CommandLineApp"/> commands have been configured correctly and that 
+    /// <see cref="CommandLineAppRegistry"/> configures services correctly.
     /// </summary>
     public class CommandsIntegrationTests
     {
         private MockRepository _mockRepository { get; }
         private ICommandLineUtilsService _cluService { get; }
-        private IServiceCollection _services { get; }
 
         public CommandsIntegrationTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
-
             _cluService = new CommandLineUtilsService(_mockRepository.Create<ILoggingService<CommandLineUtilsService>>().Object);
-            Startup startup = new Startup();
-            _services = new ServiceCollection();
-            startup.ConfigureServices(_services);
         }
 
         [Fact]
         public void RootCommand_UnexpectedOptionThrowsExceptionAndPrintsHintToConsole()
         {
             // Arrange
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+            Container container = new Container(new CommandLineAppRegistry());
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
             string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands." + Environment.NewLine;
             Assert.Equal(expected, output);
         }
@@ -58,18 +54,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Root, $"{Strings.OptionLongName_Help}=\n" +
                 $"{Strings.OptionLongName_Verbose}="));
-            _services.AddSingleton(mockLoggingService.Object);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            Container container = new Container(new CommandLineAppRegistry());
+            container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
 
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act
             rootCommand.Execute(new string[0]);
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
 
             // Assert
             string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
@@ -88,16 +84,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_VersionPrintsVersionToConsole(string[] arguments)
         {
             // Arrange
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+            Container container = new Container(new CommandLineAppRegistry());
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
 
             // Assert
             // TODO test using regex after version format is decided on
@@ -117,16 +113,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_HelpPrintsHelpTextToConsole(string[] arguments)
         {
             // Arrange
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+            Container container = new Container(new CommandLineAppRegistry());
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
 
             // Assert
             string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
@@ -150,16 +146,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RunCommand_UnexpectedOptionThrowsExceptionAndPrintsHintToConsole()
         {
             // Arrange
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+            Container container = new Container(new CommandLineAppRegistry());
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
             string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands." + Environment.NewLine;
             Assert.Equal(expected, output);
         }
@@ -167,7 +163,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         [Theory]
         [MemberData(nameof(RunCommandData))]
         public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool dryRunOff,
-            bool verbose, bool verboseOff, string pipeline, string project)
+            bool verbose, string pipeline, string project)
         {
             // Arrange
             Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
@@ -177,19 +173,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_VerboseOff}={(verboseOff ? "on" : "")}"));
-            _services.AddSingleton(mockLoggingService.Object);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}"));
+            Container container = new Container(new CommandLineAppRegistry());
+            container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
 
             Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
                 Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
+            // TODO is ClearAll() required
+            container.
+                Configure(registry => registry.For<PipelinesCE>().
+                //ClearAll().
+                Use(mockPipelinesCE.Object).Singleton());
 
-            IContainer container = serviceProvider.GetService<IContainer>();
-            container.Configure(registry => registry.For<PipelinesCE>().Use(mockPipelinesCE.Object));
-
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
@@ -198,8 +195,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             _mockRepository.VerifyAll();
             ILogger<CommandLineApp> logger = container.GetInstance<ILogger<CommandLineApp>>(); // Logger with arbitrary category
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
-            LogLevel logLevel = verbose ? claOptions.VerboseMinLogLevel : claOptions.DefaultMinLogLevel;
-            Assert.True(logger.IsEnabled(logLevel) && (logLevel == LogLevel.Trace || !logger.IsEnabled(logLevel - 1)));
         }
 
         public static IEnumerable<object[]> RunCommandData()
@@ -208,26 +203,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string testPipeline = "testPipeline";
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false, false,
+            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false, 
                 PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}", $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
-                true, false, true, false, testPipeline, testProject};
+                true, false, true,  testPipeline, testProject};
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_Verbose}", $"--{Strings.OptionLongName_DryRun}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
-                true, false, true, false, testPipeline, testProject};
+                true, false, true, testPipeline, testProject};
             yield return new object[] { new string[] { Strings.CommandName_Run,
-                    $"-{Strings.OptionShortName_VerboseOff}",
                     $"-{Strings.OptionShortName_DryRunOff}"
-            }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+            }, false, true, false, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
             yield return new object[] { new string[] { Strings.CommandName_Run,
-                    $"--{Strings.OptionLongName_VerboseOff}",
                     $"--{Strings.OptionLongName_DryRunOff}"
-            }, false, true, false, true, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+            }, false, true, false, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
         }
 
         [Theory]
@@ -235,28 +228,27 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RunCommand_HelpPrintsHelpTextToConsole(string[] arguments)
         {
             // Arrange
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            IServiceProvider serviceProvider = _services.BuildServiceProvider();
+            TextWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+            Container container = new Container(new CommandLineAppRegistry());
 
-            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
-            string output = stringWriter.ToString();
-            stringWriter.Dispose();
+            string output = tssw.ToString();
+            tssw.Dispose();
 
             // Assert
             string expected = $@"{Strings.CommandFullName_Run}" + Environment.NewLine + Environment.NewLine +
                         $@"Usage: {Strings.CommandName_Root} {Strings.CommandName_Run} [options]" + Environment.NewLine + Environment.NewLine +
                         $@"Options:" + Environment.NewLine +
-                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}         Show help information" + Environment.NewLine +
-                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}     {Strings.OptionDescription_Project}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}    {Strings.OptionDescription_Pipeline}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}       {Strings.OptionDescription_DryRun}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}   {Strings.OptionDescription_DryRunOff}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}     {Strings.OptionDescription_Verbose}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}" + Environment.NewLine + Environment.NewLine;
+                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}        Show help information" + Environment.NewLine +
+                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}    {Strings.OptionDescription_Project}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}" + Environment.NewLine +
+                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}" + Environment.NewLine + Environment.NewLine;
             Assert.Equal(expected, output);
         }
 
