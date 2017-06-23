@@ -22,6 +22,15 @@ namespace JeremyTCD.PipelinesCE
         private IContainer _mainContainer { get; }
         // TODO Access modifier should be internal or private but no good way to test if so
         public IDictionary<string, IContainer> _pluginContainers { get; }
+        private bool _isDisposed;
+
+        public bool IsDisposed
+        {
+            get
+            {
+                return _isDisposed;
+            }
+        }
 
         public PipelinesCE(IActivatorService activatorService,
             IAssemblyService assemblyService,
@@ -190,11 +199,20 @@ namespace JeremyTCD.PipelinesCE
 
         public void Dispose()
         {
-            if(_pluginContainers != null)
+            if (!_isDisposed)
             {
-                foreach(IContainer container in _pluginContainers.Values)
+                _isDisposed = true;
+                foreach (IContainer container in _pluginContainers.Values)
                 {
-                    container.Dispose();
+                    try
+                    {
+                        container.Dispose();
+                    }
+                    catch (Exception exception)
+                    {
+                        // Log but swallow exception so that all containers are disposed of
+                        _loggingService.LogError(exception.ToString());
+                    }
                 }
             }
         }
