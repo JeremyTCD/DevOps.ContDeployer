@@ -58,8 +58,11 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
                 mockActivatorService.Setup(a => a.CreateInstance(dummy1PluginStartup)).Returns(mockPluginStartup.Object);
 
+                Mock<IContainer> mockChildContainer = _mockRepository.Create<IContainer>();
+                mockChildContainer.Setup(c => c.Configure(It.IsAny<Action<ConfigurationExpression>>()));
+
                 Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
-                mockContainer.Setup(c => c.Configure(It.IsAny<Action<ConfigurationExpression>>()));
+                mockContainer.Setup(c => c.CreateChildContainer()).Returns(mockChildContainer.Object);
 
                 PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, mockContainer.Object,
                     mockLoggingService.Object);
@@ -69,6 +72,8 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 
                 // Assert
                 _mockRepository.VerifyAll();
+                Assert.Equal(pipelinesCE._pluginContainers[dummy1PluginName], mockChildContainer.Object);
+                Assert.Equal(pipelinesCE._pluginContainers[dummy2PluginName], mockChildContainer.Object);
             }
         }
 
