@@ -32,7 +32,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_UnexpectedOptionThrowsExceptionAndPrintsHintToConsole()
         {
             // Arrange
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
             Container container = new Container(new CommandLineAppRegistry());
 
@@ -57,7 +57,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Container container = new Container(new CommandLineAppRegistry());
             container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
 
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
 
             RootCommand rootCommand = container.GetInstance<RootCommand>();
@@ -84,7 +84,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_VersionPrintsVersionToConsole(string[] arguments)
         {
             // Arrange
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
             Container container = new Container(new CommandLineAppRegistry());
 
@@ -113,7 +113,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_HelpPrintsHelpTextToConsole(string[] arguments)
         {
             // Arrange
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
             Container container = new Container(new CommandLineAppRegistry());
 
@@ -146,7 +146,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RunCommand_UnexpectedOptionThrowsExceptionAndPrintsHintToConsole()
         {
             // Arrange
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
             Container container = new Container(new CommandLineAppRegistry());
 
@@ -228,7 +228,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RunCommand_HelpPrintsHelpTextToConsole(string[] arguments)
         {
             // Arrange
-            TextWriter tssw = new ThreadSpecificStringWriter();
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
             Container container = new Container(new CommandLineAppRegistry());
 
