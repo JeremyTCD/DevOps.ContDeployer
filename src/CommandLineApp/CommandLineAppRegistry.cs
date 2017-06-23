@@ -8,7 +8,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         public CommandLineAppRegistry()
         {
             IncludeRegistry<PipelinesCERegistry>();
+
             For<ICommandLineUtilsService>().Singleton().Use<CommandLineUtilsService>();
+
+            For<RunCommand>().Singleton().Use<RunCommand>();
+            For<RootCommand>().Singleton().Use<RootCommand>();
         }
     }
 }
