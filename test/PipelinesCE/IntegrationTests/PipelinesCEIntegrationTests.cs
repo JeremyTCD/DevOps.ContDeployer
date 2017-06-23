@@ -94,12 +94,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 
         private IContainer CreateContainer()
         {
-            ServiceCollection services = new ServiceCollection();
-            services.AddPipelinesCE();
-            IContainer mainContainer = new Container();
-            mainContainer.Populate(services);
-
-            return mainContainer;
+            return new Container(new PipelinesCERegistry());
         }
     }
 }
