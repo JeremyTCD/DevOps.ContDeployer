@@ -1,6 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginTools;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StructureMap;
@@ -37,9 +36,8 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 
         /// <summary>
         /// This test covers the full breadth of <see cref="PipelinesCE"/>. In particular, it verifies that
-        /// <see cref="PipelinesCEServiceCollectionExtensions.AddPipelinesCE(IServiceCollection)"/> configures default PipelinesCE
-        /// services correctly as well as that <see cref="PipelinesCE.Run(PipelineOptions)"/> configures per plugin
-        /// services correctly.
+        /// <see cref="PipelinesCERegistry"/> configures PipelinesCE services correctly as well as that 
+        /// <see cref="PipelinesCE.Run(PipelineOptions)"/> configures per plugin services correctly.
         /// </summary>
         [Fact]
         public void Run_RunsPipelineIfServicesAreConfiguredCorrectly()
@@ -58,16 +56,16 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 
             PipelinesCE pipelinesCE = _container.GetInstance<PipelinesCE>();
 
-            StringWriter stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
 
             // Act
             pipelinesCE.Run(new PipelineOptions { Project = projectFile });
 
             // Assert
             _loggerFactory.Dispose();
-            stringWriter.Dispose();
-            string output = stringWriter.ToString();
+            tssw.Dispose();
+            string output = tssw.ToString();
             // If these two logs were written to console, ServiceCollectionExtensions.AddPipelinesCE configures services correctly and PipelinesCE.Run 
             // configures per plugin services correctly
             Assert.Contains(string.Format(Strings.Log_PipelineComplete, "Stub"), output);
