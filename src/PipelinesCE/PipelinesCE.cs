@@ -20,7 +20,8 @@ namespace JeremyTCD.PipelinesCE
         private IMSBuildService _msBuildService { get; }
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
-        private IDictionary<string, IContainer> _pluginContainers { get; }
+        // TODO Access modifier should be internal or private but no good way to test if so
+        public IDictionary<string, IContainer> _pluginContainers { get; }
 
         public PipelinesCE(IActivatorService activatorService,
             IAssemblyService assemblyService,
@@ -39,6 +40,7 @@ namespace JeremyTCD.PipelinesCE
             _directoryService = directoryService;
             _loggingService = loggingService;
             _activatorService = activatorService;
+            _pluginContainers = new Dictionary<string, IContainer>();
         }
 
         /// <summary>
