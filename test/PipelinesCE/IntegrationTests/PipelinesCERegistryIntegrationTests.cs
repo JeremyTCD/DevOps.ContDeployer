@@ -12,12 +12,12 @@ using Xunit;
 namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
 {
     /// <summary>
-    /// These tests ensure that StructureMap <see cref="Container"/> configuration is done correctly
+    /// These tests ensure that PipelineCERegistry behaves correctly
     /// </summary>
     public class PipelinesCERegistryIntegrationTests
     {
         [Fact]
-        public void PipelinesRegistry_RegistersServicesCorrectly()
+        public void PipelinesRegistry_ConfiguresServicesCorrectly()
         {
             // Arrange and Act
             Container container = new Container(new PipelinesCERegistry());
@@ -68,7 +68,7 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
         }
 
         [Fact]
-        public void PipelinesRegistry_ContainerDisposesOfDisposableSingletonsCorrectly()
+        public void PipelinesRegistry_GeneratedContainerDisposesCorrectly()
         {
             // Arrange and Act
             Container container = new Container(new PipelinesCERegistry());
