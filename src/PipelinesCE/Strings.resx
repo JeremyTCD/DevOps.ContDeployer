@@ -141,13 +141,13 @@
     <value>Type "{0}" does not implement "{1}"</value>
   </data>
   <data name="Log_BuildingPipeline" xml:space="preserve">
-    <value>Building Pipeline "{0}"</value>
+    <value>== Building Pipeline "{0}" ==</value>
   </data>
   <data name="Log_BuildingPipelinesCEProject" xml:space="preserve">
-    <value>Building PipelinesCE project "{0}"</value>
+    <value>== Building PipelinesCE project "{0}" ==</value>
   </data>
   <data name="Log_ConfiguringPluginContainer" xml:space="preserve">
-    <value>Configuring IoC container for IPlugin implementation "{0}"</value>
+    <value>Building IoC container for IPlugin implementation "{0}"</value>
   </data>
   <data name="Log_ConfiguringPluginServices" xml:space="preserve">
     <value>Configuring ServiceCollection for IPlugin implementation "{0}" using IPluginStartup implementation "{1}"</value>
@@ -159,19 +159,16 @@
     <value>=== Completed Pipeline "{0}" ===</value>
   </data>
   <data name="Log_PipelinesCEProjectSuccessfullyBuilt" xml:space="preserve">
-    <value>Successfully built PipelinesCE project "{0}"</value>
+    <value>== Successfully built PipelinesCE project "{0}" ==</value>
   </data>
   <data name="Log_PipelinesCESuccessfullyInitialized" xml:space="preserve">
     <value>=== Successfully initialized PipelinesCE ===</value>
   </data>
   <data name="Log_PipelineSuccessfullyBuilt" xml:space="preserve">
-    <value>Successfully built Pipeline "{0}"</value>
+    <value>== Successfully built Pipeline "{0}" ==</value>
   </data>
   <data name="Log_PluginComplete" xml:space="preserve">
     <value>== Completed Plugin "{0}" ==</value>
-  </data>
-  <data name="Log_PluginContainerSuccessfullyConfigured" xml:space="preserve">
-    <value>Successfully configured IContainer for IPlugin implementation "{0}"</value>
   </data>
   <data name="Log_BuildingPlugin" xml:space="preserve">
     <value>Building IPlugin implementation "{0}"</value>
@@ -187,5 +184,17 @@
   </data>
   <data name="Log_RunningPlugin" xml:space="preserve">
     <value>== Running Plugin "{0}" ==</value>
+  </data>
+  <data name="Log_AssembliesSuccessfullyLoaded" xml:space="preserve">
+    <value>== Successfully loaded Assemblies in "{0}" ==</value>
+  </data>
+  <data name="Log_BuildingPluginContainers" xml:space="preserve">
+    <value>== Building Plugin IoC Containers ==</value>
+  </data>
+  <data name="Log_LoadingAssemblies" xml:space="preserve">
+    <value>== Loading Assemblies in "{0}" ==</value>
+  </data>
+  <data name="Log_PluginContainersSuccessfullyBuilt" xml:space="preserve">
+    <value>== Successfully Built Plugin IoC Containers ==</value>
   </data>
 </root>

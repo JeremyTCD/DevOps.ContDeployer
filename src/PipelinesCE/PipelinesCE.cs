@@ -62,26 +62,30 @@ namespace JeremyTCD.PipelinesCE
 
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
+            string assembliesDirectory = Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1");
 
             // Build project
             _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
             _msBuildService.Build(projectFile, "/t:restore,build /p:Configuration=Release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
-            _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline);
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies
+            _loggingService.LogInformation(Strings.Log_LoadingAssemblies, assembliesDirectory);
             IEnumerable<Assembly> assemblies = _assemblyService.
-                LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1"), true);
+                LoadAssembliesInDir(assembliesDirectory, true);
+            _loggingService.LogInformation(Strings.Log_AssembliesSuccessfullyLoaded, assembliesDirectory);
 
             // Create plugin containers
+            _loggingService.LogDebug(Strings.Log_BuildingPluginContainers);
             _pluginContainers = CreatePluginContainers(assemblies);
+            _loggingService.LogDebug(Strings.Log_PluginContainersSuccessfullyBuilt);
 
             // Create pipeline
+            _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline);
             IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions);
             Pipeline pipeline = factory.CreatePipeline();
             pipeline.Options = pipelineOptions.Combine(pipeline.Options);
-
             _loggingService.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, pipelineOptions.Pipeline);
             _loggingService.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized);
 
@@ -118,8 +122,6 @@ namespace JeremyTCD.PipelinesCE
                     registry.For(pluginType).Use(pluginType).Singleton();
                 });
                 result.Add(pluginType.Name, pluginContainer);
-
-                _loggingService.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, pluginType.Name);
             }
 
             return result;
@@ -164,7 +166,7 @@ namespace JeremyTCD.PipelinesCE
                 {
                     pipelineFactoryType = pipelineFactoryTypes.First();
                     pipelineOptions.Pipeline = PipelineFactoryPipelineName(pipelineFactoryType); // Set PipelineOptions.Pipeline 
-                    _loggingService.LogDebug(Strings.Log_ResolvedDefaultPipeline, pipelineOptions.Pipeline);
+                    _loggingService.LogInformation(Strings.Log_ResolvedDefaultPipeline, pipelineOptions.Pipeline);
                 }
                 else
                 {

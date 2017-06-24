@@ -72,7 +72,8 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple PipelineFactorys build a Pipeline with name &quot;{0}&quot;:{1}.
+        ///   Looks up a localized string similar to Multiple PipelineFactorys build a Pipeline with name &quot;{0}&quot;:
+        ///{1}.
         /// </summary>
         public static string Exception_MultiplePipelineFactoriesWithSameName {
             get {
@@ -126,7 +127,16 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Building Pipeline &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Successfully loaded Assemblies in &quot;{0}&quot; ==.
+        /// </summary>
+        public static string Log_AssembliesSuccessfullyLoaded {
+            get {
+                return ResourceManager.GetString("Log_AssembliesSuccessfullyLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to == Building Pipeline &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_BuildingPipeline {
             get {
@@ -135,7 +145,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Building PipelinesCE project &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Building PipelinesCE project &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_BuildingPipelinesCEProject {
             get {
@@ -153,7 +163,16 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuring IoC container for IPlugin implementation &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Building Plugin IoC Containers ==.
+        /// </summary>
+        public static string Log_BuildingPluginContainers {
+            get {
+                return ResourceManager.GetString("Log_BuildingPluginContainers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building IoC container for IPlugin implementation &quot;{0}&quot;.
         /// </summary>
         public static string Log_ConfiguringPluginContainer {
             get {
@@ -180,6 +199,15 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to == Loading Assemblies in &quot;{0}&quot; ==.
+        /// </summary>
+        public static string Log_LoadingAssemblies {
+            get {
+                return ResourceManager.GetString("Log_LoadingAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to === Completed Pipeline &quot;{0}&quot; ===.
         /// </summary>
         public static string Log_PipelineComplete {
@@ -189,7 +217,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully built PipelinesCE project &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Successfully built PipelinesCE project &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_PipelinesCEProjectSuccessfullyBuilt {
             get {
@@ -207,7 +235,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully built Pipeline &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Successfully built Pipeline &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_PipelineSuccessfullyBuilt {
             get {
@@ -225,11 +253,11 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully configured IContainer for IPlugin implementation &quot;{0}&quot;.
+        ///   Looks up a localized string similar to == Successfully Built Plugin IoC Containers ==.
         /// </summary>
-        public static string Log_PluginContainerSuccessfullyConfigured {
+        public static string Log_PluginContainersSuccessfullyBuilt {
             get {
-                return ResourceManager.GetString("Log_PluginContainerSuccessfullyConfigured", resourceCulture);
+                return ResourceManager.GetString("Log_PluginContainersSuccessfullyBuilt", resourceCulture);
             }
         }
         

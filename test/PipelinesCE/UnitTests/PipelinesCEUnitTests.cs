@@ -48,9 +48,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 mockLoggingService.
                     Setup(l => l.LogDebug(Strings.Log_ConfiguringPluginServices, dummy1PluginName, dummy1PluginStartup.Name)).
                     InSequence();
-                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, dummy1PluginName)).InSequence();
                 mockLoggingService.Setup(l => l.LogDebug(Strings.Log_ConfiguringPluginContainer, dummy2PluginName)).InSequence();
-                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, dummy2PluginName)).InSequence();
 
                 Mock<IPluginStartup> mockPluginStartup = _mockRepository.Create<IPluginStartup>();
                 mockPluginStartup.Setup(p => p.ConfigureServices(It.IsAny<ServiceCollection>()));
@@ -205,7 +203,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 
             Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_ResolvedDefaultPipeline, finalPipeline));
+            mockLoggingService.Setup(l => l.LogInformation(Strings.Log_ResolvedDefaultPipeline, finalPipeline));
 
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactory)).Returns(stubDummy1PipelineFactory);
@@ -268,6 +266,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             string testDirectory = "testDirectory";
             Pipeline stubPipeline = new Pipeline(null);
             DirectoryInfo stubDirectoryInfo = new DirectoryInfo(testDirectory);
+            string assembliesDirectory = Path.Combine(stubDirectoryInfo.FullName, "bin/Release/netcoreapp1.1");
             IEnumerable<Assembly> stubAssemblies = new Assembly[0];
 
             Mock<PipelineOptions> mockPipelineOptions = _mockRepository.Create<PipelineOptions>();
@@ -281,6 +280,10 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_InitializingPipelinesCE)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipelinesCEProject, testProjectFile)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, testProjectFile)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_LoadingAssemblies, assembliesDirectory)).InSequence();
+                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_AssembliesSuccessfullyLoaded, assembliesDirectory)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_BuildingPluginContainers)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainersSuccessfullyBuilt)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipeline, testPipeline)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, testPipeline)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized)).InSequence();
@@ -296,7 +299,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 
                 Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
                 mockAssemblyService.
-                    Setup(a => a.LoadAssembliesInDir(Path.Combine(stubDirectoryInfo.FullName, "bin/Release/netcoreapp1.1"), true)).
+                    Setup(a => a.LoadAssembliesInDir(assembliesDirectory, true)).
                     Returns(stubAssemblies);
 
                 Mock<IPipelineFactory> mockPipelineFactory = _mockRepository.Create<IPipelineFactory>();
