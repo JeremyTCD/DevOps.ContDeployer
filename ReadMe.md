@@ -35,13 +35,8 @@ Plugin tools are types utilizes by plugins. These types are also referenced in P
 ### CommandLineApp
 The command line application provides a simple way for end users to utilize PipelinesCE.
 #### Dependency Injection
-The command line application creates two containers, one for its own services and another for PipelinesCE. This accomplishes 
-two things:
-- Avoids bleeding of CLA services into PipelinesCE plugins. PipelinesCE is a plugin based tool. Having CLA services be accessible
-to plugins can be troublesome. For example, if users attempt to use such plugins in a system with a different user facing layer.
-- Avoids use of service locator in RunCommand. ILoggerFactory can only be configured for PipelinesCE after command line switches
-have been parsed. This means that if only one container is used, IServiceProvider must be injected into RunCommand PipelinesCE 
-can be instantiated after ILoggerFactory is configured.
+The command line application creates a single StructureMap IContainer. This IOC container contains services for PipelinesCE and CLA. StructureMap is used for its
+tenancy features. Each plugin has its own child Container. This ensures that services registered for one plugin do not intefere with services registered for another.
 #### Commands
 ##### Name
 Should be a lowercase verb, for example "run". 
