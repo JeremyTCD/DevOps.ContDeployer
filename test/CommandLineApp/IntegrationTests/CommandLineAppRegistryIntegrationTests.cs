@@ -87,5 +87,46 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Assert.True(pipelinesCE.IsDisposed);
             Assert.Throws<ObjectDisposedException>(() => loggerFactory.AddProvider(null));
         }
+
+        [Fact]
+        public void CommandLineAppRegistry_GeneratedContainerServicesCanBeOverridenByInstantiatedInstance()
+        {
+            // Arrange 
+            Container container = new Container(new CommandLineAppRegistry());
+            PipelinesCE instance = new PipelinesCE(null, null, null, null, null, null, null, null);
+
+            // Act
+            container.Configure(r => r.For<PipelinesCE>().Use(instance).Singleton());
+            PipelinesCE result = container.GetInstance<PipelinesCE>();
+
+            // Assert
+            Assert.True(object.ReferenceEquals(instance, result));
+        }
+
+        [Fact]
+        public void CommandLineAppRegistry_GeneratedContainerServicesCanBeOverridenByNewService()
+        {
+            // Arrange 
+            Container container = new Container(new CommandLineAppRegistry());
+
+            // Act
+            container.Configure(r => r.For<PipelinesCE>().Use<StubPipelinesCE>().Singleton());
+            PipelinesCE result = container.GetInstance<PipelinesCE>();
+
+            // Assert
+            Assert.Equal(typeof(StubPipelinesCE), result.GetType());
+        }
+
+        private class StubPipelinesCE : PipelinesCE
+        {
+            public StubPipelinesCE(IActivatorService activatorService, IAssemblyService assemblyService, 
+                IPathService pathService, IDirectoryService directoryService, 
+                IMSBuildService msBuildService, IPipelineRunner pipelineRunner, 
+                IContainer mainContainer, ILoggingService<PipelinesCE> loggingService) : 
+                base(activatorService, assemblyService, pathService, directoryService, 
+                    msBuildService, pipelineRunner, mainContainer, loggingService)
+            {
+            }
+        }
     }
 }
