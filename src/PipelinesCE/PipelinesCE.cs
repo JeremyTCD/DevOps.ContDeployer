@@ -111,11 +111,11 @@ namespace JeremyTCD.PipelinesCE
                     _loggingService.LogDebug(Strings.Log_ConfiguringPluginServices, pluginType.Name, pluginStartupType.Name);
                     pluginStartup.ConfigureServices(services);
                 }
-                services.AddSingleton(pluginType);
                 IContainer pluginContainer = _mainContainer.CreateChildContainer();
                 pluginContainer.Configure(registry =>
                 {
                     ((Registry)registry).Populate(services);
+                    registry.For(pluginType).Use(pluginType).Singleton();
                 });
                 result.Add(pluginType.Name, pluginContainer);
 
