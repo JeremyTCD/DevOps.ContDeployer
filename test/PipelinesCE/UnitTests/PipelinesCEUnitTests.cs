@@ -68,12 +68,13 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                     mockLoggingService.Object);
 
                 // Act
-                pipelinesCE.CreatePluginContainers(stubAssemblies);
+                IDictionary<string, IContainer> result = pipelinesCE.CreatePluginContainers(stubAssemblies);
 
                 // Assert
                 _mockRepository.VerifyAll();
-                Assert.Equal(pipelinesCE._pluginContainers[dummy1PluginName], mockChildContainer.Object);
-                Assert.Equal(pipelinesCE._pluginContainers[dummy2PluginName], mockChildContainer.Object);
+                Assert.NotNull(result);
+                Assert.Equal(result[dummy1PluginName], mockChildContainer.Object);
+                Assert.Equal(result[dummy2PluginName], mockChildContainer.Object);
             }
         }
 

@@ -20,8 +20,7 @@ namespace JeremyTCD.PipelinesCE
         private IMSBuildService _msBuildService { get; }
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
-        // TODO Access modifier should be internal or private but no good way to test if so
-        public IDictionary<string, IContainer> _pluginContainers { get; }
+        private IDictionary<string, IContainer> _pluginContainers { get; set; }
         private bool _isDisposed;
 
         public bool IsDisposed
@@ -49,7 +48,6 @@ namespace JeremyTCD.PipelinesCE
             _directoryService = directoryService;
             _loggingService = loggingService;
             _activatorService = activatorService;
-            _pluginContainers = new Dictionary<string, IContainer>();
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace JeremyTCD.PipelinesCE
                 LoadAssembliesInDir(Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1"), true);
 
             // Create plugin containers
-            CreatePluginContainers(assemblies);
+            _pluginContainers = CreatePluginContainers(assemblies);
 
             // Create pipeline
             IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions);
@@ -96,8 +94,9 @@ namespace JeremyTCD.PipelinesCE
         /// with corresponding <see cref="IPluginStartup"/> implementations.
         /// </summary>
         /// <param name="assemblies"></param>
-        public virtual void CreatePluginContainers(IEnumerable<Assembly> assemblies)
+        public virtual IDictionary<string, IContainer> CreatePluginContainers(IEnumerable<Assembly> assemblies)
         {
+            IDictionary<string, IContainer> result = new Dictionary<string, IContainer>();
             List<Type> pluginTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPlugin)).ToList();
             IDictionary<string, Type> pluginStartupTypes = _assemblyService.GetAssignableTypes(assemblies, typeof(IPluginStartup)).ToDictionary(t => t.Name);
             foreach (Type pluginType in pluginTypes)
@@ -118,10 +117,12 @@ namespace JeremyTCD.PipelinesCE
                 {
                     ((Registry)registry).Populate(services);
                 });
-                _pluginContainers.Add(pluginType.Name, pluginContainer);
+                result.Add(pluginType.Name, pluginContainer);
 
                 _loggingService.LogDebug(Strings.Log_PluginContainerSuccessfullyConfigured, pluginType.Name);
             }
+
+            return result;
         }
 
         // TODO Access modifier should be internal or private but no good way to test if so
@@ -199,9 +200,8 @@ namespace JeremyTCD.PipelinesCE
 
         public void Dispose()
         {
-            if (!_isDisposed)
+            if (!_isDisposed && _pluginContainers != null)
             {
-                _isDisposed = true;
                 foreach (IContainer container in _pluginContainers.Values)
                 {
                     try
@@ -215,6 +215,7 @@ namespace JeremyTCD.PipelinesCE
                     }
                 }
             }
+            _isDisposed = true;
         }
     }
 }
