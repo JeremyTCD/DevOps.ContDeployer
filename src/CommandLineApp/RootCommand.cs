@@ -15,6 +15,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
+        private CommandOption _verbose { get; set; }
 
         public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand, ILoggingService<RunCommand> loggingService)
 
@@ -41,6 +42,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
             VersionOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version),
                 typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
+            _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
+                Strings.OptionDescription_Verbose,
+                CommandOptionType.NoValue, true);
         }
 
         private int Run()

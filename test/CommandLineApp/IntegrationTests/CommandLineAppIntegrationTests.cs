@@ -6,24 +6,26 @@ using Moq;
 using StructureMap;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
     // TODO integration test that includes Main
-    // TODO Some log messages are verified in a very brittle manner. Find better ways to generate expected log messages.
     /// <summary>
     /// Tests to ensure that <see cref="CommandLineApp"/> commands have been configured correctly and that 
-    /// <see cref="CommandLineAppRegistry"/> configures services correctly.
+    /// <see cref="CommandLineAppRegistry"/> configures services correctly. Note that <see cref="CommandLineApplication"/>
+    /// formats output depending on option names and descriptions. This means that output strings must
+    /// be normalized before being compared with expected strings.
     /// </summary>
     public class CommandsIntegrationTests
     {
         private MockRepository _mockRepository { get; }
         private ICommandLineUtilsService _cluService { get; }
+        private StringService _stringService { get; }
 
         public CommandsIntegrationTests()
         {
+            _stringService = new StringService();
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
             _cluService = new CommandLineUtilsService(_mockRepository.Create<ILoggingService<CommandLineUtilsService>>().Object);
         }
@@ -40,10 +42,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
-            string output = tssw.ToString();
             tssw.Dispose();
-            string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands." + Environment.NewLine;
-            Assert.Equal(expected, output);
+            string output = tssw.ToString();
+            string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands.";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         [Fact]
@@ -64,19 +66,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act
             rootCommand.Execute(new string[0]);
-            string output = tssw.ToString();
-            tssw.Dispose();
 
             // Assert
-            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {Strings.CommandName_Root} [options] [command]" + Environment.NewLine + Environment.NewLine +
-                        $@"Options:" + Environment.NewLine + 
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information" + Environment.NewLine + 
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information" + Environment.NewLine + Environment.NewLine +
-                        $@"Commands:" + Environment.NewLine + 
-                        $@"  { Strings.CommandName_Run}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
-                        $@"Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
-            Assert.Equal(expected, output);
+            tssw.Dispose();
+            string output = tssw.ToString();
+            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0
+                        Usage: {Strings.CommandName_Root} [options] [command]
+                        Options:
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)} {Strings.OptionDescription_Verbose} 
+                        Commands:
+                          { Strings.CommandName_Run}  {Strings.CommandDescription_Run}
+                        Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command.";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         [Theory]
@@ -92,14 +95,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act
             rootCommand.Execute(arguments);
-            string output = tssw.ToString();
-            tssw.Dispose();
 
             // Assert
             // TODO test using regex after version format is decided on
-            string expected = $@"{Strings.CommandFullName_Root}" + Environment.NewLine +
-                        "1.0.0.0" + Environment.NewLine;
-            Assert.Equal(expected, output);
+            tssw.Dispose();
+            string output = tssw.ToString();
+            string expected = $@"{Strings.CommandFullName_Root}
+                                1.0.0.0";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         public static IEnumerable<object[]> RootCommandVersionData()
@@ -121,19 +124,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act
             rootCommand.Execute(arguments);
-            string output = tssw.ToString();
-            tssw.Dispose();
 
             // Assert
-            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {Strings.CommandName_Root} [options] [command]" + Environment.NewLine + Environment.NewLine +
-                        $@"Options:" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information" + Environment.NewLine + Environment.NewLine +
-                        $@"Commands:" + Environment.NewLine +
-                        $@"  { Strings.CommandName_Run}  {Strings.CommandDescription_Run}" + Environment.NewLine + Environment.NewLine +
-                        $@"Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command." + Environment.NewLine + Environment.NewLine;
-            Assert.Equal(expected, output);
+            tssw.Dispose();
+            string output = tssw.ToString();
+            string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0
+                        Usage: {Strings.CommandName_Root} [options] [command]
+                        Options:
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)} Show help information
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)} Show version information 
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)} {Strings.OptionDescription_Verbose} 
+                        Commands:
+                          { Strings.CommandName_Run} {Strings.CommandDescription_Run}
+                        Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command.";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         public static IEnumerable<object[]> RootCommandHelpData()
@@ -154,10 +158,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
-            string output = tssw.ToString();
             tssw.Dispose();
-            string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands." + Environment.NewLine;
-            Assert.Equal(expected, output);
+            string output = tssw.ToString();
+            string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands.";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         [Theory]
@@ -168,22 +172,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
             mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
+            string options = $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
                 $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
                 $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}"));
+                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}";
+            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, options));
             Container container = new Container(new CommandLineAppRegistry());
             container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
 
             Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null);
             mockPipelinesCE.
                 Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
-            // TODO is ClearAll() required
             container.
                 Configure(registry => registry.For<PipelinesCE>().
-                //ClearAll().
                 Use(mockPipelinesCE.Object).Singleton());
 
             RootCommand rootCommand = container.GetInstance<RootCommand>();
@@ -193,8 +196,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Assert
             _mockRepository.VerifyAll();
-            ILogger<CommandLineApp> logger = container.GetInstance<ILogger<CommandLineApp>>(); // Logger with arbitrary category
-            CommandLineAppOptions claOptions = new CommandLineAppOptions();
         }
 
         public static IEnumerable<object[]> RunCommandData()
@@ -203,7 +204,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string testPipeline = "testPipeline";
             CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false, 
+            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false,
                 PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}", $"-{Strings.OptionShortName_DryRun}",
@@ -236,20 +237,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             // Act
             rootCommand.Execute(arguments);
-            string output = tssw.ToString();
-            tssw.Dispose();
 
             // Assert
-            string expected = $@"{Strings.CommandFullName_Run}" + Environment.NewLine + Environment.NewLine +
-                        $@"Usage: {Strings.CommandName_Root} {Strings.CommandName_Run} [options]" + Environment.NewLine + Environment.NewLine +
-                        $@"Options:" + Environment.NewLine +
-                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}        Show help information" + Environment.NewLine +
-                        $@"  {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}    {Strings.OptionDescription_Project}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}" + Environment.NewLine +
-                        $@"  { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}" + Environment.NewLine + Environment.NewLine;
-            Assert.Equal(expected, output);
+            tssw.Dispose();
+            string output = tssw.ToString();
+            string expected = $@"{Strings.CommandFullName_Run}
+                        Usage: {Strings.CommandName_Root} {Strings.CommandName_Run} [options]
+                        Options:
+                          {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}        Show help information
+                          {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}    {Strings.OptionDescription_Project}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}";
+            Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
         public static IEnumerable<object[]> RunCommandHelpData()
@@ -257,5 +258,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] { new string[] { Strings.CommandName_Run, $"-{Strings.OptionShortName_Help}" } };
             yield return new object[] { new string[] { Strings.CommandName_Run, $"--{Strings.OptionLongName_Help}" } };
         }
+
+
     }
 }

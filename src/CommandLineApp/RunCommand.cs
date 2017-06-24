@@ -12,8 +12,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         private CommandOption _project { get; set; }
         private CommandOption _pipeline { get; set; }
-        // TODO consider converting to a shared (inherited) option registered under root
-        private CommandOption _verbose { get; set; }
         private CommandOption _dryRun { get; set; }
         private CommandOption _dryRunOff { get; set; }
 
@@ -53,9 +51,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _dryRunOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff),
                 Strings.OptionDescription_DryRunOff,
                 CommandOptionType.NoValue);
-            _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
-                Strings.OptionDescription_Verbose,
-                CommandOptionType.NoValue);
         }
 
         // Questions
@@ -65,7 +60,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         {
             if (_loggingService.IsEnabled(LogLevel.Debug))
             {
-                _loggingService.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, string.Join(Environment.NewLine, Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
+                _loggingService.LogDebug(Strings.Log_RunningCommand, 
+                    Strings.CommandFullName_Run, 
+                    string.Join(Environment.NewLine, GetOptions().ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
             PipelineOptions pipelineOptions = new PipelineOptions
