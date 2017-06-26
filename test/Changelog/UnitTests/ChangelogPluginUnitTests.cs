@@ -1,10 +1,8 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-using JeremyTCD.DotNetCore.Utils;
-using LibGit2Sharp;
+﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.PluginTools;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.UnitTests

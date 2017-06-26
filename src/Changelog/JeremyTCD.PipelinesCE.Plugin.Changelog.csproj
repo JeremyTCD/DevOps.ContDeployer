@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.24.7-g9fca61fdda" />
+    <Compile Remove="lib\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <None Remove="lib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="semver" Version="2.0.4" />
     <PackageReference Include="System.Composition" Version="1.1.0-preview1-25305-02" />
   </ItemGroup>
@@ -14,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
-    <ProjectReference Include="..\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
