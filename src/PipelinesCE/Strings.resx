@@ -144,7 +144,7 @@
     <value>== Building Pipeline "{0}" ==</value>
   </data>
   <data name="Log_BuildingPipelinesCEProject" xml:space="preserve">
-    <value>== Building PipelinesCE project "{0}" ==</value>
+    <value>== Building PipelinesCE config project "{0}" ==</value>
   </data>
   <data name="Log_ConfiguringPluginContainer" xml:space="preserve">
     <value>Building IoC container for IPlugin implementation "{0}"</value>
@@ -159,7 +159,7 @@
     <value>=== Completed Pipeline "{0}" ===</value>
   </data>
   <data name="Log_PipelinesCEProjectSuccessfullyBuilt" xml:space="preserve">
-    <value>== Successfully built PipelinesCE project "{0}" ==</value>
+    <value>== Successfully built PipelinesCE config project "{0}" ==</value>
   </data>
   <data name="Log_PipelinesCESuccessfullyInitialized" xml:space="preserve">
     <value>=== Successfully initialized PipelinesCE ===</value>

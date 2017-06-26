@@ -3,7 +3,7 @@
     public class PipelineOptions
     {
         public const string DefaultPipeline = "Default";
-        public const string DefaultProject = "PipelinesCE.csproj";
+        public const string DefaultProject = "PipelinesCEConfig.csproj";
         public const bool DefaultDryRun = false;
 
         private bool? _dryRun;

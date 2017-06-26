@@ -145,7 +145,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Building PipelinesCE project &quot;{0}&quot; ==.
+        ///   Looks up a localized string similar to == Building PipelinesCE config project &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_BuildingPipelinesCEProject {
             get {
@@ -217,7 +217,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Successfully built PipelinesCE project &quot;{0}&quot; ==.
+        ///   Looks up a localized string similar to == Successfully built PipelinesCE config project &quot;{0}&quot; ==.
         /// </summary>
         public static string Log_PipelinesCEProjectSuccessfullyBuilt {
             get {
