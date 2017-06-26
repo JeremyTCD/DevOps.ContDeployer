@@ -5,7 +5,6 @@
         public const string DefaultPipeline = "Default";
         public const string DefaultProject = "PipelinesCE.csproj";
         public const bool DefaultDryRun = false;
-        public const bool DefaultVerbose = false;
 
         private bool? _dryRun;
         private string _project;

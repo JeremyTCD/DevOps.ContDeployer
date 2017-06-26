@@ -1,11 +1,7 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 
 namespace JeremyTCD.PipelinesCE.PluginTools
 {
-    /// <summary>
-    /// A step in the pipeline. 
-    /// </summary>
     public class Step<T> : IStep where T : IPlugin
     {
 
