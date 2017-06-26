@@ -5,6 +5,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     public class Startup
     {
+        // TODo test this
+
         public void Configure(ILoggerFactory loggerFactory, string[] args)
         {
             bool verbose = args.Where(s => s == $"--{Strings.OptionLongName_Verbose}" ||
