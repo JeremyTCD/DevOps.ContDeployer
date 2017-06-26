@@ -258,7 +258,5 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] { new string[] { Strings.CommandName_Run, $"-{Strings.OptionShortName_Help}" } };
             yield return new object[] { new string[] { Strings.CommandName_Run, $"--{Strings.OptionLongName_Help}" } };
         }
-
-
     }
 }

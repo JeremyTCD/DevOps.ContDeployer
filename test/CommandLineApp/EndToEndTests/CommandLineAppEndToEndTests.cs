@@ -88,8 +88,5 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             doc.Save(stream);
             stream.Dispose();
         }
-
-        // Ensure that exceptions that bubble up to main are logged 
-        // Ensure that verbosity is processed correctly by main (verboseoff?)
     }
 }
