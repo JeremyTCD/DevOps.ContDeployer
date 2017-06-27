@@ -16,7 +16,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_ThrowsExceptionIfPluginOptionsIsNotAGitOptionsInstance()
+        public void Run_ThrowsExceptionIfPluginOptionsIsNotAnMSBuildPluginOptionsInstance()
         {
             // Arrange
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
@@ -24,7 +24,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object, null, null);
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => plugin.Run(null, mockStepContext.Object));
@@ -32,7 +32,33 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_CallsMSBuildServiceBuildWithSpecifiedArguments()
+        public void Run_DoesNotRunMSBuildOnDryRun()
+        {
+            // Arrange
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions());
+
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
+
+            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
+            Mock<ILoggingService<MSBuildPlugin>> mockLoggingService = _mockRepository.Create<ILoggingService<MSBuildPlugin>>();
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object, mockLoggingService.Object, mockDirectoryService.Object);
+
+            // Act
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            mockMSBuildService.
+                Verify(m => m.Build(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public void Run_RunsMSBuildServiceBuildWithSpecifiedArguments()
         {
             // Arrange
             string testFile = "testFile";
@@ -52,7 +78,10 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
             mockMSBuildService.Setup(m => m.Build(testFile, testSwitches));
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
+            Mock<ILoggingService<MSBuildPlugin>> mockLoggingService = _mockRepository.Create<ILoggingService<MSBuildPlugin>>();
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object, mockLoggingService.Object, mockDirectoryService.Object);
 
             // Act
             plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
@@ -62,27 +91,64 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
         }
 
         [Fact]
-        public void Run_DoesNotAddATagOnDryRun()
+        public void Run_LogsCorrectMessageWhenProjOrSlnFileIsNullOrAnEmptyString()
         {
             // Arrange
+            string testSwitches = "testSwitches";
+            string testDirectory = "testDirectory";
+
             Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
-            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions());
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions
+            {
+                ProjOrSlnFile = null,
+                Switches = testSwitches
+            });
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
-            mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
-
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
 
-            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object);
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+            mockDirectoryService.Setup(d => d.GetCurrentDirectory()).Returns(testDirectory);
+
+            Mock<ILoggingService<MSBuildPlugin>> mockLoggingService = _mockRepository.Create<ILoggingService<MSBuildPlugin>>();
+            mockLoggingService.Setup(l => l.LogInformation(Strings.Log_RanMSBuildInDir, testDirectory, testSwitches));
+
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object, mockLoggingService.Object, mockDirectoryService.Object);
 
             // Act
             plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
 
             // Assert
             _mockRepository.VerifyAll();
-            mockMSBuildService.
-                Verify(m => m.Build(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public void Run_LogsCorrectMessageWhenProjOrSlnFileIsNotNullOrAnEmptyString()
+        {
+            // Arrange
+            string testSwitches = "testSwitches";
+            string testFile = "testFile";
+
+            Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
+            mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions
+            {
+                ProjOrSlnFile = testFile,
+                Switches = testSwitches
+            });
+
+            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+            Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
+
+            Mock<ILoggingService<MSBuildPlugin>> mockLoggingService = _mockRepository.Create<ILoggingService<MSBuildPlugin>>();
+            mockLoggingService.Setup(l => l.LogInformation(Strings.Log_RanMSBuildOnFile, testFile, testSwitches));
+
+            MSBuildPlugin plugin = new MSBuildPlugin(mockMSBuildService.Object, mockLoggingService.Object, null);
+
+            // Act
+            plugin.Run(mockPipelineContext.Object, mockStepContext.Object);
+
+            // Assert
+            _mockRepository.VerifyAll();
         }
     }
 }
