@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JeremyTCD.PipelinesCE.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
 {
     public class Step<T> : IStep where T : IPlugin
     {

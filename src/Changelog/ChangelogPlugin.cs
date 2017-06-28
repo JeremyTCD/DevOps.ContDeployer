@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.Logging;
 using System;

@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
-    <ProjectReference Include="..\PluginTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
+    <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
 
 </Project>

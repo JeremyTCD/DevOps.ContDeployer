@@ -3,7 +3,7 @@ using JeremyTCD.PipelinesCE.Plugin.Changelog;
 using JeremyTCD.PipelinesCE.Plugin.Configuration;
 using JeremyTCD.PipelinesCE.Plugin.Git;
 using JeremyTCD.PipelinesCE.Plugin.MSBuild;
-using JeremyTCD.PipelinesCE.PluginTools;
+using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 
 namespace PipelinesCE
 {

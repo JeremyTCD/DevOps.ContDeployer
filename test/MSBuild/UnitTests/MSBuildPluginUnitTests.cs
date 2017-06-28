@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.PluginTools;
+using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Moq;
 using System;
 using Xunit;

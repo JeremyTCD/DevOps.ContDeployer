@@ -1,5 +1,5 @@
 ﻿using System;
-using JeremyTCD.PipelinesCE.PluginTools;
+using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Configuration
 {

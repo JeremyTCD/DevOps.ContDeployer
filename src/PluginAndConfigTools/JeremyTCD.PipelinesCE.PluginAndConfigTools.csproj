@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>JeremyTCD.PipelinesCE.PluginTools</AssemblyName>
+    <AssemblyName>JeremyTCD.PipelinesCE.PluginAndConfigTools</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

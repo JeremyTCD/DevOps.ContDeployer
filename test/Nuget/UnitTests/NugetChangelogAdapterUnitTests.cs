@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Moq;
 using System;
 using System.Collections.Generic;

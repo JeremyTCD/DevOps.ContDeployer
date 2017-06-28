@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace JeremyTCD.PipelinesCE.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
 {
     public class StepContextFactory : IStepContextFactory
     {

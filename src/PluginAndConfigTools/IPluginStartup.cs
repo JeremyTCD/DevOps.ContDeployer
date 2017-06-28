@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace JeremyTCD.PipelinesCE.PluginTools
+namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
 {
     public interface IPluginStartup
     {

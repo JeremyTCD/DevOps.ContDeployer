@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
-    <ProjectReference Include="..\..\src\PluginTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
+    <ProjectReference Include="..\..\src\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
 
 </Project>

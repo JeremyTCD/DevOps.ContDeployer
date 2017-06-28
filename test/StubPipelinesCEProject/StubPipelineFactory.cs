@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE;
-using JeremyTCD.PipelinesCE.PluginTools;
+using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using PipelinesCE.StubPluginProject;
 
 namespace PipelineCE.Tests.StubPipelinesCEProject

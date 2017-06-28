@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0C61E4F4-837
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{97A4254C-8D5D-4BE7-907A-18BD01E697D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools", "src\PluginTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools", "src\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Changelog", "src\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
 EndProject
@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.PluginTools.Tests", "test\PluginTools\JeremyTCD.PipelinesCE.PluginTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests", "test\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Changelog.Tests", "test\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
 EndProject

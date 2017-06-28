@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.PipelinesCE.PluginTools
+﻿namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
 {
     /// <summary>
     /// TODO tweak to allow for premade pipelines

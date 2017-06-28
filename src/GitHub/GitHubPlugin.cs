@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
+﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Octokit;
