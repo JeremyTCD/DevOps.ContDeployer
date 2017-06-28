@@ -7,7 +7,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            // Services for IMSBuildService and ILoggingService<> are added by default - see PipelinesCERegistry
+            // Services for IMSBuildService, IDirectoryService and ILoggingService<> are added by default - see PipelinesCERegistry
         }
     }
 }

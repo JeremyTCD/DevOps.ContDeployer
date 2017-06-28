@@ -8,6 +8,9 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
     /// This plugin runs MSBuild.exe with arguments specified in an <see cref="MSBuildPluginOptions"/> instance.
     /// 
     /// Note that this plugin will eventually be superceded by Roslyn, Nuget and MSBuild-target replacing plugins.
+    /// Note that when used to compile an entire solution containing a PipelinesCEConfig project, at present, MSBuild 
+    /// skips recompiling PipelinesCEConfig since output files will be up to date. When this plugin is replaced with 
+    /// Roslyn, Nuget and more, this behaviour must be carefully replicated.
     /// Also note that this plugin does not attempt to install MSBuild.exe.
     /// </summary>
     public class MSBuildPlugin : IPlugin
