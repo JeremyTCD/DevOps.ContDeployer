@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj" />
+    <ProjectReference Include="..\..\src\PluginTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
 
   <ItemGroup>

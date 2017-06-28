@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using JeremyTCD.PipelinesCE.PluginTools;
+using StructureMap;
 using System.Collections.Generic;
 
 namespace JeremyTCD.PipelinesCE

@@ -1,7 +1,6 @@
-﻿using JeremyTCD.PipelinesCE.PluginTools;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace JeremyTCD.PipelinesCE
+namespace JeremyTCD.PipelinesCE.PluginTools
 {
     public class Pipeline
     {

@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0C61E4F4-837
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{97A4254C-8D5D-4BE7-907A-18BD01E697D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PluginTools", "src\PluginTools\JeremyTCD.PipelinesCE.PluginTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools", "src\PluginTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj", "{E93E72E3-8045-420D-9728-AC3E25C4FF42}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Changelog", "src\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj", "{E94B00F1-114B-43C7-97AA-7503A686BE89}"
 EndProject
