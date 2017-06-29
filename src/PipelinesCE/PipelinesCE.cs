@@ -81,14 +81,16 @@ namespace JeremyTCD.PipelinesCE
             _pluginContainers = CreatePluginContainers(assemblies);
             _loggingService.LogDebug(Strings.Log_PluginContainersSuccessfullyBuilt);
 
-            // Create pipeline
+            // Create pipeline factory
             _loggingService.LogInformation(Strings.Log_BuildingPipeline, pipelineOptions.Pipeline);
             IPipelineFactory factory = GetPipelineFactory(assemblies, pipelineOptions);
-            Pipeline pipeline = factory.CreatePipeline();
-            pipeline.Options = pipelineOptions.Combine(pipeline.Options);
             _loggingService.LogInformation(Strings.Log_PipelineSuccessfullyBuilt, pipelineOptions.Pipeline);
+
             _loggingService.LogInformation(Strings.Log_PipelinesCESuccessfullyInitialized);
 
+            // Create and run pipeline
+            Pipeline pipeline = factory.CreatePipeline();
+            pipeline.Options = pipelineOptions.Combine(pipeline.Options);
             _pipelineRunner.Run(pipeline, _pluginContainers);
         }
 
