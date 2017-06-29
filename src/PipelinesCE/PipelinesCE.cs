@@ -66,7 +66,7 @@ namespace JeremyTCD.PipelinesCE
 
             // Build project
             _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
-            _msBuildService.Build(projectFile, "/t:restore,build /p:Configuration=Release");
+            _msBuildService.Build(projectFile, "/t:restore,publish /p:configuration=release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
