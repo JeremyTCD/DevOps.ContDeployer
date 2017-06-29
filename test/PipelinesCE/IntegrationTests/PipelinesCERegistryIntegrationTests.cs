@@ -54,6 +54,8 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IProcessService) && r.ReturnedType == typeof(ProcessService)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
+            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IDependencyContextService) && r.ReturnedType == typeof(DependencyContextService)
+                && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
 
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IPipelineRunner) && r.ReturnedType == typeof(PipelineRunner)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));

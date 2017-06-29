@@ -21,6 +21,7 @@ namespace JeremyTCD.PipelinesCE
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
         private IDictionary<string, IContainer> _pluginContainers { get; set; }
+        private IDependencyContextService _dependencyContextService { get; }
         private bool _isDisposed;
 
         public bool IsDisposed
@@ -32,6 +33,7 @@ namespace JeremyTCD.PipelinesCE
         }
 
         public PipelinesCE(IActivatorService activatorService,
+            IDependencyContextService dependencyContextService,
             IAssemblyService assemblyService,
             IPathService pathService,
             IDirectoryService directoryService,
@@ -40,6 +42,7 @@ namespace JeremyTCD.PipelinesCE
             IContainer mainContainer,
             ILoggingService<PipelinesCE> loggingService)
         {
+            _dependencyContextService = dependencyContextService;
             _mainContainer = mainContainer;
             _msBuildService = msBuildService;
             _pathService = pathService;

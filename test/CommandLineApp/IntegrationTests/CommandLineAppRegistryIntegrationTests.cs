@@ -56,6 +56,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(ICommandLineUtilsService) && r.ReturnedType == typeof(CommandLineUtilsService)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
+            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IDependencyContextService) && r.ReturnedType == typeof(DependencyContextService)
+                && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
 
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IPipelineRunner) && r.ReturnedType == typeof(PipelineRunner)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
@@ -93,7 +95,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         {
             // Arrange 
             Container container = new Container(new CommandLineAppRegistry());
-            PipelinesCE instance = new PipelinesCE(null, null, null, null, null, null, null, null);
+            PipelinesCE instance = new PipelinesCE(null, null, null, null, null, null, null, null, null);
 
             // Act
             container.Configure(r => r.For<PipelinesCE>().Use(instance).Singleton());
@@ -119,11 +121,12 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
         private class StubPipelinesCE : PipelinesCE
         {
-            public StubPipelinesCE(IActivatorService activatorService, IAssemblyService assemblyService, 
+            public StubPipelinesCE(IActivatorService activatorService, IDependencyContextService dependencyContextService,
+                IAssemblyService assemblyService, 
                 IPathService pathService, IDirectoryService directoryService, 
                 IMSBuildService msBuildService, IPipelineRunner pipelineRunner, 
                 IContainer mainContainer, ILoggingService<PipelinesCE> loggingService) : 
-                base(activatorService, assemblyService, pathService, directoryService, 
+                base(activatorService, dependencyContextService, assemblyService, pathService, directoryService, 
                     msBuildService, pipelineRunner, mainContainer, loggingService)
             {
             }

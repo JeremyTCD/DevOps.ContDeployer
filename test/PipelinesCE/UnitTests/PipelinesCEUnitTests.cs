@@ -16,7 +16,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
     public class PipelinesCEUnitTests
     {
         private MockRepository _mockRepository { get; }
-        private PipelinesCE _pipelinesCE { get; } = new PipelinesCE(null, null, null, null, null, null, null, null); // For access to PipelineFactoryPipelineName
+        private PipelinesCE _pipelinesCE { get; } = new PipelinesCE(null, null, null, null, null, null, null, null, null); // For access to PipelineFactoryPipelineName
 
         public PipelinesCEUnitTests()
         {
@@ -62,7 +62,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
                 mockContainer.Setup(c => c.CreateChildContainer()).Returns(mockChildContainer.Object);
 
-                PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, mockContainer.Object,
+                PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, null, mockAssemblyService.Object, null, null, null, null, mockContainer.Object,
                     mockLoggingService.Object);
 
                 // Act
@@ -92,7 +92,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
@@ -116,7 +116,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
@@ -146,7 +146,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
@@ -174,7 +174,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<ILoggingService<PipelinesCE>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelinesCE>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RetrievingPipelineFactory, stubOptions.Pipeline));
 
-            PipelinesCE pipelinesCE = new PipelinesCE(null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions));
@@ -208,7 +208,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactory)).Returns(stubDummy1PipelineFactory);
 
-            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act
             IPipelineFactory result = pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions);
@@ -244,7 +244,7 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactory)).Returns(stubDummy1PipelineFactory);
 
-            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
+            PipelinesCE pipelinesCE = new PipelinesCE(mockActivatorService.Object, null, mockAssemblyService.Object, null, null, null, null, null, mockLoggingService.Object);
 
             // Act
             IPipelineFactory result = pipelinesCE.GetPipelineFactory(stubAssemblies, stubOptions);
