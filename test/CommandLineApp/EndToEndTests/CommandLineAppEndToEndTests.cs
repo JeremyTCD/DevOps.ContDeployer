@@ -66,7 +66,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             Assert.Equal(0, exitCode);
             _loggerFactory.Dispose();
 
-            string output = File.ReadAllText($"log-{DateTime.Today.ToString("yyyyMMdd")}.txt");
+            CommandLineAppOptions options = new CommandLineAppOptions();
+            string output = File.ReadAllText(options.LogFileFormat.Replace("{Date}", DateTime.Today.ToString("yyyyMMdd")));
             Assert.Contains(string.Format(JeremyTCD.PipelinesCE.Strings.Log_PipelineComplete, "\"Stub\""), output);
             Assert.Contains(string.Format(JeremyTCD.PipelinesCE.Strings.Log_PluginComplete, "\"StubPlugin\""), output);
         }
