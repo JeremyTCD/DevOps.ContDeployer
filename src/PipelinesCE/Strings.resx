@@ -186,15 +186,21 @@
     <value>== Running Plugin "{0}" ==</value>
   </data>
   <data name="Log_AssembliesSuccessfullyLoaded" xml:space="preserve">
-    <value>== Successfully loaded Assemblies in "{0}" ==</value>
+    <value>== Successfully loaded Assemblies ==</value>
   </data>
   <data name="Log_BuildingPluginContainers" xml:space="preserve">
     <value>== Building Plugin IoC Containers ==</value>
   </data>
   <data name="Log_LoadingAssemblies" xml:space="preserve">
-    <value>== Loading Assemblies in "{0}" ==</value>
+    <value>== Loading Assemblies ==</value>
   </data>
   <data name="Log_PluginContainersSuccessfullyBuilt" xml:space="preserve">
     <value>== Successfully Built Plugin IoC Containers ==</value>
+  </data>
+  <data name="Exception_MultipleDepsFiles" xml:space="preserve">
+    <value>Multiple deps.json files found in directory "{0}"</value>
+  </data>
+  <data name="Exception_NoDepsFiles" xml:space="preserve">
+    <value>No deps.json files found in directory "{0}"</value>
   </data>
 </root>

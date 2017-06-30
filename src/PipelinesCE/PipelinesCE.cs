@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -64,20 +65,16 @@ namespace JeremyTCD.PipelinesCE
             _loggingService.LogInformation(Strings.Log_InitializingPipelinesCE);
 
             string projectFile = _pathService.GetAbsolutePath(pipelineOptions.Project);
-            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
-            string assembliesDirectory = Path.Combine(projectDirectory, "bin/Release/netcoreapp1.1");
 
             // Build project
             _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
             _msBuildService.Build(projectFile, "/t:restore,publish /p:configuration=release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
-            // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             // Load assemblies
-            _loggingService.LogInformation(Strings.Log_LoadingAssemblies, assembliesDirectory);
-            IEnumerable<Assembly> assemblies = _assemblyService.
-                LoadAssembliesInDir(assembliesDirectory, true);
-            _loggingService.LogInformation(Strings.Log_AssembliesSuccessfullyLoaded, assembliesDirectory);
+            _loggingService.LogDebug(Strings.Log_LoadingAssemblies);
+            IEnumerable<Assembly> assemblies = LoadAssemblies(projectFile);
+            _loggingService.LogDebug(Strings.Log_AssembliesSuccessfullyLoaded);
 
             // Create plugin containers
             _loggingService.LogDebug(Strings.Log_BuildingPluginContainers);
@@ -95,6 +92,44 @@ namespace JeremyTCD.PipelinesCE
             Pipeline pipeline = factory.CreatePipeline();
             pipeline.Options = pipelineOptions.Combine(pipeline.Options);
             _pipelineRunner.Run(pipeline, _pluginContainers);
+        }
+
+        // TODO Access modifier should be internal or private but no good way to test if so
+        /// <summary>
+        /// Loads assemblies from project represented by <paramref name="projectFile"/> that reference the PluginAndConfigTools 
+        /// assembly
+        /// </summary>
+        /// <param name="projectFile"></param>
+        /// <returns>
+        /// <see cref="IEnumerable{Assembly}"/>
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if more than 1 *.deps.json file exists in publish directory
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if no *.deps.json file exists in publish directory
+        /// </exception>
+        public virtual IEnumerable<Assembly> LoadAssemblies(string projectFile)
+        {
+            string projectFileName = _pathService.GetFileNameWithoutExtension(projectFile);
+            string projectDirectory = _directoryService.GetParent(projectFile).FullName;
+            string publishDirectory = _pathService.Combine(projectDirectory, "bin/Release/netcoreapp1.1/publish");
+
+            // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
+            string[] possibleDepsFiles = _directoryService.GetFiles(publishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly);
+            if (possibleDepsFiles.Length > 1)
+            {
+                throw new InvalidOperationException(String.Format(Strings.Exception_MultipleDepsFiles, publishDirectory));
+            }
+            else if (possibleDepsFiles.Length == 0)
+            {
+                throw new InvalidOperationException(String.Format(Strings.Exception_NoDepsFiles, publishDirectory));
+            }
+
+            DependencyContext context = _dependencyContextService.CreateDependencyContext(possibleDepsFiles[0]);
+            _assemblyService.AddAssemblyResolutionDirectory(publishDirectory);
+
+            return _assemblyService.GetReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
         }
 
         // TODO Access modifier should be internal or private but no good way to test if so

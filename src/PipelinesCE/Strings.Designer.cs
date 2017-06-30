@@ -62,6 +62,15 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple deps.json files found in directory &quot;{0}&quot;.
+        /// </summary>
+        public static string Exception_MultipleDepsFiles {
+            get {
+                return ResourceManager.GetString("Exception_MultipleDepsFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiple PipelineFactorys found, please specify one:
         ///{0}.
         /// </summary>
@@ -87,6 +96,15 @@ namespace JeremyTCD.PipelinesCE {
         public static string Exception_NoContainerForPluginType {
             get {
                 return ResourceManager.GetString("Exception_NoContainerForPluginType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No deps.json files found in directory &quot;{0}&quot;.
+        /// </summary>
+        public static string Exception_NoDepsFiles {
+            get {
+                return ResourceManager.GetString("Exception_NoDepsFiles", resourceCulture);
             }
         }
         
@@ -127,7 +145,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Successfully loaded Assemblies in &quot;{0}&quot; ==.
+        ///   Looks up a localized string similar to == Successfully loaded Assemblies ==.
         /// </summary>
         public static string Log_AssembliesSuccessfullyLoaded {
             get {
@@ -199,7 +217,7 @@ namespace JeremyTCD.PipelinesCE {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to == Loading Assemblies in &quot;{0}&quot; ==.
+        ///   Looks up a localized string similar to == Loading Assemblies ==.
         /// </summary>
         public static string Log_LoadingAssemblies {
             get {

@@ -10,6 +10,7 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Moq.Sequences;
+using Microsoft.Extensions.DependencyModel;
 
 namespace JeremyTCD.PipelinesCE.Tests.UnitTests
 {
@@ -255,6 +256,104 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
         }
 
         [Fact]
+        public void LoadAssemblies_ThrowsExceptionIfMoreThanOneDepsJsonFileExistsInPublishDirectory()
+        {
+            // Arrange
+            string testProjectFile = "testFile";
+            string testProjectFileName = "testFileName";
+            DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
+            string testProjectDirectory = stubDirectoryInfo.FullName;
+            string testPublishDirectory = "testPublishDirectory";
+            string[] stubPossibleDepsFiles = new string[2];
+
+            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+            mockPathService.Setup(p => p.GetFileNameWithoutExtension(testProjectFile)).Returns(testProjectFileName);
+            mockPathService.Setup(p => p.Combine(testProjectDirectory, "bin/Release/netcoreapp1.1/publish")).Returns(testPublishDirectory);
+
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
+            mockDirectoryService.Setup(d => d.GetFiles(testPublishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly)).
+                Returns(stubPossibleDepsFiles);
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, null, mockPathService.Object, mockDirectoryService.Object, null, null, null, null);
+
+            // Act and Assert
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.LoadAssemblies(testProjectFile));
+            _mockRepository.VerifyAll();
+            Assert.Equal(string.Format(Strings.Exception_MultipleDepsFiles, testPublishDirectory), exception.Message);
+        }
+
+        [Fact]
+        public void LoadAssemblies_ThrowsExceptionIfNoDepsJsonFileExistsInPublishDirectory()
+        {
+            // Arrange
+            string testProjectFile = "testFile";
+            string testProjectFileName = "testFileName";
+            DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
+            string testProjectDirectory = stubDirectoryInfo.FullName;
+            string testPublishDirectory = "testPublishDirectory";
+            string[] stubPossibleDepsFiles = new string[0];
+
+            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+            mockPathService.Setup(p => p.GetFileNameWithoutExtension(testProjectFile)).Returns(testProjectFileName);
+            mockPathService.Setup(p => p.Combine(testProjectDirectory, "bin/Release/netcoreapp1.1/publish")).Returns(testPublishDirectory);
+
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
+            mockDirectoryService.Setup(d => d.GetFiles(testPublishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly)).
+                Returns(stubPossibleDepsFiles);
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, null, null, mockPathService.Object, mockDirectoryService.Object, null, null, null, null);
+
+            // Act and Assert
+            Exception exception = Assert.Throws<InvalidOperationException>(() => pipelinesCE.LoadAssemblies(testProjectFile));
+            _mockRepository.VerifyAll();
+            Assert.Equal(string.Format(Strings.Exception_NoDepsFiles, testPublishDirectory), exception.Message);
+        }
+
+        [Fact]
+        public void LoadAssemblies_LoadsAssembliesFromProjectRepresentedByProjectFileThatReferencePluginConfigAndToolsAssembly()
+        {
+            // Arrange
+            string testProjectFile = "testFile";
+            string testProjectFileName = "testFileName";
+            DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
+            string testProjectDirectory = stubDirectoryInfo.FullName;
+            string testPublishDirectory = "testPublishDirectory";
+            string testDepsFile = "testDepsFile";
+            string[] stubPossibleDepsFiles = new string[] { testDepsFile };
+            Assembly[] stubAssemblies = new Assembly[0];
+
+            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+            mockPathService.Setup(p => p.GetFileNameWithoutExtension(testProjectFile)).Returns(testProjectFileName);
+            mockPathService.Setup(p => p.Combine(testProjectDirectory, "bin/Release/netcoreapp1.1/publish")).Returns(testPublishDirectory);
+
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
+            mockDirectoryService.Setup(d => d.GetFiles(testPublishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly)).
+                Returns(stubPossibleDepsFiles);
+
+            DependencyContext stubDependencyContext = new DependencyContext(new TargetInfo("dummyFramework", "dummyRuntime", "dummyRuntimeSignature",
+                false), CompilationOptions.Default, new CompilationLibrary[0], new RuntimeLibrary[0], new RuntimeFallbacks[0]);
+            Mock<IDependencyContextService> mockDependencyContextService = _mockRepository.Create<IDependencyContextService>();
+            mockDependencyContextService.Setup(d => d.CreateDependencyContext(testDepsFile)).Returns(stubDependencyContext);
+
+            Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
+            mockAssemblyService.Setup(a => a.AddAssemblyResolutionDirectory(testPublishDirectory));
+            mockAssemblyService.Setup(a => a.GetReferencingAssemblies(stubDependencyContext, typeof(IPlugin).GetTypeInfo().Assembly)).Returns(stubAssemblies);
+
+            PipelinesCE pipelinesCE = new PipelinesCE(null, mockDependencyContextService.Object, mockAssemblyService.Object, mockPathService.Object, 
+                mockDirectoryService.Object, null, null, null, null);
+
+            // Act 
+            IEnumerable<Assembly> result = pipelinesCE.LoadAssemblies(testProjectFile);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            Assert.Equal(stubAssemblies, result);
+        }
+
+        [Fact]
         public void Run_BuildsProjectBuildPipelineAndCallsPipelineRunnerRun()
         {
             // Arrange
@@ -280,8 +379,8 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_InitializingPipelinesCE)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipelinesCEProject, testProjectFile)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, testProjectFile)).InSequence();
-                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_LoadingAssemblies, assembliesDirectory)).InSequence();
-                mockLoggingService.Setup(l => l.LogInformation(Strings.Log_AssembliesSuccessfullyLoaded, assembliesDirectory)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_LoadingAssemblies)).InSequence();
+                mockLoggingService.Setup(l => l.LogDebug(Strings.Log_AssembliesSuccessfullyLoaded)).InSequence();
                 mockLoggingService.Setup(l => l.LogDebug(Strings.Log_BuildingPluginContainers)).InSequence();
                 mockLoggingService.Setup(l => l.LogDebug(Strings.Log_PluginContainersSuccessfullyBuilt)).InSequence();
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_BuildingPipeline, testPipeline)).InSequence();
@@ -291,16 +390,8 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
                 mockPathService.Setup(p => p.GetAbsolutePath(testProject)).Returns(testProjectFile);
 
-                Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
-                mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
-
                 Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
-                mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,build /p:Configuration=Release"));
-
-                Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
-                mockAssemblyService.
-                    Setup(a => a.LoadAssembliesInDir(assembliesDirectory, true)).
-                    Returns(stubAssemblies);
+                mockMSBuildService.Setup(m => m.Build(testProjectFile, "/t:restore,publish /p:configuration=release"));
 
                 Mock<IPipelineFactory> mockPipelineFactory = _mockRepository.Create<IPipelineFactory>();
                 mockPipelineFactory.Setup(p => p.CreatePipeline()).Returns(stubPipeline);
@@ -308,10 +399,11 @@ namespace JeremyTCD.PipelinesCE.Tests.UnitTests
                 Mock<IPipelineRunner> mockPipelineRunner = _mockRepository.Create<IPipelineRunner>();
                 mockPipelineRunner.Setup(p => p.Run(stubPipeline, It.IsAny<IDictionary<string, IContainer>>()));
 
-                Mock<PipelinesCE> pipelinesCE = _mockRepository.Create<PipelinesCE>(null, mockAssemblyService.Object, mockPathService.Object,
-                    mockDirectoryService.Object, mockMSBuildService.Object, mockPipelineRunner.Object, null, mockLoggingService.Object);
+                Mock<PipelinesCE> pipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, mockPathService.Object,
+                    null, mockMSBuildService.Object, mockPipelineRunner.Object, null, mockLoggingService.Object);
                 pipelinesCE.Setup(p => p.CreatePluginContainers(stubAssemblies));
                 pipelinesCE.Setup(p => p.GetPipelineFactory(stubAssemblies, mockPipelineOptions.Object)).Returns(mockPipelineFactory.Object);
+                pipelinesCE.Setup(p => p.LoadAssemblies(testProjectFile)).Returns(stubAssemblies);
                 pipelinesCE.CallBase = true;
 
                 // Act 
