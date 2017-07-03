@@ -2,6 +2,7 @@
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using NuGet.Configuration;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace JeremyTCD.PipelinesCE
         private IContainer _mainContainer { get; }
         private IDictionary<string, IContainer> _pluginContainers { get; set; }
         private IDependencyContextService _dependencyContextService { get; }
+        private INugetConfigurationService _nugetConfigurationService { get; }
         private bool _isDisposed;
 
         public bool IsDisposed
@@ -41,6 +43,7 @@ namespace JeremyTCD.PipelinesCE
             IMSBuildService msBuildService,
             IPipelineRunner pipelineRunner,
             IContainer mainContainer,
+            INugetConfigurationService nugetConfigurationService,
             ILoggingService<PipelinesCE> loggingService)
         {
             _dependencyContextService = dependencyContextService;
@@ -52,6 +55,7 @@ namespace JeremyTCD.PipelinesCE
             _directoryService = directoryService;
             _loggingService = loggingService;
             _activatorService = activatorService;
+            _nugetConfigurationService = nugetConfigurationService;
         }
 
         /// <summary>
