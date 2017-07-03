@@ -24,6 +24,7 @@ namespace JeremyTCD.PipelinesCE
             For<IProcessService>().Singleton().Use<ProcessService>();
             For<IDependencyContextService>().Singleton().Use<DependencyContextService>();
             For<IFileService>().Singleton().Use<FileService>();
+            For<INugetConfigurationService>().Singleton().Use<NugetConfigurationService>();
 
             For<PipelinesCE>().Singleton().Use<PipelinesCE>();
             For<IPipelineRunner>().Singleton().Use<PipelineRunner>();
