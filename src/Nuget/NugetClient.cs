@@ -1,15 +1,9 @@
-﻿using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Logging;
-using NuGet.Commands;
-using NuGet.Common;
+﻿using NuGet.Common;
 using NuGet.Configuration;
-using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Nuget

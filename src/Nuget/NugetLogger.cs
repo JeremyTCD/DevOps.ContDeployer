@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NuGet.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Nuget
 {
@@ -61,6 +60,26 @@ namespace JeremyTCD.PipelinesCE.Plugin.Nuget
         public void LogWarning(string data)
         {
             _logger.LogWarning(data);
+        }
+
+        public void Log(NuGet.Common.LogLevel level, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LogAsync(NuGet.Common.LogLevel level, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Log(ILogMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LogAsync(ILogMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
