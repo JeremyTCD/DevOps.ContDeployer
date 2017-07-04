@@ -22,9 +22,10 @@ namespace JeremyTCD.PipelinesCE
         private IMSBuildService _msBuildService { get; }
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
-        private IDictionary<string, IContainer> _pluginContainers { get; set; }
         private IDependencyContextService _dependencyContextService { get; }
         private INugetConfigurationService _nugetConfigurationService { get; }
+
+        private IDictionary<string, IContainer> _pluginContainers { get; set; }
         private bool _isDisposed;
 
         public bool IsDisposed
@@ -72,7 +73,7 @@ namespace JeremyTCD.PipelinesCE
 
             // Build project
             _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
-            _msBuildService.Build(projectFile, "/t:restore,publish /p:configuration=release");
+            _msBuildService.Build(projectFile, "/t:restore,build /p:configuration=release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
             // Load assemblies
@@ -117,7 +118,7 @@ namespace JeremyTCD.PipelinesCE
         {
             string projectFileName = _pathService.GetFileNameWithoutExtension(projectFile);
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
-            string publishDirectory = _pathService.Combine(projectDirectory, "bin/Release/netcoreapp1.1/publish");
+            string publishDirectory = _pathService.Combine(projectDirectory, "bin/Release/netcoreapp1.1");
 
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             string[] possibleDepsFiles = _directoryService.GetFiles(publishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly);
@@ -131,7 +132,15 @@ namespace JeremyTCD.PipelinesCE
             }
 
             DependencyContext context = _dependencyContextService.CreateDependencyContext(possibleDepsFiles[0]);
-            _assemblyService.AddAssemblyResolutionDirectory(publishDirectory);
+            ISettings nugetSettings = _nugetConfigurationService.LoadDefaultSettings(projectDirectory);
+            string globalPackagesFolder = _nugetConfigurationService.GetGlobalPackagesFolder(nugetSettings);
+            _assemblyService.AddAssemblyDirectory(publishDirectory);
+            _assemblyService.AddPackageCacheDirectory(globalPackagesFolder);
+
+            // TODO what exactly is stored in a "repository", are the packages duplicated in the global cache? is null returned if no repository is used? 
+            //string repositoryPath = _nugetConfigurationService.GetRepositoryPath(nugetSettings); 
+            //if(repositoryPath != null)
+            //_assemblyService.AddAssemblyDirectory(globalPackagesFolder);
 
             return _assemblyService.GetReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
         }

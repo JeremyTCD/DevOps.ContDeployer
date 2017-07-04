@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
+    <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj" />
     <ProjectReference Include="..\..\src\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
-
 </Project>

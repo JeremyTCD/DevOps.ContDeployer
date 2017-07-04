@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26621.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE", "src\PipelinesCE\JeremyTCD.PipelinesCE.csproj", "{CC901030-1F1E-4BD6-AB42-661015DC47D5}"
 EndProject
@@ -24,53 +24,51 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.AppVeyor", "src\AppVeyor\JeremyTCD.PipelinesCE.Plugin.AppVeyor.csproj", "{A528121B-899B-46D7-A619-E5809BE983C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Git", "src\Git\JeremyTCD.PipelinesCE.Plugin.Git.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Git", "src\Git\JeremyTCD.PipelinesCE.Plugin.Git.csproj", "{BD3CFD52-3E9A-42E2-BB50-C37BF906EC0D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.Utils", "..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj", "{7372C701-9A34-4F07-832C-9FFA193E3041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests", "test\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests", "test\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests.csproj", "{4596FE1C-242D-4373-8529-C3D45F5E2FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Changelog.Tests", "test\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Changelog.Tests", "test\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.Tests.csproj", "{A46A6337-4351-43C7-A8C2-EB45E12998E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.LibGit2Sharp.Extensions", "src\JeremyTCD.LibGit2Sharp.Extensions\JeremyTCD.LibGit2Sharp.Extensions.csproj", "{14C9D89B-B773-4533-B9EE-D2F6D11823BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Git.Tests", "test\Git\JeremyTCD.PipelinesCE.Plugin.Git.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Git.Tests", "test\Git\JeremyTCD.PipelinesCE.Plugin.Git.Tests.csproj", "{8D6CA4D0-0938-4A8D-B41F-22B10C8F2242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.GitHub", "src\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.csproj", "{EF5B2A02-AFD3-4BE6-8032-F690763B1538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.GitHub", "src\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.csproj", "{EF5B2A02-AFD3-4BE6-8032-F690763B1538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.GitHub.Tests", "test\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.csproj", "{E4BC721A-0E8B-48E5-9436-E1F9F943ECB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.GitHub.Tests", "test\GitHub\JeremyTCD.PipelinesCE.Plugin.GitHub.Tests.csproj", "{E4BC721A-0E8B-48E5-9436-E1F9F943ECB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Chocolatey", "src\Chocolatey\JeremyTCD.PipelinesCE.Plugin.Chocolatey.csproj", "{E5DBC88E-7374-450C-9250-C52384F43EF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Chocolatey", "src\Chocolatey\JeremyTCD.PipelinesCE.Plugin.Chocolatey.csproj", "{E5DBC88E-7374-450C-9250-C52384F43EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Chocolatey.Tests", "test\Chocolatey\JeremyTCD.PipelinesCE.Plugin.Chocolatey.Tests.csproj", "{BEFB8FBB-0AEB-4EFC-BCAE-09A6CD411B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Chocolatey.Tests", "test\Chocolatey\JeremyTCD.PipelinesCE.Plugin.Chocolatey.Tests.csproj", "{BEFB8FBB-0AEB-4EFC-BCAE-09A6CD411B5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Nuget", "src\Nuget\JeremyTCD.PipelinesCE.Plugin.Nuget.csproj", "{608E06BF-5312-4DDF-90BD-4EC6437B1B5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Nuget", "src\Nuget\JeremyTCD.PipelinesCE.Plugin.Nuget.csproj", "{608E06BF-5312-4DDF-90BD-4EC6437B1B5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Nuget.Tests", "test\Nuget\JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.csproj", "{ABDC8C54-26EF-40D7-9E8E-91D947D496E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Nuget.Tests", "test\Nuget\JeremyTCD.PipelinesCE.Plugin.Nuget.Tests.csproj", "{ABDC8C54-26EF-40D7-9E8E-91D947D496E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Roslyn", "src\Roslyn\JeremyTCD.PipelinesCE.Plugin.Roslyn.csproj", "{F7B21A1F-6A9A-4E0E-BF19-6637D97CDF55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Roslyn", "src\Roslyn\JeremyTCD.PipelinesCE.Plugin.Roslyn.csproj", "{F7B21A1F-6A9A-4E0E-BF19-6637D97CDF55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Roslyn.Tests", "test\Roslyn\JeremyTCD.PipelinesCE.Plugin.Roslyn.Tests.csproj", "{5276114F-7A2E-4C41-A1A0-A9F00947B753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Roslyn.Tests", "test\Roslyn\JeremyTCD.PipelinesCE.Plugin.Roslyn.Tests.csproj", "{5276114F-7A2E-4C41-A1A0-A9F00947B753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.MSBuild", "src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj", "{887D7BE4-6D85-4BA3-A77C-940E97644919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.MSBuild", "src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj", "{887D7BE4-6D85-4BA3-A77C-940E97644919}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests", "test\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.csproj", "{6B512194-4EB9-4D44-92DB-FF480DEC80E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests", "test\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.csproj", "{6B512194-4EB9-4D44-92DB-FF480DEC80E0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CDA18578-9B05-47F8-8368-CBB8C1FCBD72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipelinesCEConfig", "build\PipelinesCE\PipelinesCEConfig.csproj", "{7D04DFBE-E8EF-45A1-ADE3-443E7A73ED3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelinesCEConfig", "build\PipelinesCE\PipelinesCEConfig.csproj", "{7D04DFBE-E8EF-45A1-ADE3-443E7A73ED3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Plugin.Configuration", "src\Configuration\JeremyTCD.PipelinesCE.Plugin.Configuration.csproj", "{F4613FFC-2A59-4FF9-9DB7-78022E065AD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Plugin.Configuration", "src\Configuration\JeremyTCD.PipelinesCE.Plugin.Configuration.csproj", "{F4613FFC-2A59-4FF9-9DB7-78022E065AD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.CommandLineApp", "src\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.csproj", "{CF057720-DF46-40B5-9E7C-6E36B448738B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.CommandLineApp.Tests", "test\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.Tests.csproj", "{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.CommandLineApp.Tests", "test\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.Tests.csproj", "{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructureMap", "..\..\..\..\Desktop\LibrariesAndTools\StructureMapVS2017\structuremap\src\StructureMap\StructureMap.csproj", "{E149CE09-0802-4E09-9CC7-77FF7CC8E576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject", "test\StubPipelinesCEProject\JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject.csproj", "{1CC2CE40-106A-4D69-985E-8D7DDCC94891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject", "test\StubPipelinesCEProject\JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject.csproj", "{1CC2CE40-106A-4D69-985E-8D7DDCC94891}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeremyTCD.PipelinesCE.Tests.StubPluginProject", "test\StubPluginProject\JeremyTCD.PipelinesCE.Tests.StubPluginProject.csproj", "{F2921616-F09A-45B4-A69A-C5E9CE8241BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tests.StubPluginProject", "test\StubPluginProject\JeremyTCD.PipelinesCE.Tests.StubPluginProject.csproj", "{F2921616-F09A-45B4-A69A-C5E9CE8241BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1146,48 +1144,6 @@ Global
 		{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}.Release-NetCore|x64.Build.0 = Release|Any CPU
 		{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}.Release-NetCore|x86.ActiveCfg = Release|Any CPU
 		{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}.Release-NetCore|x86.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|x64.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug|x86.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|Any CPU.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|Any CPU.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|x64.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|x64.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|x86.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-MONO|x86.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|Any CPU.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|Any CPU.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|x64.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|x64.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|x86.ActiveCfg = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Debug-NetCore|x86.Build.0 = Debug|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|Any CPU.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|Any CPU.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|x64.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|x64.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|x86.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Port-Progress|x86.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|x64.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|x64.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|x86.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release|x86.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|Any CPU.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|Any CPU.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|x64.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|x64.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|x86.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-MONO|x86.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|Any CPU.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|Any CPU.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|x64.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|x64.Build.0 = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|x86.ActiveCfg = Release|Any CPU
-		{E149CE09-0802-4E09-9CC7-77FF7CC8E576}.Release-NetCore|x86.Build.0 = Release|Any CPU
 		{1CC2CE40-106A-4D69-985E-8D7DDCC94891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CC2CE40-106A-4D69-985E-8D7DDCC94891}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CC2CE40-106A-4D69-985E-8D7DDCC94891}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -1303,5 +1259,8 @@ Global
 		{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 		{1CC2CE40-106A-4D69-985E-8D7DDCC94891} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
 		{F2921616-F09A-45B4-A69A-C5E9CE8241BE} = {97A4254C-8D5D-4BE7-907A-18BD01E697D3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6884189A-4C9A-471C-9378-FC48D923C1A2}
 	EndGlobalSection
 EndGlobal
