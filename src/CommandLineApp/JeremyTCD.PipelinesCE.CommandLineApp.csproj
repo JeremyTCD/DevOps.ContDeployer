@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- Also used as exe name -->
     <AssemblyName>PipelinesCE</AssemblyName>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
     <!-- This should not be necessary as it has been added to the default properties: https://github.com/dotnet/sdk/issues/346,
@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PipelinesCE\JeremyTCD.PipelinesCE.csproj" />
   </ItemGroup>
-
 
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">

@@ -73,7 +73,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.GitHub
                         Body = version.Notes,
                         Name = name,
                         Draft = false,
-                        Prerelease = name.Contains('-'),
+                        Prerelease = name.Contains("-"),
                         TargetCommitish = _options.Commitish // Ignored by gitHub api if tag already exists, otherwise creates a tag pointing to commitish
                     });
 

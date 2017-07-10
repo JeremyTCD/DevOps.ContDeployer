@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
 

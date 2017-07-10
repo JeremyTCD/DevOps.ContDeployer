@@ -35,10 +35,10 @@ namespace JeremyTCD.PipelinesCE.Tests.IntegrationTests
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IOptionsSnapshot<>) && r.ReturnedType == typeof(OptionsSnapshot<>)
                 && r.Lifecycle.GetType() == typeof(ContainerLifecycle)));
-            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IOptionsFactory<>) && r.ReturnedType == typeof(OptionsFactory<>)
-                && r.Lifecycle.GetType() == typeof(UniquePerRequestLifecycle))); 
-            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IOptionsCache<>) && r.ReturnedType == typeof(OptionsCache<>)
-                && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
+            //Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IOptionsFactory<>) && r.ReturnedType == typeof(OptionsFactory<>)
+            //    && r.Lifecycle.GetType() == typeof(UniquePerRequestLifecycle))); 
+            //Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IOptionsCache<>) && r.ReturnedType == typeof(OptionsCache<>)
+            //    && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
 
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IAssemblyService) && r.ReturnedType == typeof(AssemblyService)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
