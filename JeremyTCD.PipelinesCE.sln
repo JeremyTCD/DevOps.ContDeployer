@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26621.2
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE", "src\PipelinesCE\JeremyTCD.PipelinesCE.csproj", "{CC901030-1F1E-4BD6-AB42-661015DC47D5}"
 EndProject
