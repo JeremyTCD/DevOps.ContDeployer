@@ -22,18 +22,25 @@ PipelinesCE keeps all relevant data within the project or solution being worked 
 plugins.
 
 ## System Architecture
-The PipelinesCE system consists of four separate levels.
-### PipelinesCE
-PipelinesCE is the heart of the system. It manages plugins and provides an interface for user facing clients like the command line application.
-### PluginTools
-Plugin tools are types utilizes by plugins. These types are also referenced in PipelinesCE, therefore, to avoid circular dependencies, they cannot be part of PipelinesCE.
-### Plugins
-- Dependency 
-- Runtime data (e.g plugin options, remaining steps) 
-  - Provide through api method parameters. Messing with services at runtime or using complex factories causes inflexibility and convolution.
-    Good write up on handling runtime data: https://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=99.
-### CommandLineApp
-The command line application provides a simple way for end users to utilize PipelinesCE.
+The PipelinesCE system consists of three levels and two shared libraries.
+### Levels
+From top (closest to end users) to bottom:
+#### PipelinesCE.CommandLineApp
+Provides a user facing interface. Converts user input into instances of options Types from PipelinesCE.Tools. Uses ProjectRunner to run 
+config project with serialized options instances as arguments.  
+Config project must reference same PipelinesCE.Tools version so that it can deserialize options in a predictable manner.
+#### PipelinesCE.Runner
+Referenced by config projects, PipelinesCE.Runner contains a main method that ProjectRunner locates and calls. Loads
+config project assemblies that reference PipelinesCE.Tools. Intantiates instances of relevant types, sets up DI and 
+finally runs Pipeline defined in config project.
+#### PipelinesCE.Plugin
+Runs within a Pipeline. 
+### Shared Libraries
+#### PipelinesCE.Tools
+Defines types shared by all levels.
+#### ProjectRunner
+Restores, builds and publishes a project. Locates main method within generated assemblies and calls it.
+### Misc
 #### Dependency Injection
 The command line application creates a single StructureMap IContainer. This IOC container contains services for PipelinesCE and CLA. StructureMap is used for its
 tenancy features. Each plugin has its own child Container. This ensures that services registered for one plugin do not intefere with services registered for another.
@@ -58,7 +65,6 @@ should be in the following format: <what it does><elaboration/notes>.
 PipelinesCE allows default options to be specified in PipelineFactorys. Therefore, every option must have at least two states: specified or unspecified (overridable by defaults). These states are facilitated
 by creating a nullable field in PipelineOptions for every property. If a field is null, the option is unspecified and can be overridden by defaults. Note that since flag CLA options can only be on or off,
 every flag must have a corresponding "<flag>off" CLA option. 
-### Shared Systems
 #### Logging Strategy
 ##### Info Level Log
 The goal of messages at this log level is to provide users with a quick way to verify that PipelinesCE is behaving in the expected manner. It is thus a rough 
@@ -78,3 +84,11 @@ with options <insert options here>". Therefore, log debug level messages whereve
 immediately after entering functions. Debug logs are not a magic bullet, sometimes it will be necessary to recreate conditions and run with the debugger attached.
 ##### Testing Logging
 The goal of testing logging is ensuring that log messages are written at the expected log levels with the expected interpolations. 
+## Plugins
+### XUnit 
+#### What it should do
+- If assemblies are included in options, run them
+- If no project is specified, run all that reference the xunit assembly
+- If assemblies are excluded in options, run all that reference the xunit assembly other than the excluded ones
+- Option to kill pipeline if test fail
+- Test results should be output to xml/json
