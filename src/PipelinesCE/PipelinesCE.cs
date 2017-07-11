@@ -2,7 +2,6 @@
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using NuGet.Configuration;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,6 @@ namespace JeremyTCD.PipelinesCE
         private IActivatorService _activatorService { get; }
         private IContainer _mainContainer { get; }
         private IDependencyContextService _dependencyContextService { get; }
-        private INugetConfigurationService _nugetConfigurationService { get; }
 
         private IDictionary<string, IContainer> _pluginContainers { get; set; }
         private bool _isDisposed;
@@ -44,7 +42,6 @@ namespace JeremyTCD.PipelinesCE
             IMSBuildService msBuildService,
             IPipelineRunner pipelineRunner,
             IContainer mainContainer,
-            INugetConfigurationService nugetConfigurationService,
             ILoggingService<PipelinesCE> loggingService)
         {
             _dependencyContextService = dependencyContextService;
@@ -56,7 +53,6 @@ namespace JeremyTCD.PipelinesCE
             _directoryService = directoryService;
             _loggingService = loggingService;
             _activatorService = activatorService;
-            _nugetConfigurationService = nugetConfigurationService;
         }
 
         /// <summary>
@@ -73,7 +69,7 @@ namespace JeremyTCD.PipelinesCE
 
             // Build project
             _loggingService.LogInformation(Strings.Log_BuildingPipelinesCEProject, projectFile);
-            _msBuildService.Build(projectFile, "/t:restore,build /p:configuration=release");
+            _msBuildService.Build(projectFile, "/t:restore,publish /p:configuration=release");
             _loggingService.LogInformation(Strings.Log_PipelinesCEProjectSuccessfullyBuilt, projectFile);
 
             // Load assemblies
@@ -116,9 +112,8 @@ namespace JeremyTCD.PipelinesCE
         /// </exception>
         public virtual IEnumerable<Assembly> LoadAssemblies(string projectFile)
         {
-            string projectFileName = _pathService.GetFileNameWithoutExtension(projectFile);
             string projectDirectory = _directoryService.GetParent(projectFile).FullName;
-            string publishDirectory = _pathService.Combine(projectDirectory, "bin/Release/netcoreapp1.1");
+            string publishDirectory = _pathService.Combine(projectDirectory, "bin/release/netcoreapp2.0/publish");
 
             // TODO what if framework version changes? can a wildcard be used? what if project builds for multiple frameworks?
             string[] possibleDepsFiles = _directoryService.GetFiles(publishDirectory, "*.deps.json", SearchOption.TopDirectoryOnly);
@@ -130,17 +125,15 @@ namespace JeremyTCD.PipelinesCE
             {
                 throw new InvalidOperationException(String.Format(Strings.Exception_NoDepsFiles, publishDirectory));
             }
+            string depsFile = possibleDepsFiles[0];
+            string assemblyFile = depsFile.Replace(".deps.json", ".dll");
 
-            DependencyContext context = _dependencyContextService.CreateDependencyContext(possibleDepsFiles[0]);
-            ISettings nugetSettings = _nugetConfigurationService.LoadDefaultSettings(projectDirectory);
-            string globalPackagesFolder = _nugetConfigurationService.GetGlobalPackagesFolder(nugetSettings);
-            _assemblyService.AddAssemblyDirectory(publishDirectory);
-            _assemblyService.AddPackageCacheDirectory(globalPackagesFolder);
-
-            // TODO what exactly is stored in a "repository", are the packages duplicated in the global cache? is null returned if no repository is used? 
-            //string repositoryPath = _nugetConfigurationService.GetRepositoryPath(nugetSettings); 
-            //if(repositoryPath != null)
-            //_assemblyService.AddAssemblyDirectory(globalPackagesFolder);
+            // Load root assembly
+            //Assembly a = _assemblyService.LoadFrom(assemblyFile);
+            //a.LoadModule()
+            
+            // Create context 
+            DependencyContext context = _dependencyContextService.CreateDependencyContext(depsFile);
 
             return _assemblyService.GetReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
         }

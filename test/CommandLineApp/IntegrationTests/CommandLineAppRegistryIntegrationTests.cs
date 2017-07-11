@@ -53,7 +53,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         {
             // Arrange 
             Container container = new Container(new CommandLineAppRegistry());
-            PipelinesCE instance = new PipelinesCE(null, null, null, null, null, null, null, null, null, null);
+            PipelinesCE instance = new PipelinesCE(null, null, null, null, null, null, null, null, null);
 
             // Act
             container.Configure(r => r.For<PipelinesCE>().Use(instance).Singleton());
@@ -83,9 +83,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 IAssemblyService assemblyService, 
                 IPathService pathService, IDirectoryService directoryService, 
                 IMSBuildService msBuildService, IPipelineRunner pipelineRunner, 
-                IContainer mainContainer, INugetConfigurationService nugetConfigService, ILoggingService<PipelinesCE> loggingService) : 
+                IContainer mainContainer, ILoggingService<PipelinesCE> loggingService) : 
                 base(activatorService, dependencyContextService, assemblyService, pathService, directoryService, 
-                    msBuildService, pipelineRunner, mainContainer, nugetConfigService, loggingService)
+                    msBuildService, pipelineRunner, mainContainer,loggingService)
             {
             }
         }
