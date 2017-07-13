@@ -19,7 +19,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
         private DirectoryService _directoryService { get; }
         private ProcessService _processService { get; }
         private LoggerFactory _loggerFactory { get; }
-        private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(CommandLineApp)}Temp");
+        private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(Program)}Temp");
 
         public CommandLineAppEndToEndTests()
         {
@@ -42,7 +42,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
         public void PublishTarget_PublishesWorkingPipelinesCEExecutable()
         {
             // Arrange
-            string solutionDir = Path.GetFullPath(typeof(CommandLineApp).GetTypeInfo().Assembly.Location + "../../../../../../..");
+            string solutionDir = Path.GetFullPath(typeof(Program).GetTypeInfo().Assembly.Location + "../../../../../../..");
             string claProjectAbsDir = Path.GetFullPath(solutionDir + "/src/CommandLineApp");
             string exePath = Path.GetFullPath(claProjectAbsDir + "/bin/Release/netcoreapp1.1/win10-x64/PipelinesCE.exe");
             // This magic string is unavoidable, can't reference this assembly since it is to be build and loaded by PipelinesCE

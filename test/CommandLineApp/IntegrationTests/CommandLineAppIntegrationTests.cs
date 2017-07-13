@@ -12,7 +12,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
     // TODO integration test that includes Main
     /// <summary>
-    /// Tests to ensure that <see cref="CommandLineApp"/> commands have been configured correctly and that 
+    /// Tests to ensure that <see cref="Program"/> commands have been configured correctly and that 
     /// <see cref="CommandLineAppRegistry"/> configures services correctly. Note that <see cref="CommandLineApplication"/>
     /// formats output depending on option names and descriptions. This means that output strings must
     /// be normalized before being compared with expected strings.

@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
-    public class CommandLineApp
+    public class Program
     {
         public static int Main(string[] args)
         {
-            ILoggingService<CommandLineApp> loggingService = null;
+            ILoggingService<Program> loggingService = null;
             IContainer container = null;
             int exitCode = 1;
 
@@ -26,7 +26,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 Startup startup = new Startup();
                 ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
                 startup.Configure(loggerFactory, args);
-                loggingService = container.GetInstance<ILoggingService<CommandLineApp>>();
+                loggingService = container.GetInstance<ILoggingService<Program>>();
 
                 if (loggingService.IsEnabled(LogLevel.Debug))
                 {
