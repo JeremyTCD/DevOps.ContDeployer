@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>JeremyTCD.PipelinesCE.Plugin.AppVeyor</AssemblyName>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
