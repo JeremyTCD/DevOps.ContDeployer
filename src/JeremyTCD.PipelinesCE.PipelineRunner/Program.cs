@@ -1,17 +1,20 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StructureMap;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.PipelineRunner
 {
     public class Program
     {
+        private static ILoggingService<Program> _loggingService = null;
+
         private static int Main(string[] args)
         {
-            ILoggingService<Program> loggingService = null;
             IContainer container = null;
             int exitCode = 1;
 
@@ -19,7 +22,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             {
                 // Parse args into PipelineOptions
                 // TODO logic to catch errors which can occur if Tools version is different for program that supplied args
-                PipelineOptions pipelineOptions = ParseArgs(args);
+                PipelineOptions pipelineOptions = JsonConvert.DeserializeObject<PipelineOptions>(args[0], new PrivateFieldsJsonConverter());
 
                 // Initialize container
                 container = new Container(new PipelineRunnerRegistry());
@@ -29,7 +32,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
                 startup.Configure(container, pipelineOptions);
 
                 // Create logger
-                loggingService = container.GetInstance<ILoggingService<Program>>();
+                _loggingService = container.GetInstance<ILoggingService<Program>>();
 
                 Root root = container.GetInstance<Root>();
                 root.Run(pipelineOptions);
@@ -39,9 +42,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             {
                 // Catch unhandled exceptions and log them using logger. This ensures that unhandled exceptions are logged by all
                 // logging providers (such as file, debug etc - not just console).
-                if (loggingService != null)
+                if (_loggingService != null)
                 {
-                    loggingService.LogError(exception.ToString());
+                    _loggingService.LogError(exception.ToString());
                 }
             }
             finally
@@ -58,13 +61,22 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
         // TODO should be private or internal
         public static PipelineOptions ParseArgs(string[] args)
         {
-            // Attempt to deserialize, require exact match member wise
-            // If members do not match, advise user to update PipelinesCE (CLA) and PipelineRunner to their latest versions
-            // - as far as possible, try to run (when developing, keep PipelineOptions backward compatible)
-            //   - if PipelinesCE is newer, ignore the new members (notify user). This way user wont have to install older version just to interact with a project that hasn't updated its PipelineRunner package.
-            //   - if pipelinerunner is newer, continue using default for the field (every field must have default)
+            PrivateFieldsJsonConverter converter = new PrivateFieldsJsonConverter();
 
-            return JsonConvert.DeserializeObject<PipelineOptions>(args[0]);
+            PipelineOptions result = JsonConvert.DeserializeObject<PipelineOptions>(args[0], converter);
+
+
+            foreach(FieldInfo field in converter.MissingFields)
+            {
+                // log
+            }
+
+            foreach(KeyValuePair<string, JToken> pair in converter.ExtraFields)
+            {
+                // log
+            }
+
+            return result;
         }
     }
 }
