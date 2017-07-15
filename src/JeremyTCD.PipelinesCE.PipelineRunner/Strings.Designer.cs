@@ -10,7 +10,6 @@
 
 namespace JeremyTCD.PipelinesCE.PipelineRunner {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.PipelinesCE.PipelineRunner.Strings", typeof(Strings).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.PipelinesCE.PipelineRunner.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -159,6 +158,17 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner {
         public static string Log_CreatingPluginIoCContainers {
             get {
                 return ResourceManager.GetString("Log_CreatingPluginIoCContainers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PipelinesCE executable and config project versions do not match. The following options will be ignored:{0}
+        ///The following options will be assigned their default values:{1}
+        ///.
+        /// </summary>
+        public static string Log_ExecutableAndProjectVersionsDoNotMatch {
+            get {
+                return ResourceManager.GetString("Log_ExecutableAndProjectVersionsDoNotMatch", resourceCulture);
             }
         }
         

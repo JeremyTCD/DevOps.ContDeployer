@@ -152,6 +152,11 @@
   <data name="Log_CreatingPluginIoCContainers" xml:space="preserve">
     <value>== Creating Plugin IoC Containers ==</value>
   </data>
+  <data name="Log_ExecutableAndProjectVersionsDoNotMatch" xml:space="preserve">
+    <value>PipelinesCE executable and config project versions do not match. The following options will be ignored:{0}
+The following options will be assigned their default values:{1}
+</value>
+  </data>
   <data name="Log_FinishedRunningPipeline" xml:space="preserve">
     <value>=== Finished running Pipeline "{0}" ===</value>
   </data>

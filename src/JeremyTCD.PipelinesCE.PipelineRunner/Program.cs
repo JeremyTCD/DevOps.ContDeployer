@@ -1,4 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,7 +22,6 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             try
             {
                 // Parse args into PipelineOptions
-                // TODO logic to catch errors which can occur if Tools version is different for program that supplied args
                 PipelineOptions pipelineOptions = JsonConvert.DeserializeObject<PipelineOptions>(args[0], new PrivateFieldsJsonConverter());
 
                 // Initialize container
@@ -34,8 +34,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
                 // Create logger
                 _loggingService = container.GetInstance<ILoggingService<Program>>();
 
-                Root root = container.GetInstance<Root>();
-                root.Run(pipelineOptions);
+                container.GetInstance<Root>().Run(pipelineOptions);
                 exitCode = 0;
             }
             catch (Exception exception)
@@ -59,21 +58,34 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
         }
 
         // TODO should be private or internal
+        /// <summary>
+        /// Parses args. Logs if there is a version mismatch between PipelinesCE executable and config project
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>
+        /// <see cref="PipelineOptions"/>
+        /// </returns>
         public static PipelineOptions ParseArgs(string[] args)
         {
             PrivateFieldsJsonConverter converter = new PrivateFieldsJsonConverter();
-
             PipelineOptions result = JsonConvert.DeserializeObject<PipelineOptions>(args[0], converter);
 
-
-            foreach(FieldInfo field in converter.MissingFields)
+            if (converter.MissingFields.Count > 0 || converter.ExtraFields.Count > 0)
             {
-                // log
-            }
+                string missingFields = "";
+                string extraFields = "";
 
-            foreach(KeyValuePair<string, JToken> pair in converter.ExtraFields)
-            {
-                // log
+                foreach (FieldInfo field in converter.MissingFields)
+                {
+                    missingFields += Environment.NewLine + field.Name.Replace("_", "").ToLowerInvariant();
+                }
+
+                foreach (KeyValuePair<string, JToken> pair in converter.ExtraFields)
+                {
+                    extraFields += Environment.NewLine + pair.Key.Replace("_", "").ToLowerInvariant();
+                }
+
+                _loggingService.LogWarning(Strings.Log_ExecutableAndProjectVersionsDoNotMatch, extraFields, missingFields);
             }
 
             return result;
