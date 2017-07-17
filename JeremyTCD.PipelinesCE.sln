@@ -62,13 +62,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Comma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.CommandLineApp.Tests", "test\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.Tests.csproj", "{B5C11E3F-C6D1-41E7-93B4-53D72EE4FC4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject", "test\StubPipelinesCEProject\JeremyTCD.PipelinesCE.Tests.StubPipelinesCEProject.csproj", "{1CC2CE40-106A-4D69-985E-8D7DDCC94891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubProject.PipelinesCEConfig", "test\StubProject.PipelinesCEConfig\StubProject.PipelinesCEConfig.csproj", "{1CC2CE40-106A-4D69-985E-8D7DDCC94891}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tests.StubPluginProject", "test\StubPluginProject\JeremyTCD.PipelinesCE.Tests.StubPluginProject.csproj", "{F2921616-F09A-45B4-A69A-C5E9CE8241BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubProject.Plugin", "test\StubProject.Plugin\StubProject.Plugin.csproj", "{F2921616-F09A-45B4-A69A-C5E9CE8241BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PipelineRunner", "src\JeremyTCD.PipelinesCE.PipelineRunner\JeremyTCD.PipelinesCE.PipelineRunner.csproj", "{E3C73164-0199-45C3-979F-8BCEAEF99ED1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PipelineRunner", "src\PipelineRunner\JeremyTCD.PipelinesCE.PipelineRunner.csproj", "{E3C73164-0199-45C3-979F-8BCEAEF99ED1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PipelineRunner.Tests", "test\JeremyTCD.PipelinesCE.PipelineRunner.Tests\JeremyTCD.PipelinesCE.PipelineRunner.Tests.csproj", "{D79C47D2-522B-4D45-A6CE-0179D1DB9639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.PipelineRunner.Tests", "test\PipelineRunner\JeremyTCD.PipelinesCE.PipelineRunner.Tests.csproj", "{D79C47D2-522B-4D45-A6CE-0179D1DB9639}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.Newtonsoft.Json.Utils", "..\JeremyTCD.Newtonsoft.Json.Utils\src\Utils\JeremyTCD.Newtonsoft.Json.Utils.csproj", "{64E4BCBD-F406-4DCB-B15A-9851B8DCC8C3}"
 EndProject
