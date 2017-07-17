@@ -7,9 +7,24 @@
     <OutputType>Exe</OutputType>
     <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
     <!-- This should not be necessary as it has been added to the default properties: https://github.com/dotnet/sdk/issues/346,
-      https://github.com/dotnet/sdk/commit/829d60a3b584b1413904f0d40ccd81c168147e0f -->
-    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
+      https://github.com/dotnet/sdk/commit/829d60a3b584b1413904f0d40ccd81c168147e0f --><!--
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>-->
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StructureMap" Version="4.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.ProjectRunner\src\ProjectRunner\JeremyTCD.ProjectRunner.csproj" />
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
+    <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">

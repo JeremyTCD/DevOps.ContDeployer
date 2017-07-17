@@ -164,39 +164,39 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
-        [Theory]
-        [MemberData(nameof(RunCommandData))]
-        public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool dryRunOff,
-            bool verbose, string pipeline, string project)
-        {
-            // Arrange
-            Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
-            mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-            string options = $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
-                $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
-                $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}";
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, options));
-            Container container = new Container(new CommandLineAppRegistry());
-            container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
+        //[Theory]
+        //[MemberData(nameof(RunCommandData))]
+        //public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool dryRunOff,
+        //    bool verbose, string pipeline, string project)
+        //{
+        //    // Arrange
+        //    Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
+        //    mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
+        //    string options = $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
+        //        $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
+        //        $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
+        //        $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
+        //        $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
+        //        $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}";
+        //    mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, options));
+        //    Container container = new Container(new CommandLineAppRegistry());
+        //    container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
 
-            Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null, null);
-            mockPipelinesCE.
-                Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
-            container.
-                Configure(registry => registry.For<PipelinesCE>().
-                Use(mockPipelinesCE.Object).Singleton());
+        //    Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null, null);
+        //    mockPipelinesCE.
+        //        Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
+        //    container.
+        //        Configure(registry => registry.For<PipelinesCE>().
+        //        Use(mockPipelinesCE.Object).Singleton());
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+        //    RootCommand rootCommand = container.GetInstance<RootCommand>();
 
-            // Act
-            rootCommand.Execute(arguments);
+        //    // Act
+        //    rootCommand.Execute(arguments);
 
-            // Assert
-            _mockRepository.VerifyAll();
-        }
+        //    // Assert
+        //    _mockRepository.VerifyAll();
+        //}
 
         public static IEnumerable<object[]> RunCommandData()
         {

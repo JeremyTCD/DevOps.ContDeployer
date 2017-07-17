@@ -1,5 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+using JeremyTCD.ProjectRunner;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,14 +19,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
-        private PipelinesCE _pipelinesCE { get; }
+        private Runner _runner { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, PipelinesCE pipelinesCE,
+        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, Runner runner,
             ILoggingService<RunCommand> loggingService)
         {
             _claOptions = claOptionsAccessor.Value;
             _cluService = cluService;
-            _pipelinesCE = pipelinesCE;
+            _runner = runner;
             _loggingService = loggingService;
 
             Description = Strings.CommandDescription_Run;
@@ -79,7 +80,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 pipelineOptions.DryRun = false;
             }
 
-            _pipelinesCE.Run(pipelineOptions);
+            //_runner.Run(pipelineOptions);
 
             return 0;
         }
