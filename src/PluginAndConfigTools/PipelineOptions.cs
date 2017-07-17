@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
 {
@@ -9,13 +10,33 @@ namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
     /// </summary>
     public class PipelineOptions
     {
+        public const string LogFileFormat = nameof(PipelinesCE) + "-{Date}.log";
+        public const LogLevel VerboseMinLogLevel = LogLevel.Debug;
+        public const LogLevel DefaultMinLogLevel = LogLevel.Information;
         public const string DefaultPipeline = "Default";
         public const string DefaultProject = "PipelinesCEConfig.csproj";
         public const bool DefaultDryRun = false;
+        public const bool DefaultVerbose = false;
 
+        private bool? _verbose;
         private bool? _dryRun;
         private string _project;
         private string _pipeline;
+
+        /// <summary>
+        /// Defaults to false
+        /// </summary>
+        public virtual bool Verbose
+        {
+            get
+            {
+                return _verbose ?? DefaultVerbose;
+            }
+            set
+            {
+                _verbose = value;
+            }
+        }
 
         /// <summary>
         /// Defaults to false
