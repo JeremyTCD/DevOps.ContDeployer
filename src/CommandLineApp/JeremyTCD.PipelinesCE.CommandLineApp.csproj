@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.ProjectRunner\src\ProjectRunner\JeremyTCD.ProjectRunner.csproj" />
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
+    <ProjectReference Include="..\..\..\JeremyTCD.Newtonsoft.Json.Utils\src\Utils\JeremyTCD.Newtonsoft.Json.Utils.csproj" />
     <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
   </ItemGroup>
 

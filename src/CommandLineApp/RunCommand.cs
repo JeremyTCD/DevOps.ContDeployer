@@ -1,9 +1,11 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using JeremyTCD.ProjectRunner;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -19,11 +21,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
+        private IPathService _pathService { get; }
         private Runner _runner { get; }
 
         public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, Runner runner,
-            ILoggingService<RunCommand> loggingService)
+            ILoggingService<RunCommand> loggingService, IPathService pathService)
         {
+            _pathService = pathService;
             _claOptions = claOptionsAccessor.Value;
             _cluService = cluService;
             _runner = runner;
@@ -54,9 +58,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 CommandOptionType.NoValue);
         }
 
-        // Questions
-        // If optiontype is novalue and a value is provided, is an error thrown? is value made available?
-        // If optiontype is singlevalue and no value is provided, is an error thrown?
         private int Run()
         {
             if (_loggingService.IsEnabled(LogLevel.Debug))
@@ -66,6 +67,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                     string.Join(Environment.NewLine, GetOptions().ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
+            PipelineOptions pipelineOptions = CreatePipelineOptions();
+            string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
+
+            _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project), 
+                PipelineOptions.EntryAssemblyName, 
+                args: new string[] { json });
+
+            return 0;
+        }
+
+        private PipelineOptions CreatePipelineOptions()
+        {
             PipelineOptions pipelineOptions = new PipelineOptions
             {
                 Project = _project.Value(),
