@@ -18,7 +18,7 @@ namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
         public const bool DefaultDryRun = false;
         public const bool DefaultVerbose = false;
         public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.PipelineRunner";
-        public const string EntryClassName = "Program";
+        public const string EntryClassName = "JeremyTCD.PipelinesCE.PipelineRunner.Program";
 
         private bool? _verbose;
         private bool? _dryRun;

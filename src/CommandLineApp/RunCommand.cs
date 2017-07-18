@@ -80,6 +80,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project), 
                 PipelineOptions.EntryAssemblyName, 
+                PipelineOptions.EntryClassName,
                 args: new string[] { json });
 
             return 0;

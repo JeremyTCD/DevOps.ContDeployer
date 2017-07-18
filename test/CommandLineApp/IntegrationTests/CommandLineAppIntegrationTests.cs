@@ -188,7 +188,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             Mock<Runner> mockRunner = _mockRepository.Create<Runner>(null, null, null, null, null, null, null);
             mockRunner.
-                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, It.IsAny<string>(), It.IsAny<string>(), stubArgs));
+                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, PipelineOptions.EntryClassName, It.IsAny<string>(), stubArgs));
 
             Container container = new Container(new CommandLineAppRegistry());
             container.
