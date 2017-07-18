@@ -1,8 +1,11 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+using JeremyTCD.ProjectRunner;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -164,64 +167,95 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
-        //[Theory]
-        //[MemberData(nameof(RunCommandData))]
-        //public void RunCommand_LogsDebugMessageAndCallsPipelinesCERunWithSpecifiedOptions(string[] arguments, bool dryRun, bool dryRunOff,
-        //    bool verbose, string pipeline, string project)
-        //{
-        //    // Arrange
-        //    Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
-        //    mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-        //    string options = $"{Strings.OptionLongName_Help}={Environment.NewLine}" +
-        //        $"{Strings.OptionLongName_Project}={(project == PipelineOptions.DefaultProject ? "" : project)}{Environment.NewLine}" +
-        //        $"{Strings.OptionLongName_Pipeline}={(pipeline == PipelineOptions.DefaultPipeline ? "" : pipeline)}{Environment.NewLine}" +
-        //        $"{Strings.OptionLongName_DryRun}={(dryRun ? "on" : "")}{Environment.NewLine}" +
-        //        $"{Strings.OptionLongName_DryRunOff}={(dryRunOff ? "on" : "")}{Environment.NewLine}" +
-        //        $"{Strings.OptionLongName_Verbose}={(verbose ? "on" : "")}";
-        //    mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Run, options));
-        //    Container container = new Container(new CommandLineAppRegistry());
-        //    container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
+        /// <summary>
+        /// Ensures that CommandOptions are setup correctly and that arguments are processed correctly
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <param name="pipelineOptions"></param>
+        [Theory]
+        [MemberData(nameof(RunCommandData))]
+        public void RunCommand_LogsDebugMessageAndCallsRunnerRunWithSpecifiedOptions(string[] arguments, PipelineOptions pipelineOptions)
+        {
+            // Arrange
+            string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
+            string[] stubArgs = new string[] { json };
 
-        //    Mock<PipelinesCE> mockPipelinesCE = _mockRepository.Create<PipelinesCE>(null, null, null, null, null, null, null, null, null);
-        //    mockPipelinesCE.
-        //        Setup(p => p.Run(It.Is<PipelineOptions>(o => o.DryRun == dryRun && o.Pipeline == pipeline && o.Project == project)));
-        //    container.
-        //        Configure(registry => registry.For<PipelinesCE>().
-        //        Use(mockPipelinesCE.Object).Singleton());
+            Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
+            mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(false);
 
-        //    RootCommand rootCommand = container.GetInstance<RootCommand>();
+            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+            mockPathService.Setup(p => p.GetAbsolutePath(pipelineOptions.Project)).Returns(pipelineOptions.Project);
 
-        //    // Act
-        //    rootCommand.Execute(arguments);
+            Mock<Runner> mockRunner = _mockRepository.Create<Runner>(null, null, null, null, null, null, null);
+            mockRunner.
+                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, It.IsAny<string>(), It.IsAny<string>(), stubArgs));
 
-        //    // Assert
-        //    _mockRepository.VerifyAll();
-        //}
+            Container container = new Container(new CommandLineAppRegistry());
+            container.
+                Configure(registry =>
+                {
+                    registry.For<Runner>().Use(mockRunner.Object).Singleton();
+                    registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton();
+                    registry.For<IPathService>().Use(mockPathService.Object).Singleton();
+                });
+
+            RootCommand rootCommand = container.GetInstance<RootCommand>();
+
+            // Act
+            rootCommand.Execute(arguments);
+
+            // Assert
+            _mockRepository.VerifyAll();
+        }
 
         public static IEnumerable<object[]> RunCommandData()
         {
             string testProject = "testProject";
             string testPipeline = "testPipeline";
-            CommandLineAppOptions claOptions = new CommandLineAppOptions();
 
-            yield return new object[] { new string[] { Strings.CommandName_Run }, false, false, false,
-                PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+            yield return new object[] { new string[] { Strings.CommandName_Run }, new PipelineOptions() };
             yield return new object[] {new string[] {Strings.CommandName_Run,
-                $"-{Strings.OptionShortName_Verbose}", $"-{Strings.OptionShortName_DryRun}",
+                $"-{Strings.OptionShortName_Verbose}",
+                $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
-                true, false, true,  testPipeline, testProject};
+                new PipelineOptions{
+                    Verbose = true,
+                    DryRun = true,
+                    Project = testProject,
+                    Pipeline = testPipeline
+                }
+            };
             yield return new object[] {new string[] {Strings.CommandName_Run,
-                $"--{Strings.OptionLongName_Verbose}", $"--{Strings.OptionLongName_DryRun}",
+                $"--{Strings.OptionLongName_Verbose}",
+                $"--{Strings.OptionLongName_DryRun}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
-                true, false, true, testPipeline, testProject};
+                new PipelineOptions{
+                    Verbose = true,
+                    DryRun = true,
+                    Project = testProject,
+                    Pipeline = testPipeline
+                }
+            };
             yield return new object[] { new string[] { Strings.CommandName_Run,
-                    $"-{Strings.OptionShortName_DryRunOff}"
-            }, false, true, false, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+                $"-{Strings.OptionShortName_DryRunOff}",
+                $"-{Strings.OptionShortName_VerboseOff}" },
+                new PipelineOptions
+                {
+                    DryRun = false,
+                    Verbose = false
+                }
+            };
             yield return new object[] { new string[] { Strings.CommandName_Run,
-                    $"--{Strings.OptionLongName_DryRunOff}"
-            }, false, true, false, PipelineOptions.DefaultPipeline, PipelineOptions.DefaultProject };
+                $"--{Strings.OptionLongName_DryRunOff}",
+                $"--{Strings.OptionLongName_VerboseOff}" },
+                new PipelineOptions
+                {
+                    DryRun = false,
+                    Verbose = false
+                }
+            };
         }
 
         [Theory]
@@ -249,7 +283,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}
-                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}";
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}";
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 
