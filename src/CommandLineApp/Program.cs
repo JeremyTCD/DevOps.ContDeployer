@@ -16,7 +16,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             try
             {
-                // Make all args lowercase
+                // Normalize args
                 args = args.Select(s => s.ToLowerInvariant()).ToArray();
 
                 // Initialize container
@@ -34,10 +34,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 }
 
                 RootCommand rootCommand = container.GetInstance<RootCommand>();
-                rootCommand.Execute(args);
-                exitCode = 0;
+                exitCode = rootCommand.Execute(args);
             }
-            catch (Exception exception)
+            catch (Exception exception) 
             {
                 // Catch unhandled exceptions and log them using logger. This ensures that unhandled exceptions are logged by all
                 // logging providers (such as file, debug etc - not just console).
