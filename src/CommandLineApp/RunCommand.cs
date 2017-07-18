@@ -17,6 +17,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _pipeline { get; set; }
         private CommandOption _dryRun { get; set; }
         private CommandOption _dryRunOff { get; set; }
+        private CommandOption _verbose { get; set; }
+        private CommandOption _verboseOff { get; set; }
 
         private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
@@ -56,14 +58,20 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _dryRunOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff),
                 Strings.OptionDescription_DryRunOff,
                 CommandOptionType.NoValue);
+            _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
+                Strings.OptionDescription_Verbose,
+                CommandOptionType.NoValue);
+            _verboseOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff),
+                Strings.OptionDescription_VerboseOff,
+                CommandOptionType.NoValue);
         }
 
         private int Run()
         {
             if (_loggingService.IsEnabled(LogLevel.Debug))
             {
-                _loggingService.LogDebug(Strings.Log_RunningCommand, 
-                    Strings.CommandFullName_Run, 
+                _loggingService.LogDebug(Strings.Log_RunningCommand,
+                    Strings.CommandFullName_Run,
                     string.Join(Environment.NewLine, GetOptions().ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
@@ -84,6 +92,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 Project = _project.Value(),
                 Pipeline = _pipeline.Value(),
             };
+
             if (_dryRun.HasValue())
             {
                 pipelineOptions.DryRun = true;
@@ -93,9 +102,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 pipelineOptions.DryRun = false;
             }
 
-            //_runner.Run(pipelineOptions);
+            if (_verbose.HasValue())
+            {
+                pipelineOptions.Verbose = true;
+            }
+            else if (_dryRunOff.HasValue())
+            {
+                pipelineOptions.Verbose = false;
+            }
 
-            return 0;
+            return pipelineOptions;
         }
     }
 }
