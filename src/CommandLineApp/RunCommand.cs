@@ -106,7 +106,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             {
                 pipelineOptions.Verbose = true;
             }
-            else if (_dryRunOff.HasValue())
+            else if (_verboseOff.HasValue())
             {
                 pipelineOptions.Verbose = false;
             }
