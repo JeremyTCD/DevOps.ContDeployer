@@ -44,7 +44,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
             _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
                 Strings.OptionDescription_Verbose,
-                CommandOptionType.NoValue, true);
+                CommandOptionType.NoValue);
         }
 
         private int Run()
