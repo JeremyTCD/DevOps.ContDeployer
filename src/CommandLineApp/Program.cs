@@ -21,11 +21,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
                 // Initialize container
                 container = new Container(new CommandLineAppRegistry());
-                    
-                // Configure logging and create logging service
-                Startup startup = new Startup();
-                ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
-                startup.Configure(loggerFactory, args);
+
+                // Configure configurable services
+                Configure(container, args);
+
+                // Create logger
                 loggingService = container.GetInstance<ILoggingService<Program>>();
 
                 if (loggingService.IsEnabled(LogLevel.Debug))
@@ -55,6 +55,23 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             }
 
             return exitCode;
+        }
+
+        // TODO should be private or internal
+        public static void Configure(IContainer container, string[] args)
+        {
+            ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
+
+            bool verbose = args.Where(s => s == $"--{Strings.OptionLongName_Verbose}" ||
+                s == $"-{Strings.OptionShortName_Verbose}").Count() > 0;
+
+            CommandLineAppOptions claOptions = new CommandLineAppOptions();
+            LogLevel logLevel = verbose ? claOptions.VerboseMinLogLevel : claOptions.DefaultMinLogLevel;
+
+            loggerFactory.
+                AddConsole(logLevel).
+                AddFile(claOptions.LogFileFormat, logLevel).
+                AddDebug(logLevel);
         }
     }
 }

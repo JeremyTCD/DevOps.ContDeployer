@@ -1,33 +1,36 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using StructureMap;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
-    public class StartupUnitTests
+    public class ProgramIntegrationTests
     {
         private MockRepository _mockRepository { get; }
 
-        public StartupUnitTests()
+        public ProgramIntegrationTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
 
         [Theory]
         [MemberData(nameof(ConfiguresLoggerFactoryData))]
-        public void Configure_ConfiguresLoggerFactory(LogLevel minLogLevel, string[] args)
+        public void Configure_ConfiguresLoggerFactoryCorrectly(LogLevel minLogLevel, string[] args)
         {
             // Arrange
-            ILoggerFactory loggerFactory = new LoggerFactory();
-
-            Startup startup = new Startup();
+            IContainer container = new Container(r =>
+            {
+                r.For<ILoggerFactory>().Singleton().Use<LoggerFactory>();
+            });
 
             // Act
-            startup.Configure(loggerFactory, args);
+            Program.Configure(container, args);
 
             // Assert
-            ILogger logger = loggerFactory.CreateLogger("test");
+            ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
+            ILogger logger = loggerFactory.CreateLogger("");
             Assert.True(logger.IsEnabled(minLogLevel) && (minLogLevel == LogLevel.Trace || !logger.IsEnabled(minLogLevel - 1)));
         }
 
