@@ -23,11 +23,11 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
 
             try
             {
-                // Initialize container
-                container = new Container(new PipelineRunnerRegistry());
-
                 // Parse args into PipelineOptions
                 (PipelineOptions pipelineOptions, string parseArgsWarnings) = ParseArgs(args);
+
+                // Initialize container
+                container = new Container(new PipelineRunnerRegistry());
 
                 // Configure configurable services
                 Configure(container, pipelineOptions);
