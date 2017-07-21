@@ -24,6 +24,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             For<IProcessService>().Singleton().Use<ProcessService>();
             For<IDependencyContextService>().Singleton().Use<DependencyContextService>();
             For<IFileService>().Singleton().Use<FileService>();
+            For<IAssemblyLoadContextService>().Singleton().Use<AssemblyLoadContextService>();
 
             For<Root>().Singleton().Use<Root>();
             For<ILoader>().Singleton().Use<Loader>();
