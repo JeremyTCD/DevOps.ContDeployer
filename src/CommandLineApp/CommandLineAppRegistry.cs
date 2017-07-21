@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.ProjectRunner;
+using JeremyTCD.DotNetCore.ProjectRunner;
 using StructureMap;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp

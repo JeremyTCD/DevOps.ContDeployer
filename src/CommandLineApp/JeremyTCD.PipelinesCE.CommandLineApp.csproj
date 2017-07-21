@@ -7,8 +7,8 @@
     <OutputType>Exe</OutputType>
     <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
     <!-- This should not be necessary as it has been added to the default properties: https://github.com/dotnet/sdk/issues/346,
-      https://github.com/dotnet/sdk/commit/829d60a3b584b1413904f0d40ccd81c168147e0f --><!--
-    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>-->
+      https://github.com/dotnet/sdk/commit/829d60a3b584b1413904f0d40ccd81c168147e0f -->
+    <GenerateResourceMSBuildArchitecture>CurrentArchitecture</GenerateResourceMSBuildArchitecture>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.ProjectRunner\src\ProjectRunner\JeremyTCD.ProjectRunner.csproj" />
+    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.ProjectRunner\src\ProjectRunner\JeremyTCD.DotNetCore.ProjectRunner.csproj" />
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\..\..\JeremyTCD.Newtonsoft.Json.Utils\src\Utils\JeremyTCD.Newtonsoft.Json.Utils.csproj" />
     <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
