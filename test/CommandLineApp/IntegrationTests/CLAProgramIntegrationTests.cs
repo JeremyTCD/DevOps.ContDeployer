@@ -1,12 +1,9 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StructureMap;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Xunit;
