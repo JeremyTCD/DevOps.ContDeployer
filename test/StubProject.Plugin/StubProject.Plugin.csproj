@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginAndConfigTools\JeremyTCD.PipelinesCE.Tools.csproj" />
+    <ProjectReference Include="..\..\src\Core\JeremyTCD.PipelinesCE.Core.csproj" />
   </ItemGroup>
 
 </Project>

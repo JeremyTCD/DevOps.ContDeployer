@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.Newtonsoft.Json.Utils;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using System;

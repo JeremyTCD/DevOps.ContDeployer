@@ -1,7 +1,7 @@
-﻿using JeremyTCD.DotNetCore.Utils;
+﻿using JeremyTCD.DotNetCore.ProjectRunner;
+using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
-using JeremyTCD.PipelinesCE.Tools;
-using JeremyTCD.DotNetCore.ProjectRunner;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

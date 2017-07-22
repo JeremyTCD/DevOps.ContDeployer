@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using StructureMap;
@@ -86,7 +86,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
 
         // TODO Access modifier should be internal or private but no good way to test if so
         /// <summary>
-        /// Loads assemblies that reference JeremyTCD.PipelinesCE.Tools from the directory that the executing assembly is located in
+        /// Loads assemblies that reference JeremyTCD.PipelinesCE.Core from the directory that the executing assembly is located in
         /// </summary>
         /// <returns>
         /// <see cref="IEnumerable{Assembly}"/>

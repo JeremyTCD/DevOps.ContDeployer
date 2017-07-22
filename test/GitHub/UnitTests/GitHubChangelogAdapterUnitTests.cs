@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Moq;
 using Octokit;
 using Semver;

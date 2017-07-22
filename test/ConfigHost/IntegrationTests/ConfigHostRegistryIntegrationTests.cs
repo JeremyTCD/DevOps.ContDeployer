@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StructureMap;

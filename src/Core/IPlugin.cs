@@ -1,4 +1,4 @@
-﻿namespace JeremyTCD.PipelinesCE.Tools
+﻿namespace JeremyTCD.PipelinesCE.Core
 {
     public interface IPlugin
     {

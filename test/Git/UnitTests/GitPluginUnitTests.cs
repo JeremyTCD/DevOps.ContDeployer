@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.Tools;
+﻿using JeremyTCD.PipelinesCE.Core;
 using LibGit2Sharp;
 using Moq;
 using System;

@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.Tools;
+﻿using JeremyTCD.PipelinesCE.Core;
 using System;
 
 namespace JeremyTCD.PipelinesCE.Plugin.AppVeyorPlugin

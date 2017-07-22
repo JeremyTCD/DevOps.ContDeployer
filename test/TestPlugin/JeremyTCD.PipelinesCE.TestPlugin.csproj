@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginAndConfigTools\JeremyTCD.PipelinesCE.PluginAndConfigTools.csproj" />
+    <ProjectReference Include="..\..\src\Core\JeremyTCD.PipelinesCE.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.Tools;
+﻿using JeremyTCD.PipelinesCE.Core;
 using PipelinesCE.StubPluginProject;
 
 namespace PipelineCE.Tests.StubPipelinesCEProject

@@ -70,9 +70,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.Newtonsoft.Json.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.ProjectRunner", "..\JeremyTCD.DotNetCore.ProjectRunner\src\ProjectRunner\JeremyTCD.DotNetCore.ProjectRunner.csproj", "{21661375-1F3C-414E-9E45-7D8EC0C2C0A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tools", "src\PluginAndConfigTools\JeremyTCD.PipelinesCE.Tools.csproj", "{234EE411-C4DF-4062-9DCE-3F7FFC0D6A2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Core", "src\Core\JeremyTCD.PipelinesCE.Core.csproj", "{234EE411-C4DF-4062-9DCE-3F7FFC0D6A2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Tools.Tests", "test\PluginAndConfigTools\JeremyTCD.PipelinesCE.Tools.Tests.csproj", "{D5E803D9-3857-4EF7-936E-609F462A07E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Core.Tests", "test\Core\JeremyTCD.PipelinesCE.Core.Tests.csproj", "{D5E803D9-3857-4EF7-936E-609F462A07E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

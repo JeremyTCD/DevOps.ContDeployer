@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.Tools;
+﻿using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Common;
 

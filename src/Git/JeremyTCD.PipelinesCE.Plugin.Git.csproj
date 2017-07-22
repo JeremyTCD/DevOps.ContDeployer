@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Changelog\JeremyTCD.PipelinesCE.Plugin.Changelog.csproj" />
-    <ProjectReference Include="..\PluginAndConfigTools\JeremyTCD.PipelinesCE.Tools.csproj" />
+    <ProjectReference Include="..\Core\JeremyTCD.PipelinesCE.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.Tools;
+﻿using JeremyTCD.PipelinesCE.Core;
 using JeremyTCD.PipelinesCE.Tests.StubPluginProject;
 using Newtonsoft.Json;
 

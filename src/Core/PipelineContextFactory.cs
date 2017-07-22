@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JeremyTCD.PipelinesCE.Tools
+namespace JeremyTCD.PipelinesCE.Core
 {
     public class PipelineContextFactory : IPipelineContextFactory
     {

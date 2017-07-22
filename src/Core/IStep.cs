@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace JeremyTCD.PipelinesCE.Tools
+namespace JeremyTCD.PipelinesCE.Core
 {
     public interface IStep
     {

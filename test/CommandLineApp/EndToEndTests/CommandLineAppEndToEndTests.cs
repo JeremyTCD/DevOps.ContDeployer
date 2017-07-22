@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -31,6 +31,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
             _loggerFactory = new LoggerFactory();
             _loggerFactory.
+                AddConsole().
                 AddDebug(LogLevel.Debug);
             ILogger<ProcessService> logger = _loggerFactory.CreateLogger<ProcessService>();
             _processService = new ProcessService(new LoggingService<ProcessService>(logger));
@@ -60,14 +61,27 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
 
             _directoryService.SetCurrentDirectory(claProjectAbsDir);
 
-            _msBuildService.Build(switches: $"/t:Restore,Publish /p:Configuration=Release,RuntimeIdentifier={rid}");
+            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
+            Console.SetOut(tssw);
+
+            // Act
+            try
+            {
+                _msBuildService.Build(switches: $"/t:Restore,Publish /p:Configuration=Release,RuntimeIdentifier={rid}");
+            }
+            catch
+            {
+                _loggerFactory.Dispose();
+                tssw.Dispose();
+                throw new Exception(tssw.ToString());
+            }
             _directoryService.SetCurrentDirectory(_tempDir);
             int exitCode = _processService.Run(exePath, $"{Strings.CommandName_Run} --{Strings.OptionLongName_Project} {stubProjectFile} --{Strings.OptionLongName_Verbose}");
 
             // Assert 
             Assert.Equal(0, exitCode);
             _loggerFactory.Dispose();
-
+            tssw.Dispose();
             string logFile = Directory.GetFiles(_tempDir, PipelineOptions.LogFileFormat.Replace("{Date}", "*")).FirstOrDefault();
             Assert.NotNull(logFile);
             string output = File.ReadAllText(logFile);

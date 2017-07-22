@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE.Plugin.MSBuild;
-using JeremyTCD.PipelinesCE.Tools;
+using JeremyTCD.PipelinesCE.Core;
 
 namespace PipelinesCE
 {
