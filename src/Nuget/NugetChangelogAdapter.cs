@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.PipelinesCE.Plugin.Changelog;
-using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+using JeremyTCD.PipelinesCE.Tools;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;

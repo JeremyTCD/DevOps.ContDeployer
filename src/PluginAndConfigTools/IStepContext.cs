@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
+namespace JeremyTCD.PipelinesCE.Tools
 {
     public interface IStepContext
     {

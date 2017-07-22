@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
+namespace JeremyTCD.PipelinesCE.Tools
 {
     /// <summary>
     /// For backward and forward compatibility, all properties must have a default value.

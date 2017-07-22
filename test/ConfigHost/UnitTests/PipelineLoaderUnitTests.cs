@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+using JeremyTCD.PipelinesCE.Tools;
 using Microsoft.Extensions.DependencyModel;
 using Moq;
 using StructureMap;

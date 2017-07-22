@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+﻿using JeremyTCD.PipelinesCE.Tools;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using System;

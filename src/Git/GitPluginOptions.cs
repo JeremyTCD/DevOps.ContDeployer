@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+﻿using JeremyTCD.PipelinesCE.Tools;
 using System;
 
 namespace JeremyTCD.PipelinesCE.Plugin.Git

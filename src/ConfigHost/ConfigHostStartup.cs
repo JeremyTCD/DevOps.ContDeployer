@@ -1,6 +1,6 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
-using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+using JeremyTCD.PipelinesCE.Tools;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

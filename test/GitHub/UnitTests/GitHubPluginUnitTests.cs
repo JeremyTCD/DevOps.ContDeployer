@@ -1,4 +1,4 @@
-﻿using JeremyTCD.PipelinesCE.PluginAndConfigTools;
+﻿using JeremyTCD.PipelinesCE.Tools;
 using Moq;
 using Octokit;
 using System;

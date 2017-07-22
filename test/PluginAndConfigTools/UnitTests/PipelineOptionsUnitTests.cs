@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace JeremyTCD.PipelinesCE.PluginAndConfigTools.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Tools.Tests.UnitTests
 {
     public class PipelineOptionsUnitTests
     {
