@@ -6,6 +6,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public LogLevel DefaultMinLogLevel { get; } = LogLevel.Information;
         public LogLevel VerboseMinLogLevel { get; } = LogLevel.Debug;
-        public string LogFileFormat { get; } = $"{nameof(PipelinesCE)}-{{Date}}.txt"; // https://github.com/serilog/serilog-extensions-logging-file
+        public string LogFileFormat { get; } = $"{nameof(CommandLineApp)}-{{Date}}.log"; // https://github.com/serilog/serilog-extensions-logging-file
     }
 }
