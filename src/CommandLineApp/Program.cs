@@ -16,9 +16,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             try
             {
-                // Normalize args
-                args = args.Select(s => s.ToLowerInvariant()).ToArray();
-
                 // Initialize container
                 container = new Container(new CommandLineAppRegistry());
 
