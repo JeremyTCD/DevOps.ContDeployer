@@ -78,12 +78,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             PipelineOptions pipelineOptions = CreatePipelineOptions();
             string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
 
-            _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project), 
+            return _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project), 
                 PipelineOptions.EntryAssemblyName, 
                 PipelineOptions.EntryClassName,
                 args: new string[] { json });
-
-            return 0;
         }
 
         private PipelineOptions CreatePipelineOptions()
