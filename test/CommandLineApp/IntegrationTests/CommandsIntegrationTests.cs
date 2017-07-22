@@ -1,7 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
-using JeremyTCD.ProjectRunner;
+using JeremyTCD.DotNetCore.ProjectRunner;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,10 +13,8 @@ using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
-    // TODO integration test that includes Main
     /// <summary>
-    /// Tests to ensure that <see cref="Program"/> commands have been configured correctly and that 
-    /// <see cref="CommandLineAppRegistry"/> configures services correctly. Note that <see cref="CommandLineApplication"/>
+    /// Tests to ensure that <see cref="Program"/> commands have been configured correctly. Note that <see cref="CommandLineApplication"/>
     /// formats output depending on option names and descriptions. This means that output strings must
     /// be normalized before being compared with expected strings.
     /// </summary>
@@ -188,7 +186,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             Mock<Runner> mockRunner = _mockRepository.Create<Runner>(null, null, null, null, null, null, null);
             mockRunner.
-                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, PipelineOptions.EntryClassName, It.IsAny<string>(), stubArgs));
+                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, PipelineOptions.EntryClassName, It.IsAny<string>(), It.IsAny<string>(), stubArgs));
 
             Container container = new Container(new CommandLineAppRegistry());
             container.
