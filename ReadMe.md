@@ -26,17 +26,17 @@ The PipelinesCE system consists of three levels and two shared libraries.
 ### Levels
 From top (closest to end users) to bottom:
 #### PipelinesCE.CommandLineApp
-Provides a user facing interface. Converts user input into instances of options Types from PipelinesCE.Tools. Uses ProjectRunner to run 
+Provides a user facing interface. Converts user input into instances of options Types from PipelinesCE.Core. Uses ProjectRunner to run 
 config project with serialized options instances as arguments.  
-Config project must reference same PipelinesCE.Tools version so that it can deserialize options in a predictable manner.
-#### PipelinesCE.Runner
-Referenced by config projects, PipelinesCE.Runner contains a main method that ProjectRunner locates and calls. Loads
-config project assemblies that reference PipelinesCE.Tools. Intantiates instances of relevant types, sets up DI and 
+Config project must reference same PipelinesCE.Core version so that it can deserialize options in a predictable manner.
+#### PipelinesCE.ConfigHost
+Referenced by config projects, PipelinesCE.ConfigHost contains a main method that ProjectRunner locates and calls. Loads
+config project assemblies that reference PipelinesCE.Core. Intantiates instances of relevant types, sets up DI and 
 finally runs Pipeline defined in config project.
 #### PipelinesCE.Plugin
 Runs within a Pipeline. 
 ### Shared Libraries
-#### PipelinesCE.Tools
+#### PipelinesCE.Core
 Defines types shared by all levels.
 #### ProjectRunner
 Restores, builds and publishes a project. Locates main method within generated assemblies and calls it.
