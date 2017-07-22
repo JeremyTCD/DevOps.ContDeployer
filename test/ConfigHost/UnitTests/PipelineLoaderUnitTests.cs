@@ -12,14 +12,14 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq.Sequences;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
 {
-    public class LoaderUnitTests
+    public class PipelineLoaderUnitTests
     {
         private MockRepository _mockRepository { get; }
-        private Loader _loader { get; } 
+        private PipelineLoader _loader { get; } 
 
-        public LoaderUnitTests()
+        public PipelineLoaderUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
             _loader = CreateLoader();
@@ -31,7 +31,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             // Arrange
             DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
             string testDirectory = stubDirectoryInfo.FullName;
-            string assemblyLocation = typeof(Loader).GetTypeInfo().Assembly.Location;
+            string assemblyLocation = typeof(PipelineLoader).GetTypeInfo().Assembly.Location;
             string[] stubPossibleDepsFiles = new string[2];
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
@@ -39,7 +39,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             mockDirectoryService.Setup(d => d.GetFiles(testDirectory, "*.deps.json", SearchOption.TopDirectoryOnly)).
                 Returns(stubPossibleDepsFiles);
 
-            Loader loader = CreateLoader(directoryService: mockDirectoryService.Object);
+            PipelineLoader loader = CreateLoader(directoryService: mockDirectoryService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAssemblies());
@@ -53,7 +53,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             // Arrange
             DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
             string testDirectory = stubDirectoryInfo.FullName;
-            string assemblyLocation = typeof(Loader).GetTypeInfo().Assembly.Location;
+            string assemblyLocation = typeof(PipelineLoader).GetTypeInfo().Assembly.Location;
             string[] stubPossibleDepsFiles = new string[0];
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
@@ -61,7 +61,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             mockDirectoryService.Setup(d => d.GetFiles(testDirectory, "*.deps.json", SearchOption.TopDirectoryOnly)).
                 Returns(stubPossibleDepsFiles);
 
-            Loader loader = CreateLoader(directoryService: mockDirectoryService.Object);
+            PipelineLoader loader = CreateLoader(directoryService: mockDirectoryService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAssemblies());
@@ -75,7 +75,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             // Arrange
             DirectoryInfo stubDirectoryInfo = new DirectoryInfo("test");
             string testDirectory = stubDirectoryInfo.FullName;
-            string assemblyLocation = typeof(Loader).GetTypeInfo().Assembly.Location;
+            string assemblyLocation = typeof(PipelineLoader).GetTypeInfo().Assembly.Location;
             string testDepsFile = "testDepsFile";
             string[] stubPossibleDepsFiles = new string[] { testDepsFile };
             Assembly[] stubAssemblies = new Assembly[0];
@@ -93,7 +93,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.Setup(a => a.CreateReferencingAssemblies(stubDependencyContext, typeof(IPlugin).GetTypeInfo().Assembly)).Returns(stubAssemblies);
 
-            Loader loader = CreateLoader(dependencyContextService: mockDependencyContextService.Object, assemblyService: mockAssemblyService.Object,
+            PipelineLoader loader = CreateLoader(dependencyContextService: mockDependencyContextService.Object, assemblyService: mockAssemblyService.Object,
                 directoryService: mockDirectoryService.Object);
 
             // Act 
@@ -123,7 +123,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             mockAssemblyService.Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPlugin))).Returns(stubPluginTypes);
             mockAssemblyService.Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPluginStartup))).Returns(stubPluginStartupTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
             using (Sequence.Create())
             {
                 mockLoggingService.Setup(l => l.LogDebug(Strings.Log_CreatingPluginIoCContainer, dummy1PluginName)).InSequence();
@@ -144,7 +144,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Mock<IContainer> mockContainer = _mockRepository.Create<IContainer>();
                 mockContainer.Setup(c => c.CreateChildContainer()).Returns(mockChildContainer.Object);
 
-                Loader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
+                PipelineLoader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
                     mainContainer: mockContainer.Object, loggingService: mockLoggingService.Object);
 
                 // Act
@@ -172,9 +172,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
 
-            Loader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
+            PipelineLoader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.CreatePipelineFactory(stubAssemblies, stubOptions));
@@ -195,9 +195,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
 
-            Loader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
+            PipelineLoader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.CreatePipelineFactory(stubAssemblies, stubOptions));
@@ -224,9 +224,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
 
-            Loader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
+            PipelineLoader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.CreatePipelineFactory(stubAssemblies, stubOptions));
@@ -251,9 +251,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
 
-            Loader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
+            PipelineLoader loader = CreateLoader(assemblyService: mockAssemblyService.Object, loggingService: mockLoggingService.Object);
 
             // Act and Assert
             Exception exception = Assert.Throws<InvalidOperationException>(() => loader.CreatePipelineFactory(stubAssemblies, stubOptions));
@@ -280,13 +280,13 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
             mockLoggingService.Setup(l => l.LogInformation(Strings.Log_ResolvedDefaultPipeline, resolvedPipeline));
 
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactoryType)).Returns(stubDummy1PipelineFactory);
 
-            Loader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
+            PipelineLoader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
                 loggingService: mockLoggingService.Object);
 
             // Act
@@ -317,13 +317,13 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Setup(a => a.GetAssignableTypes(stubAssemblies, typeof(IPipelineFactory))).
                 Returns(stubPipelineFactoryTypes);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
             mockLoggingService.Setup(l => l.LogDebug(Strings.Log_CreatingPipelineFactory, stubOptions.Pipeline));
 
             Mock<IActivatorService> mockActivatorService = _mockRepository.Create<IActivatorService>();
             mockActivatorService.Setup(a => a.CreateInstance(dummy1PipelineFactoryType)).Returns(stubDummy1PipelineFactory);
 
-            Loader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
+            PipelineLoader loader = CreateLoader(activatorService: mockActivatorService.Object, assemblyService: mockAssemblyService.Object, 
                 loggingService: mockLoggingService.Object);
 
             // Act
@@ -346,7 +346,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             Mock<PipelineOptions> mockPipelineOptions = _mockRepository.Create<PipelineOptions>();
             mockPipelineOptions.Setup(p => p.Pipeline).Returns(testPipeline);
 
-            Mock<ILoggingService<Loader>> mockLoggingService = _mockRepository.Create<ILoggingService<Loader>>();
+            Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();
             using (Sequence.Create())
             {
                 mockLoggingService.Setup(l => l.LogInformation(Strings.Log_LoadingPipeline)).InSequence();
@@ -361,7 +361,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 Mock<IPipelineFactory> mockPipelineFactory = _mockRepository.Create<IPipelineFactory>();
                 mockPipelineFactory.Setup(p => p.CreatePipeline()).Returns(stubPipeline);
 
-                Mock<Loader> mockLoader = _mockRepository.Create<Loader>(null, null, null, null, null, null, null, mockLoggingService.Object);
+                Mock<PipelineLoader> mockLoader = _mockRepository.Create<PipelineLoader>(null, null, null, null, null, null, null, mockLoggingService.Object);
                 mockLoader.Setup(l => l.CreatePluginIoCContainers(stubAssemblies)).Returns(stubPluginContainers);
                 mockLoader.Setup(l => l.CreatePipelineFactory(stubAssemblies, mockPipelineOptions.Object)).Returns(mockPipelineFactory.Object);
                 mockLoader.Setup(l => l.LoadAssemblies()).Returns(stubAssemblies);
@@ -427,16 +427,16 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             }
         }
 
-        private Loader CreateLoader(IActivatorService activatorService = null,
+        private PipelineLoader CreateLoader(IActivatorService activatorService = null,
             IDependencyContextService dependencyContextService = null,
             IAssemblyService assemblyService = null,
             IPathService pathService = null,
             IDirectoryService directoryService = null,
             IMSBuildService msBuildService = null,
             IContainer mainContainer = null,
-            ILoggingService<Loader> loggingService = null)
+            ILoggingService<PipelineLoader> loggingService = null)
         {
-            return new Loader(activatorService, dependencyContextService, assemblyService, pathService, directoryService,
+            return new PipelineLoader(activatorService, dependencyContextService, assemblyService, pathService, directoryService,
                 msBuildService, mainContainer, loggingService);
         }
     }

@@ -71,8 +71,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             string logFile = Directory.GetFiles(_tempDir, PipelineOptions.LogFileFormat.Replace("{Date}", "*")).FirstOrDefault();
             Assert.NotNull(logFile);
             string output = File.ReadAllText(logFile);
-            Assert.Contains(string.Format(PipelineRunner.Strings.Log_FinishedRunningPipeline, "\"Stub\""), output);
-            Assert.Contains(string.Format(PipelineRunner.Strings.Log_FinishedRunningPlugin, "\"StubPlugin\""), output);
+            Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPipeline, "\"Stub\""), output);
+            Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPlugin, "\"StubPlugin\""), output);
         }
 
         private void ConvertProjectReferenceRelPathsToAbs(string projectFile, string projectDir)

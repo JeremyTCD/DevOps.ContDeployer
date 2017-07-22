@@ -7,13 +7,13 @@ using StructureMap;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
 {
-    public class RunnerUnitTests
+    public class PipelineRunnerUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public RunnerUnitTests()
+        public PipelineRunnerUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
@@ -40,7 +40,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             mockPipelineContextFactory.Setup(p => p.AddPipelineOptions(options)).Returns(mockPipelineContextFactory.Object);
             mockPipelineContextFactory.Setup(p => p.CreatePipelineContext()).Returns(mockPipelineContext.Object);
 
-            Mock<ILoggingService<Runner>> loggingService = _mockRepository.Create<ILoggingService<Runner>>();
+            Mock<ILoggingService<PipelineRunner>> loggingService = _mockRepository.Create<ILoggingService<PipelineRunner>>();
             using (Sequence.Create())
             {
                 loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPipeline, testPipeline)).InSequence();
@@ -78,7 +78,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
                 mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin2Logger.Object)).Returns(mockStepContextFactory.Object);
                 mockStepContextFactory.Setup(s => s.CreateStepContext()).Returns(mockStepContext.Object);
 
-                Runner runner = new Runner(loggingService.Object, mockStepContextFactory.Object, mockPipelineContextFactory.Object, mockLoggerFactory.Object);
+                PipelineRunner runner = new PipelineRunner(loggingService.Object, mockStepContextFactory.Object, mockPipelineContextFactory.Object, mockLoggerFactory.Object);
 
                 // Act
                 runner.Run(pipeline, mockContainers.Object);

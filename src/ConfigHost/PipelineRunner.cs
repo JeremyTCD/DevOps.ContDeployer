@@ -5,16 +5,16 @@ using StructureMap;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner
+namespace JeremyTCD.PipelinesCE.ConfigHost
 {
-    public class Runner : IRunner
+    public class PipelineRunner : IPipelineRunner
     {
-        private ILoggingService<Runner> _loggingService { get; }
+        private ILoggingService<PipelineRunner> _loggingService { get; }
         private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
 
-        public Runner(ILoggingService<Runner> loggingService,
+        public PipelineRunner(ILoggingService<PipelineRunner> loggingService,
             IStepContextFactory stepContextFactory,
             IPipelineContextFactory pipelineContextFactory,
             ILoggerFactory loggerFactory)

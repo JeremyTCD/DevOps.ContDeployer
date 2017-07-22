@@ -9,14 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner
+namespace JeremyTCD.PipelinesCE.ConfigHost
 {
-    public class Program
+    public class ConfigHostStartup
     {
         // TODO should be private or internal
         public static int Main(string[] args)
         {
-            ILoggingService<Program> loggingService = null;
+            ILoggingService<ConfigHostStartup> loggingService = null;
             IContainer container = null;
             int exitCode = 1;
 
@@ -26,20 +26,20 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
                 (PipelineOptions pipelineOptions, string parseArgsWarnings) = ParseArgs(args);
 
                 // Initialize container
-                container = new Container(new PipelineRunnerRegistry());
+                container = new Container(new ConfigHostRegistry());
 
                 // Configure configurable services
                 Configure(container, pipelineOptions);
 
                 // Create logger
-                loggingService = container.GetInstance<ILoggingService<Program>>();
+                loggingService = container.GetInstance<ILoggingService<ConfigHostStartup>>();
                 if (!string.IsNullOrEmpty(parseArgsWarnings))
                 {
                     loggingService.LogWarning(parseArgsWarnings);
                 }
 
-                Root root = container.GetInstance<Root>();
-                root.Run(pipelineOptions);
+                ConfigHostCore core = container.GetInstance<ConfigHostCore>();
+                core.Run(pipelineOptions);
 
                 container.Dispose();
                 exitCode = 0;

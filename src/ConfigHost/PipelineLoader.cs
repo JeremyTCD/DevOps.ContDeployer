@@ -9,12 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner
+namespace JeremyTCD.PipelinesCE.ConfigHost
 {
-    public class Loader : ILoader, IDisposable
+    public class PipelineLoader : IPipelineLoader, IDisposable
     {
         private IAssemblyService _assemblyService { get; }
-        private ILoggingService<Loader> _loggingService { get; }
+        private ILoggingService<PipelineLoader> _loggingService { get; }
         private IPathService _pathService { get; }
         private IDirectoryService _directoryService { get; }
         private IMSBuildService _msBuildService { get; }
@@ -33,14 +33,14 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             }
         }
 
-        public Loader(IActivatorService activatorService,
+        public PipelineLoader(IActivatorService activatorService,
             IDependencyContextService dependencyContextService,
             IAssemblyService assemblyService,
             IPathService pathService,
             IDirectoryService directoryService,
             IMSBuildService msBuildService,
             IContainer mainContainer,
-            ILoggingService<Loader> loggingService)
+            ILoggingService<PipelineLoader> loggingService)
         {
             _dependencyContextService = dependencyContextService;
             _mainContainer = mainContainer;
@@ -99,7 +99,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
         /// </exception>
         public virtual IEnumerable<Assembly> LoadAssemblies()
         {
-            string directory = _directoryService.GetParent(typeof(Loader).GetTypeInfo().Assembly.Location).FullName;
+            string directory = _directoryService.GetParent(typeof(PipelineLoader).GetTypeInfo().Assembly.Location).FullName;
 
             string[] possibleDepsFiles = _directoryService.GetFiles(directory, "*.deps.json", SearchOption.TopDirectoryOnly);
             if (possibleDepsFiles.Length > 1)

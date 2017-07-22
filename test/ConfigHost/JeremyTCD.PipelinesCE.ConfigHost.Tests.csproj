@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
-    <ProjectReference Include="..\..\src\PipelineRunner\JeremyTCD.PipelinesCE.PipelineRunner.csproj" />
+    <ProjectReference Include="..\..\src\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.csproj" />
     <ProjectReference Include="..\StubProject.PipelinesCEConfig\StubProject.PipelinesCEConfig.csproj" />
   </ItemGroup>
 

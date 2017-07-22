@@ -17,8 +17,8 @@ namespace JeremyTCD.PipelinesCE.PluginAndConfigTools
         public const string DefaultProject = "PipelinesCEConfig.csproj";
         public const bool DefaultDryRun = false;
         public const bool DefaultVerbose = false;
-        public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.PipelineRunner";
-        public const string EntryClassName = "JeremyTCD.PipelinesCE.PipelineRunner.Program";
+        public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.ConfigHost";
+        public const string EntryClassName = "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup";
 
         private bool? _verbose;
         private bool? _dryRun;

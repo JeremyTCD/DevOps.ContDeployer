@@ -9,15 +9,15 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
 {
-    public class PipelineRunnerRegistryIntegrationTests
+    public class ConfigHostRegistryIntegrationTests
     {
         [Fact]
         public void PipelinesRegistry_ConfiguresServicesCorrectly()
         {
             // Arrange and Act
-            Container container = new Container(new PipelineRunnerRegistry());
+            Container container = new Container(new ConfigHostRegistry());
 
             // Assert
             IModel model = container.Model;
@@ -56,11 +56,11 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IFileService) && r.ReturnedType == typeof(FileService)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
 
-            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(Root) && r.ReturnedType == typeof(Root)
+            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(ConfigHostCore) && r.ReturnedType == typeof(ConfigHostCore)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
-            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IRunner) && r.ReturnedType == typeof(Runner)
+            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IPipelineRunner) && r.ReturnedType == typeof(PipelineRunner)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
-            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(ILoader) && r.ReturnedType == typeof(Loader)
+            Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IPipelineLoader) && r.ReturnedType == typeof(PipelineLoader)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
             Assert.True(model.AllInstances.Any(r => r.PluginType == typeof(IPipelineContextFactory) && r.ReturnedType == typeof(PipelineContextFactory)
                 && r.Lifecycle.GetType() == typeof(SingletonLifecycle)));
@@ -72,8 +72,8 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
         public void PipelinesRegistry_GeneratedContainerDisposesCorrectly()
         {
             // Arrange and Act
-            Container container = new Container(new PipelineRunnerRegistry());
-            Loader loader = container.GetInstance<ILoader>() as Loader;
+            Container container = new Container(new ConfigHostRegistry());
+            PipelineLoader loader = container.GetInstance<IPipelineLoader>() as PipelineLoader;
             ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
             container.Dispose();
 

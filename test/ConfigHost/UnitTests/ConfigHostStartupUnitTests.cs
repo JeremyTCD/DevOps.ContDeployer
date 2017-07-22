@@ -1,14 +1,14 @@
 ﻿using Xunit;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
 {
-    public class ProgramUnitTests
+    public class ConfigHostStartupUnitTests
     {
         [Fact]
         public void NormalizeFieldName()
         {
             // Act
-            string result = Program.NormalizeFieldName("_TestTest");
+            string result = ConfigHostStartup.NormalizeFieldName("_TestTest");
 
             // Assert
             Assert.Equal("testtest", result);

@@ -3,11 +3,11 @@ using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.DependencyInjection;
 using StructureMap;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner
+namespace JeremyTCD.PipelinesCE.ConfigHost
 {
-    public class PipelineRunnerRegistry : Registry
+    public class ConfigHostRegistry : Registry
     {
-        public PipelineRunnerRegistry()
+        public ConfigHostRegistry()
         {
             IServiceCollection services = new ServiceCollection();
             services.
@@ -26,9 +26,9 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             For<IFileService>().Singleton().Use<FileService>();
             For<IAssemblyLoadContextService>().Singleton().Use<AssemblyLoadContextService>();
 
-            For<Root>().Singleton().Use<Root>();
-            For<ILoader>().Singleton().Use<Loader>();
-            For<IRunner>().Singleton().Use<Runner>();
+            For<ConfigHostCore>().Singleton().Use<ConfigHostCore>();
+            For<IPipelineLoader>().Singleton().Use<PipelineLoader>();
+            For<IPipelineRunner>().Singleton().Use<PipelineRunner>();
             For<IStepContextFactory>().Singleton().Use<StepContextFactory>();
             For<IPipelineContextFactory>().Singleton().Use<PipelineContextFactory>();
         }

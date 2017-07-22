@@ -8,12 +8,12 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
 {
-    public class PRProgramIntegrationTests
+    public class ConfigHostStartupIntegrationTests
     {
         /// <summary>
-        /// This test ensures that <see cref="PipelineRunnerRegistry"/> configures services correctly.
+        /// This test ensures that <see cref="ConfigHostRegistry"/> configures services correctly.
         /// </summary>
         [Fact]
         public void Main_RunsPipeline()
@@ -28,7 +28,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
             string json = JsonConvert.SerializeObject(stubOptions, new PrivateFieldsJsonConverter());
 
             // Act
-            int exitCode = Program.Main(new string[] { json });
+            int exitCode = ConfigHostStartup.Main(new string[] { json });
 
             // Assert
             Assert.Equal(0, exitCode);
@@ -58,10 +58,10 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
             jObject.Remove(projectFieldKey);
             json = jObject.ToString();
 
-            Program program = new Program();
+            ConfigHostStartup program = new ConfigHostStartup();
 
             // Act
-            (PipelineOptions options, string warnings) = Program.ParseArgs(new string[] { json });
+            (PipelineOptions options, string warnings) = ConfigHostStartup.ParseArgs(new string[] { json });
 
             // Assert
             Assert.Equal(testDryRun, options.DryRun);
@@ -69,8 +69,8 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
             Assert.Equal(PipelineOptions.DefaultVerbose, options.Verbose);
             Assert.Equal(PipelineOptions.DefaultProject, options.Project);
             Assert.Equal(string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch,
-                Environment.NewLine + Program.NormalizeFieldName(extraFieldKey),
-                Environment.NewLine + Program.NormalizeFieldName(projectFieldKey)),
+                Environment.NewLine + ConfigHostStartup.NormalizeFieldName(extraFieldKey),
+                Environment.NewLine + ConfigHostStartup.NormalizeFieldName(projectFieldKey)),
                 warnings);
         }
 
@@ -90,7 +90,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
             };
 
             // Act
-            Program.Configure(container, pipelineOptions);
+            ConfigHostStartup.Configure(container, pipelineOptions);
 
             // Assert
             ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
