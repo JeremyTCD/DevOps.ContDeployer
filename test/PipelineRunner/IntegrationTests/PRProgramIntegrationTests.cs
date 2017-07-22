@@ -1,5 +1,4 @@
-﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.Newtonsoft.Json.Utils;
+﻿using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.PluginAndConfigTools;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ using Xunit;
 
 namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
 {
-    public class ProgramIntegrationTests
+    public class PRProgramIntegrationTests
     {
         /// <summary>
         /// This test ensures that <see cref="PipelineRunnerRegistry"/> configures services correctly.
@@ -28,17 +27,11 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.IntegrationTests
 
             string json = JsonConvert.SerializeObject(stubOptions, new PrivateFieldsJsonConverter());
 
-            ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
-            Console.SetOut(tssw);
-
             // Act
-            Program.Main(new string[] { json });
+            int exitCode = Program.Main(new string[] { json });
 
             // Assert
-            tssw.Dispose();
-            string output = tssw.ToString();
-            Assert.Contains(string.Format(Strings.Log_FinishedRunningPlugin, "StubPlugin"), output);
-            Assert.Contains(string.Format(Strings.Log_FinishedRunningPipeline, $"{testPipeline}"), output);
+            Assert.Equal(0, exitCode);
         }
 
         [Fact]

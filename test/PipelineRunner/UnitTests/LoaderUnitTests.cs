@@ -91,7 +91,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner.Tests.UnitTests
             mockDependencyContextService.Setup(d => d.CreateDependencyContext(testDepsFile)).Returns(stubDependencyContext);
 
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
-            mockAssemblyService.Setup(a => a.GetReferencingAssemblies(stubDependencyContext, typeof(IPlugin).GetTypeInfo().Assembly)).Returns(stubAssemblies);
+            mockAssemblyService.Setup(a => a.CreateReferencingAssemblies(stubDependencyContext, typeof(IPlugin).GetTypeInfo().Assembly)).Returns(stubAssemblies);
 
             Loader loader = CreateLoader(dependencyContextService: mockDependencyContextService.Object, assemblyService: mockAssemblyService.Object,
                 directoryService: mockDirectoryService.Object);
