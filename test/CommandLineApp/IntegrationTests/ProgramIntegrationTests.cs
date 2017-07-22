@@ -10,13 +10,13 @@ using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
-    public class CLAProgramIntegrationTests
+    public class ProgramIntegrationTests
     {
         private MockRepository _mockRepository { get; }
-        private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(CLAProgramIntegrationTests)}Temp");
+        private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(ProgramIntegrationTests)}Temp");
         private DirectoryService _directoryService { get; }
 
-        public CLAProgramIntegrationTests()
+        public ProgramIntegrationTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
             _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
@@ -33,7 +33,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             _directoryService.Create(_tempDir);
             _directoryService.SetCurrentDirectory(_tempDir);
 
-            string solutionDir = Path.GetFullPath(typeof(CLAProgramIntegrationTests).GetTypeInfo().Assembly.Location + "../../../../../../..");
+            string solutionDir = Path.GetFullPath(typeof(ProgramIntegrationTests).GetTypeInfo().Assembly.Location + "../../../../../../..");
             string stubProjectDir = "StubProject.PipelinesCEConfig";
             string stubProjectAbsSrcDir = $"{solutionDir}/test/{stubProjectDir}";
             string stubProjectFile = $"{stubProjectDir}.csproj";
