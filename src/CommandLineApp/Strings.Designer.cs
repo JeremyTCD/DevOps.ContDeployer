@@ -10,7 +10,6 @@
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,7 +19,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -40,7 +39,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.PipelinesCE.CommandLineApp.Strings", typeof(Strings).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JeremyTCD.PipelinesCE.CommandLineApp.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -144,6 +143,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Build config project in debug configuration.
+        /// </summary>
+        public static string OptionDescription_Debug {
+            get {
+                return ResourceManager.GetString("OptionDescription_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build config project in release configuration.
+        /// </summary>
+        public static string OptionDescription_DebugOff {
+            get {
+                return ResourceManager.GetString("OptionDescription_DebugOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Pipeline in dry run mode.
         /// </summary>
         public static string OptionDescription_DryRun {
@@ -194,6 +211,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionDescription_VerboseOff {
             get {
                 return ResourceManager.GetString("OptionDescription_VerboseOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to debug.
+        /// </summary>
+        public static string OptionLongName_Debug {
+            get {
+                return ResourceManager.GetString("OptionLongName_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to debugoff.
+        /// </summary>
+        public static string OptionLongName_DebugOff {
+            get {
+                return ResourceManager.GetString("OptionLongName_DebugOff", resourceCulture);
             }
         }
         
@@ -270,7 +305,25 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to d.
+        ///   Looks up a localized string similar to db.
+        /// </summary>
+        public static string OptionShortName_Debug {
+            get {
+                return ResourceManager.GetString("OptionShortName_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dbo.
+        /// </summary>
+        public static string OptionShortName_DebugOff {
+            get {
+                return ResourceManager.GetString("OptionShortName_DebugOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dr.
         /// </summary>
         public static string OptionShortName_DryRun {
             get {
@@ -279,7 +332,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to do.
+        ///   Looks up a localized string similar to dro.
         /// </summary>
         public static string OptionShortName_DryRunOff {
             get {

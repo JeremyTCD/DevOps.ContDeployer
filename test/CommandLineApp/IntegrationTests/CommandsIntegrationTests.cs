@@ -215,11 +215,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}",
                 $"-{Strings.OptionShortName_DryRun}",
+                $"-{Strings.OptionShortName_Debug}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
                 new PipelineOptions{
                     Verbose = true,
                     DryRun = true,
+                    Debug = true,
                     Project = testProject,
                     Pipeline = testPipeline
                 }
@@ -227,31 +229,37 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_Verbose}",
                 $"--{Strings.OptionLongName_DryRun}",
+                $"--{Strings.OptionLongName_Debug}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
                 new PipelineOptions{
                     Verbose = true,
                     DryRun = true,
+                    Debug = true,
                     Project = testProject,
                     Pipeline = testPipeline
                 }
             };
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_DryRunOff}",
-                $"-{Strings.OptionShortName_VerboseOff}" },
+                $"-{Strings.OptionShortName_VerboseOff}",
+                $"-{Strings.OptionShortName_DebugOff}" },
                 new PipelineOptions
                 {
                     DryRun = false,
-                    Verbose = false
+                    Verbose = false,
+                    Debug = false
                 }
             };
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_DryRunOff}",
-                $"--{Strings.OptionLongName_VerboseOff}" },
+                $"--{Strings.OptionLongName_VerboseOff}" ,
+                $"--{Strings.OptionLongName_DebugOff}"},
                 new PipelineOptions
                 {
                     DryRun = false,
-                    Verbose = false
+                    Verbose = false,
+                    Debug = false
                 }
             };
         }
@@ -282,7 +290,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}
-                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}";
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Debug, Strings.OptionLongName_Debug)}    {Strings.OptionDescription_Debug}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_DebugOff, Strings.OptionLongName_DebugOff)}  {Strings.OptionDescription_DebugOff}";
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 

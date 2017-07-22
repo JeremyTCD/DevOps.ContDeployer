@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OptionShortName_DryRun" xml:space="preserve">
-    <value>d</value>
+    <value>dr</value>
   </data>
   <data name="OptionLongName_Help" xml:space="preserve">
     <value>help</value>
@@ -194,7 +194,7 @@
     <value>verboseoff</value>
   </data>
   <data name="OptionShortName_DryRunOff" xml:space="preserve">
-    <value>do</value>
+    <value>dro</value>
   </data>
   <data name="OptionShortName_VerboseOff" xml:space="preserve">
     <value>vo</value>
@@ -210,5 +210,23 @@
   </data>
   <data name="CommandName_Run" xml:space="preserve">
     <value>run</value>
+  </data>
+  <data name="OptionDescription_Debug" xml:space="preserve">
+    <value>Build config project in debug configuration</value>
+  </data>
+  <data name="OptionLongName_Debug" xml:space="preserve">
+    <value>debug</value>
+  </data>
+  <data name="OptionLongName_DebugOff" xml:space="preserve">
+    <value>debugoff</value>
+  </data>
+  <data name="OptionShortName_Debug" xml:space="preserve">
+    <value>db</value>
+  </data>
+  <data name="OptionShortName_DebugOff" xml:space="preserve">
+    <value>dbo</value>
+  </data>
+  <data name="OptionDescription_DebugOff" xml:space="preserve">
+    <value>Build config project in release configuration</value>
   </data>
 </root>

@@ -17,15 +17,30 @@ namespace JeremyTCD.PipelinesCE.Core
         public const string DefaultProject = "PipelinesCEConfig.csproj";
         public const bool DefaultDryRun = false;
         public const bool DefaultVerbose = false;
+        public const bool DefaultDebug = false;
         public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.ConfigHost";
         public const string EntryClassName = "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup";
 
         private bool? _verbose;
         private bool? _dryRun;
+        private bool? _debug;
         private string _project;
         private string _pipeline;
 
-
+        /// <summary>
+        /// Defaults to false
+        /// </summary>
+        public virtual bool Debug
+        {
+            get
+            {
+                return _debug ?? DefaultDebug;
+            }
+            set
+            {
+                _debug = value;
+            }
+        }
 
         /// <summary>
         /// Defaults to false

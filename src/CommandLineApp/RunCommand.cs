@@ -18,6 +18,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _dryRunOff { get; set; }
         private CommandOption _verbose { get; set; }
         private CommandOption _verboseOff { get; set; }
+        private CommandOption _debug { get; set; }
+        private CommandOption _debugOff { get; set; }
 
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
@@ -60,6 +62,12 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             _verboseOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff),
                 Strings.OptionDescription_VerboseOff,
                 CommandOptionType.NoValue);
+            _debug = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Debug, Strings.OptionLongName_Debug),
+                Strings.OptionDescription_Debug,
+                CommandOptionType.NoValue);
+            _debugOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DebugOff, Strings.OptionLongName_DebugOff),
+                Strings.OptionDescription_DebugOff,
+                CommandOptionType.NoValue);
         }
 
         private int Run()
@@ -74,8 +82,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             PipelineOptions pipelineOptions = CreatePipelineOptions();
             string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
 
-            return _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project), 
-                PipelineOptions.EntryAssemblyName, 
+            return _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project),
+                PipelineOptions.EntryAssemblyName,
                 PipelineOptions.EntryClassName,
                 args: new string[] { json });
         }
@@ -104,6 +112,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             else if (_verboseOff.HasValue())
             {
                 pipelineOptions.Verbose = false;
+            }
+
+            if (_debug.HasValue())
+            {
+                pipelineOptions.Debug = true;
+            }
+            else if (_debugOff.HasValue())
+            {
+                pipelineOptions.Debug = false;
             }
 
             return pipelineOptions;
