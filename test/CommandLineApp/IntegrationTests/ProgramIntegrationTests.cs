@@ -29,8 +29,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void Main_RunsPipeline()
         {
             // Arrange
-            _directoryService.DeleteIfExists(_tempDir, true);
-            _directoryService.Create(_tempDir);
+            _directoryService.Empty(_tempDir);
             _directoryService.SetCurrentDirectory(_tempDir);
 
             string solutionDir = Path.GetFullPath(typeof(ProgramIntegrationTests).GetTypeInfo().Assembly.Location + "../../../../../../..");

@@ -37,8 +37,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             _processService = new ProcessService(new LoggingService<ProcessService>(logger));
             _msBuildService = new MSBuildService(_processService, _mockRepository.Create<ILoggingService<MSBuildService>>().Object);
 
-            _directoryService.DeleteIfExists(_tempDir, true);
-            _directoryService.Create(_tempDir);
+            _directoryService.SetCurrentDirectory("/");
+            _directoryService.Empty(_tempDir);
             _directoryService.SetCurrentDirectory(_tempDir);
         }
 
