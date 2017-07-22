@@ -4,7 +4,6 @@ using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -20,17 +19,14 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _verbose { get; set; }
         private CommandOption _verboseOff { get; set; }
 
-        private CommandLineAppOptions _claOptions { get; }
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
         private IPathService _pathService { get; }
         private Runner _runner { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, IOptions<CommandLineAppOptions> claOptionsAccessor, Runner runner,
-            ILoggingService<RunCommand> loggingService, IPathService pathService)
+        public RunCommand(ICommandLineUtilsService cluService, Runner runner, ILoggingService<RunCommand> loggingService, IPathService pathService)
         {
             _pathService = pathService;
-            _claOptions = claOptionsAccessor.Value;
             _cluService = cluService;
             _runner = runner;
             _loggingService = loggingService;
