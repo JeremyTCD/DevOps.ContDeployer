@@ -115,7 +115,7 @@ namespace JeremyTCD.PipelinesCE.PipelineRunner
             // Create context 
             DependencyContext context = _dependencyContextService.CreateDependencyContext(depsFile);
 
-            return _assemblyService.GetReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
+            return _assemblyService.CreateReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
         }
 
         // TODO Access modifier should be internal or private but no good way to test if so
