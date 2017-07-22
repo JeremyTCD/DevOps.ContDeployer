@@ -1,5 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using JeremyTCD.DotNetCore.ProjectRunner;
+using JeremyTCD.DotNetCore.ProjectHost;
 using StructureMap;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
@@ -8,7 +8,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public CommandLineAppRegistry()
         {
-            IncludeRegistry<ProjectRunnerRegistry>();
+            IncludeRegistry<ProjectHostRegistry>();
 
             For<ICommandLineUtilsService>().Singleton().Use<CommandLineUtilsService>();
 

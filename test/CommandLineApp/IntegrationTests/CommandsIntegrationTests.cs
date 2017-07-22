@@ -1,7 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.Core;
-using JeremyTCD.DotNetCore.ProjectRunner;
+using JeremyTCD.DotNetCore.ProjectHost;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -184,7 +184,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
             mockPathService.Setup(p => p.GetAbsolutePath(pipelineOptions.Project)).Returns(pipelineOptions.Project);
 
-            Mock<Runner> mockRunner = _mockRepository.Create<Runner>(null, null, null, null, null, null, null);
+            Mock<ProjectRunner> mockRunner = _mockRepository.Create<ProjectRunner>(null, null, null, null, null, null, null);
             mockRunner.
                 Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, PipelineOptions.EntryClassName, It.IsAny<string>(), It.IsAny<string>(), stubArgs));
 
@@ -192,7 +192,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             container.
                 Configure(registry =>
                 {
-                    registry.For<Runner>().Use(mockRunner.Object).Singleton();
+                    registry.For<ProjectRunner>().Use(mockRunner.Object).Singleton();
                     registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton();
                     registry.For<IPathService>().Use(mockPathService.Object).Singleton();
                 });

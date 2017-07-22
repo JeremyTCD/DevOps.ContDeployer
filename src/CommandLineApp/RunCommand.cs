@@ -1,4 +1,4 @@
-﻿using JeremyTCD.DotNetCore.ProjectRunner;
+﻿using JeremyTCD.DotNetCore.ProjectHost;
 using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.Core;
@@ -24,9 +24,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private ICommandLineUtilsService _cluService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
         private IPathService _pathService { get; }
-        private Runner _runner { get; }
+        private ProjectRunner _runner { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, Runner runner, ILoggingService<RunCommand> loggingService, IPathService pathService)
+        public RunCommand(ICommandLineUtilsService cluService, ProjectRunner runner, ILoggingService<RunCommand> loggingService, IPathService pathService)
         {
             _pathService = pathService;
             _cluService = cluService;
