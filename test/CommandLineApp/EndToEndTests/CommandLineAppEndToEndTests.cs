@@ -1,14 +1,13 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.PipelinesCE.Core;
+using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.IO;
-using System.Reflection;
-using Microsoft.DotNet.PlatformAbstractions;
-using System.Xml;
-using Xunit;
 using System.Linq;
+using System.Reflection;
+using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
 {
@@ -57,7 +56,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             string stubProjectFilePath = $"{_tempDir}/{stubProjectFile}";
             // Copy stub project to temp dir
             _directoryService.Copy(stubProjectAbsSrcDir, _tempDir, excludePatterns: new string[] { "^bin$", "^obj$" });
-            ConvertProjectReferenceRelPathsToAbs(stubProjectFilePath, stubProjectAbsSrcDir);
+            _msBuildService.ConvertProjectReferenceRelPathsToAbs(stubProjectFilePath, stubProjectAbsSrcDir);
 
             _directoryService.SetCurrentDirectory(claProjectAbsDir);
 
@@ -87,24 +86,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             string output = File.ReadAllText(logFile);
             Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPipeline, "\"Stub\""), output);
             Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPlugin, "\"StubPlugin\""), output);
-        }
-
-        private void ConvertProjectReferenceRelPathsToAbs(string projectFile, string projectDir)
-        {
-            XmlDocument doc = new XmlDocument();
-
-            FileStream stream = new FileStream(projectFile, FileMode.Open);
-            doc.Load(stream);
-            stream.Dispose();
-
-            foreach (XmlNode node in doc.GetElementsByTagName("ProjectReference"))
-            {
-                node.Attributes["Include"].Value = Path.Combine(projectDir, node.Attributes["Include"].Value);
-            }
-
-            stream = new FileStream(projectFile, FileMode.Create);
-            doc.Save(stream);
-            stream.Dispose();
         }
     }
 }

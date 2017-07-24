@@ -5,7 +5,6 @@ using StructureMap;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Xml;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
@@ -15,11 +14,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         private MockRepository _mockRepository { get; }
         private string _tempDir { get; } = Path.Combine(Path.GetTempPath(), $"{nameof(ProgramIntegrationTests)}Temp");
         private DirectoryService _directoryService { get; }
+        private MSBuildService _msBuildService { get; }
 
         public ProgramIntegrationTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
             _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
+            _msBuildService = new MSBuildService(null, _mockRepository.Create<ILoggingService<MSBuildService>>().Object);
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string stubPipelineName = "Stub";
             // Copy stub project to temp dir
             _directoryService.Copy(stubProjectAbsSrcDir, _tempDir, excludePatterns: new string[] { "^bin$", "^obj$" });
-            ConvertProjectReferenceRelPathsToAbs(stubProjectFilePath, stubProjectAbsSrcDir);
+            _msBuildService.ConvertProjectReferenceRelPathsToAbs(stubProjectFilePath, stubProjectAbsSrcDir);
 
             // Act
             int exitCode = Program.Main(new string[] { Strings.CommandName_Run,
@@ -79,24 +80,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] { claOptions.VerboseMinLogLevel, new string[] { $"--{Strings.OptionLongName_Verbose}" } };
             yield return new object[] { claOptions.VerboseMinLogLevel, new string[] { $"-{Strings.OptionShortName_Verbose}" } };
             yield return new object[] { claOptions.DefaultMinLogLevel, new string[] { } };
-        }
-
-        private void ConvertProjectReferenceRelPathsToAbs(string projectFile, string projectDir)
-        {
-            XmlDocument doc = new XmlDocument();
-
-            FileStream stream = new FileStream(projectFile, FileMode.Open);
-            doc.Load(stream);
-            stream.Dispose();
-
-            foreach (XmlNode node in doc.GetElementsByTagName("ProjectReference"))
-            {
-                node.Attributes["Include"].Value = Path.Combine(projectDir, node.Attributes["Include"].Value);
-            }
-
-            stream = new FileStream(projectFile, FileMode.Create);
-            doc.Save(stream);
-            stream.Dispose();
         }
     }
 }
