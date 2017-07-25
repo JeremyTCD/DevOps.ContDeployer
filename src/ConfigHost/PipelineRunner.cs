@@ -10,36 +10,33 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
     public class PipelineRunner : IPipelineRunner
     {
         private ILoggingService<PipelineRunner> _loggingService { get; }
-        private IPipelineContextFactory _pipelineContextFactory { get; }
         private IStepContextFactory _stepContextFactory { get; }
         private ILoggerFactory _loggerFactory { get; }
 
         public PipelineRunner(ILoggingService<PipelineRunner> loggingService,
             IStepContextFactory stepContextFactory,
-            IPipelineContextFactory pipelineContextFactory,
             ILoggerFactory loggerFactory)
         {
             _stepContextFactory = stepContextFactory;
             _loggingService = loggingService;
             _loggerFactory = loggerFactory;
-            _pipelineContextFactory = pipelineContextFactory;
         }
 
-        public void Run(Pipeline pipeline, IDictionary<string, IContainer> pluginContainers)
+        // TODO place plugin containersd into pipelinecontect
+        // generate context in confighostcore.run
+        public void Run(Pipeline pipeline, IPipelineContext pipelineContext)
         {
-            IPipelineContext pipelineContext = _pipelineContextFactory.
-                AddPipelineOptions(pipeline.Options).
-                CreatePipelineContext();
+
             LinkedList<IStep> remainingSteps = new LinkedList<IStep>(pipeline.Steps);
 
-            _loggingService.LogInformation(Strings.Log_RunningPipeline, pipeline.Options.Pipeline);
+            _loggingService.LogInformation(Strings.Log_RunningPipeline, pipelineContext.PipelinesCEOptions.Pipeline);
 
             while (remainingSteps.Count > 0)
             {
                 IStep step = remainingSteps.First();
                 remainingSteps.RemoveFirst();
 
-                IContainer container = pluginContainers[step.PluginType.Name];
+                IContainer container = pipelineContext.PluginContainers[step.PluginType.Name];
                 IPlugin plugin = container.GetInstance(step.PluginType) as IPlugin;
                 ILogger logger = _loggerFactory.CreateLogger(step.PluginType.Name);
 
@@ -54,7 +51,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                 _loggingService.LogInformation(Strings.Log_FinishedRunningPlugin, step.PluginType.Name);
             }
 
-            _loggingService.LogInformation(Strings.Log_FinishedRunningPipeline, pipeline.Options.Pipeline);
+            _loggingService.LogInformation(Strings.Log_FinishedRunningPipeline, pipelineContext.PipelinesCEOptions.Pipeline);
         }
     }
 }

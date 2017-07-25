@@ -50,7 +50,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.Git.Tests.UnitTests
             });
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            Mock<SharedPluginOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.SharedPluginOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(false);
 
             Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();
@@ -81,7 +81,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.Git.Tests.UnitTests
             mockStepContext.Setup(s => s.PluginOptions).Returns(new GitPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            Mock<SharedPluginOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.SharedPluginOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
 
             Mock<IRepository> mockRepository = _mockRepository.Create<IRepository>();

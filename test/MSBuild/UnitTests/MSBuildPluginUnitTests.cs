@@ -39,7 +39,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             mockStepContext.Setup(s => s.PluginOptions).Returns(new MSBuildPluginOptions());
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            Mock<SharedPluginOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.SharedPluginOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(true);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();
@@ -72,7 +72,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild.Tests.UnitTests
             });
 
             Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-            Mock<PipelineOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.PipelineOptions);
+            Mock<SharedPluginOptions> mockPipelineOptions = Mock.Get(mockPipelineContext.Object.SharedPluginOptions);
             mockPipelineOptions.Setup(s => s.DryRun).Returns(false);
 
             Mock<IMSBuildService> mockMSBuildService = _mockRepository.Create<IMSBuildService>();

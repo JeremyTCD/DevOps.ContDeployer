@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StructureMap;
+using System.Collections.Generic;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
@@ -6,5 +7,7 @@ namespace JeremyTCD.PipelinesCE.Core
     {
         SharedPluginOptions SharedPluginOptions { get; set; }
         IDictionary<string, object> SharedData { get; set; }
+        PipelinesCEOptions PipelinesCEOptions { get; set; }
+        IDictionary<string, IContainer> PluginContainers { get; set; }
     }
 }

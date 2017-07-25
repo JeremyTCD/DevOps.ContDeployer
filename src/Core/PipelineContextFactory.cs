@@ -1,14 +1,29 @@
 ﻿using System.Collections.Generic;
+using StructureMap;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
     public class PipelineContextFactory : IPipelineContextFactory
     {
-        private PipelinesCEOptions _pipelineOptions { get; set; }
+        public IDictionary<string, IContainer> _pluginContainers { get; private set; }
+        private SharedPluginOptions _sharedPluginOptions { get; set; }
+        private PipelinesCEOptions _pipelinesCEOptions { get; set; }
 
-        public IPipelineContextFactory AddPipelineOptions(PipelinesCEOptions pipelineOptions)
+        public IPipelineContextFactory AddPipelinesCEOptions(PipelinesCEOptions pipelinesCEOptions)
         {
-            _pipelineOptions = pipelineOptions;
+            _pipelinesCEOptions = pipelinesCEOptions;
+            return this;
+        }
+
+        public IPipelineContextFactory AddPluginContainers(IDictionary<string, IContainer> pluginContainers)
+        {
+            _pluginContainers = pluginContainers;
+            return this;
+        }
+
+        public IPipelineContextFactory AddSharedPluginOptions(SharedPluginOptions sharedPluginOptions)
+        {
+            _sharedPluginOptions = sharedPluginOptions;
             return this;
         }
 
@@ -16,7 +31,9 @@ namespace JeremyTCD.PipelinesCE.Core
         {
             return new PipelineContext
             {
-                PipelineOptions = _pipelineOptions,
+                PluginContainers = _pluginContainers,
+                PipelinesCEOptions = _pipelinesCEOptions,
+                SharedPluginOptions = _sharedPluginOptions,
                 SharedData = new Dictionary<string, object>()
             };
         }

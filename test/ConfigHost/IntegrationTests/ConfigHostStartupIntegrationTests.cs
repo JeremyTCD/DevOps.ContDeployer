@@ -20,15 +20,17 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
         {
             // Arrange
             string testPipeline = "Stub";
-            PipelineOptions stubOptions = new PipelineOptions
+            PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
             {
                 Pipeline = testPipeline
             };
+            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions();
 
-            string json = JsonConvert.SerializeObject(stubOptions, new PrivateFieldsJsonConverter());
+            string pipelinesCEOptionsJson = JsonConvert.SerializeObject(stubPipelinesCEOptions, new PrivateFieldsJsonConverter());
+            string sharedPluginOptionsJson = JsonConvert.SerializeObject(stubSharedPluginOptions, new PrivateFieldsJsonConverter());
 
             // Act
-            int exitCode = ConfigHostStartup.Main(new string[] { json });
+            int exitCode = ConfigHostStartup.Main(new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
 
             // Assert
             Assert.Equal(0, exitCode);
@@ -40,37 +42,51 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             // Arrange
             string testPipeline = "testPipeline";
             string testProject = "testProject";
-            string extraFieldKey = "_extraFieldKey";
+            string pipelinesCEOptionsExtraFieldKey = "_pipelinesCEOptionsExtraFieldKey";
+            string sharedPluginOptionsExtraFieldKey = "_sharedPluginOptionsExtraFieldKey";
             string extraFieldValue = "extraFieldValue";
             string projectFieldKey = "_project";
+            string dryRunFieldKey = "_dryRun";
             bool testDryRun = true;
 
-            PipelineOptions stubOptions = new PipelineOptions
+            PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
             {
-                DryRun = true,
                 Pipeline = testPipeline,
                 Project = testProject
             };
 
-            string json = JsonConvert.SerializeObject(stubOptions, new PrivateFieldsJsonConverter());
-            JObject jObject = JsonConvert.DeserializeObject<JObject>(json);
-            jObject.Add(extraFieldKey, extraFieldValue);
+            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions
+            {
+                DryRun = testDryRun
+            };
+
+            string pipelinesCEOptionsJson = JsonConvert.SerializeObject(stubPipelinesCEOptions, new PrivateFieldsJsonConverter());
+            JObject jObject = JsonConvert.DeserializeObject<JObject>(pipelinesCEOptionsJson);
+            jObject.Add(pipelinesCEOptionsExtraFieldKey, extraFieldValue);
             jObject.Remove(projectFieldKey);
-            json = jObject.ToString();
+            pipelinesCEOptionsJson = jObject.ToString();
+
+            string sharedPluginOptionsJson = JsonConvert.SerializeObject(stubSharedPluginOptions, new PrivateFieldsJsonConverter());
+            jObject = JsonConvert.DeserializeObject<JObject>(sharedPluginOptionsJson);
+            jObject.Add(sharedPluginOptionsExtraFieldKey, extraFieldValue);
+            jObject.Remove(dryRunFieldKey);
+            sharedPluginOptionsJson = jObject.ToString();
 
             ConfigHostStartup program = new ConfigHostStartup();
 
             // Act
-            (PipelineOptions options, string warnings) = ConfigHostStartup.ParseArgs(new string[] { json });
+            (PipelinesCEOptions resultPipelinesCEOptions, SharedPluginOptions resultSharedPluginOptions, string warnings) = ConfigHostStartup.
+                ParseArgs(new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson});
 
+            // TODO warnings are wrong
             // Assert
-            Assert.Equal(testDryRun, options.DryRun);
-            Assert.Equal(testPipeline, options.Pipeline);
-            Assert.Equal(PipelineOptions.DefaultVerbose, options.Verbose);
-            Assert.Equal(PipelineOptions.DefaultProject, options.Project);
+            Assert.Equal(testDryRun, stubSharedPluginOptions.DryRun);
+            Assert.Equal(testPipeline, resultPipelinesCEOptions.Pipeline);
+            Assert.Equal(PipelinesCEOptions.DefaultVerbose, resultPipelinesCEOptions.Verbose);
+            Assert.Equal(PipelinesCEOptions.DefaultProject, resultPipelinesCEOptions.Project);
             Assert.Equal(string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch,
-                Environment.NewLine + ConfigHostStartup.NormalizeFieldName(extraFieldKey),
-                Environment.NewLine + ConfigHostStartup.NormalizeFieldName(projectFieldKey)),
+                $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(pipelinesCEOptionsExtraFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(sharedPluginOptionsExtraFieldKey)}",
+                $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(projectFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(dryRunFieldKey)}"),
                 warnings);
         }
 
@@ -84,7 +100,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
                 r.For<ILoggerFactory>().Singleton().Use<LoggerFactory>();
             });
 
-            PipelineOptions pipelineOptions = new PipelineOptions
+            PipelinesCEOptions pipelineOptions = new PipelinesCEOptions
             {
                 Verbose = verbose
             };
@@ -100,8 +116,8 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
 
         public static IEnumerable<object[]> ConfiguresLoggerFactoryData()
         {
-            yield return new object[] { PipelineOptions.VerboseMinLogLevel, true };
-            yield return new object[] { PipelineOptions.DefaultMinLogLevel, false };
+            yield return new object[] { PipelinesCEOptions.VerboseMinLogLevel, true };
+            yield return new object[] { PipelinesCEOptions.DefaultMinLogLevel, false };
         }
     }
 }

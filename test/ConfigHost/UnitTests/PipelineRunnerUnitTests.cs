@@ -31,14 +31,12 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
                 new Step<StubPlugin1>(plugin1Options),
                 new Step<StubPlugin2>(plugin2Options)
             };
-            PipelineOptions options = new PipelineOptions { Pipeline = testPipeline };
-            Pipeline pipeline = new Pipeline(steps, options);
-
-            Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
-
-            Mock<IPipelineContextFactory> mockPipelineContextFactory = _mockRepository.Create<IPipelineContextFactory>();
-            mockPipelineContextFactory.Setup(p => p.AddPipelineOptions(options)).Returns(mockPipelineContextFactory.Object);
-            mockPipelineContextFactory.Setup(p => p.CreatePipelineContext()).Returns(mockPipelineContext.Object);
+            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions();
+            Pipeline pipeline = new Pipeline(steps, stubSharedPluginOptions);
+            PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
+            {
+                Pipeline = testPipeline
+            };
 
             Mock<ILoggingService<PipelineRunner>> loggingService = _mockRepository.Create<ILoggingService<PipelineRunner>>();
             using (Sequence.Create())
@@ -60,6 +58,10 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
                 mockContainers.Setup(c => c[stubPlugin1Name]).Returns(mockContainer.Object);
                 mockContainers.Setup(c => c[stubPlugin2Name]).Returns(mockContainer.Object);
 
+                Mock<IPipelineContext> mockPipelineContext = _mockRepository.Create<IPipelineContext>();
+                mockPipelineContext.Setup(p => p.PipelinesCEOptions).Returns(stubPipelinesCEOptions);
+                mockPipelineContext.Setup(p => p.PluginContainers).Returns(mockContainers.Object);
+
                 Mock<ILogger> mockPlugin1Logger = _mockRepository.Create<ILogger>();
                 Mock<ILogger> mockPlugin2Logger = _mockRepository.Create<ILogger>();
 
@@ -78,10 +80,10 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
                 mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin2Logger.Object)).Returns(mockStepContextFactory.Object);
                 mockStepContextFactory.Setup(s => s.CreateStepContext()).Returns(mockStepContext.Object);
 
-                PipelineRunner runner = new PipelineRunner(loggingService.Object, mockStepContextFactory.Object, mockPipelineContextFactory.Object, mockLoggerFactory.Object);
+                PipelineRunner runner = new PipelineRunner(loggingService.Object, mockStepContextFactory.Object, mockLoggerFactory.Object);
 
                 // Act
-                runner.Run(pipeline, mockContainers.Object);
+                runner.Run(pipeline, mockPipelineContext.Object);
 
                 // Assert
                 _mockRepository.VerifyAll();

@@ -1,27 +1,21 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using Microsoft.Extensions.CommandLineUtils;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     /// <summary>
-    /// Contains basic options such as --version and options shared by all commands, such as --verbose. All
-    /// other commands are children of this command.
+    /// Contains basic options such as --version --help. All other commands are children of this command.
     /// </summary>
     public class RootCommand : CommandLineApplication
     {
         private ICommandLineUtilsService _cluService { get; }
-        private ILoggingService<RunCommand> _loggingService { get; }
-        private CommandOption _verbose { get; set; }
 
-        public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand, ILoggingService<RunCommand> loggingService)
+        public RootCommand(ICommandLineUtilsService cluService, RunCommand runCommand)
 
         {
             _cluService = cluService;
-            _loggingService = loggingService;
 
             Description = Strings.CommandDescription_Run;
             Name = Strings.CommandName_Root;
@@ -42,19 +36,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
             VersionOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version),
                 typeof(RootCommand).GetTypeInfo().Assembly.GetName().Version.ToString());
-            _verbose = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose),
-                Strings.OptionDescription_Verbose,
-                CommandOptionType.NoValue);
         }
 
         private int Run()
         {
-            if (_loggingService.IsEnabled(LogLevel.Debug))
-            {
-                _loggingService.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Root, string.Join(Environment.NewLine, Options.ToArray().Select(o => $"{o.LongName}={o.Value()}")));
-            }
-
-            ShowHelp();
+            ShowHelp(); // User enters just "PipelinesCE"
 
             return 0;
         }

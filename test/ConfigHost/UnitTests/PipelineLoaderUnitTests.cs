@@ -165,7 +165,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             // Arrange
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = new Type[0];
-            PipelineOptions stubOptions = new PipelineOptions();
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions();
 
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
@@ -188,7 +188,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             // Arrange
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = { typeof(Dummy1PipelineFactory), typeof(Dummy2PipelineFactory) };
-            PipelineOptions stubOptions = new PipelineOptions();
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions();
 
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
             mockAssemblyService.
@@ -214,7 +214,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             string testPipeline = _loader.PipelineFactoryPipelineName(typeof(Dummy1PipelineFactory));
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = new Type[] { typeof(Dummy2PipelineFactory) };
-            PipelineOptions stubOptions = new PipelineOptions
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions
             {
                 Pipeline = testPipeline
             };
@@ -241,7 +241,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             string testPipeline = _loader.PipelineFactoryPipelineName(typeof(Dummy1PipelineFactory));
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = new Type[] { typeof(Dummy1PipelineFactory), typeof(Dummy1PipelineFactory) };
-            PipelineOptions stubOptions = new PipelineOptions
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions
             {
                 Pipeline = testPipeline
             };
@@ -272,7 +272,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             string resolvedPipeline = _loader.PipelineFactoryPipelineName(dummy1PipelineFactoryType);
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = new Type[] { dummy1PipelineFactoryType };
-            PipelineOptions stubOptions = new PipelineOptions();
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions();
             Dummy1PipelineFactory stubDummy1PipelineFactory = new Dummy1PipelineFactory();
 
             Mock<IAssemblyService> mockAssemblyService = _mockRepository.Create<IAssemblyService>();
@@ -306,7 +306,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             string pipeline = _loader.PipelineFactoryPipelineName(dummy1PipelineFactoryType);
             Assembly[] stubAssemblies = new Assembly[0];
             Type[] stubPipelineFactoryTypes = new Type[] { dummy1PipelineFactoryType };
-            PipelineOptions stubOptions = new PipelineOptions
+            PipelinesCEOptions stubOptions = new PipelinesCEOptions
             {
                 Pipeline = pipeline
             };
@@ -343,7 +343,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             IEnumerable<Assembly> stubAssemblies = new Assembly[0];
             IDictionary<string, IContainer> stubPluginContainers = new Dictionary<string, IContainer>();
 
-            Mock<PipelineOptions> mockPipelineOptions = _mockRepository.Create<PipelineOptions>();
+            Mock<PipelinesCEOptions> mockPipelineOptions = _mockRepository.Create<PipelinesCEOptions>();
             mockPipelineOptions.Setup(p => p.Pipeline).Returns(testPipeline);
 
             Mock<ILoggingService<PipelineLoader>> mockLoggingService = _mockRepository.Create<ILoggingService<PipelineLoader>>();

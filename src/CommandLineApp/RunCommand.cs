@@ -6,7 +6,6 @@ using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
@@ -22,16 +21,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _debugOff { get; set; }
 
         private ICommandLineUtilsService _cluService { get; }
-        private ILoggingService<RunCommand> _loggingService { get; }
         private IPathService _pathService { get; }
-        private ProjectRunner _runner { get; }
+        private ProjectRunner _projectRunner { get; }
+        private ILoggerFactory _loggerFactory { get; }
+        private ProjectLoader _projectLoader { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, ProjectRunner runner, ILoggingService<RunCommand> loggingService, IPathService pathService)
+        public RunCommand(ICommandLineUtilsService cluService, ProjectLoader projectLoader, ProjectRunner projectRunner, IPathService pathService, ILoggerFactory loggerFactory)
         {
             _pathService = pathService;
             _cluService = cluService;
-            _runner = runner;
-            _loggingService = loggingService;
+            _projectRunner = projectRunner;
+            _loggerFactory = loggerFactory;
+            _projectLoader = projectLoader;
 
             Description = Strings.CommandDescription_Run;
             Name = Strings.CommandName_Run;
@@ -72,25 +73,25 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
-            ShowVersion();
-            if (_loggingService.IsEnabled(LogLevel.Debug))
-            {
-                _loggingService.LogDebug(Strings.Log_RunningCommand,
-                    Strings.CommandFullName_Run,
-                    string.Join(Environment.NewLine, GetOptions().ToArray().Select(o => $"{o.LongName}={o.Value()}")));
-            }
+            ShowRootCommandFullNameAndVersion();
 
             // Process CommandOptions
             PipelinesCEOptions pipelinesCEOptions = CreatePipelinesCEOptions();
             SharedPluginOptions sharedPluginOptions = CreateSharedPluginOptions();
+
+            // Configure logging
+            ConfigureLogging(pipelinesCEOptions);
+
             // Serialize options
             PrivateFieldsJsonConverter pfjc = new PrivateFieldsJsonConverter();
             string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, pfjc);
             string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, pfjc);
 
-            return _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project),
-                PipelineOptions.EntryAssemblyName,
-                PipelineOptions.EntryClassName,
+            //Assembly entryAssembly = _projectLoader.Load();
+
+            return _projectRunner.Run(_pathService.GetAbsolutePath(pipelinesCEOptions.Project),
+                PipelinesCEOptions.EntryAssemblyName,
+                PipelinesCEOptions.EntryClassName,
                 args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
         }
 
@@ -125,6 +126,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 pipelineOptions.Debug = false;
 
             return pipelineOptions;
+        }
+
+        private void ConfigureLogging(PipelinesCEOptions pipelinesCEOptions)
+        {
+            //_loggerFactory.
+            //    AddNLog();
+
+            //LoggingConfiguration config = new LoggingConfiguration();
+
+            //ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget();
+            //config.AddTarget(consoleTarget);
+            ////config.AddRule(LogLevel.)
+
+            //_loggerFactory.
+            //    ConfigureNLog(config);
         }
     }
 }

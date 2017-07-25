@@ -4,6 +4,7 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
 {
     public class PipelineOptionsUnitTests
     {
+        // TODO incomplete, does not test all properties
         [Fact]
         public void Combine_CombinesTwoPipelineOptionsInstancesWithCorrectPrecedence()
         {
@@ -12,14 +13,13 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
             string testSecondaryProject = "testSecondaryProject";
             string testSecondaryPipeline = "testSecondaryPipeline";
 
-            PipelineOptions primary = new PipelineOptions
+            PipelinesCEOptions primary = new PipelinesCEOptions
             {
                 Project = testPrimaryProject
             };
 
-            PipelineOptions secondary = new PipelineOptions
+            PipelinesCEOptions secondary = new PipelinesCEOptions
             {
-                DryRun = true,
                 Project = testSecondaryProject,
                 Pipeline = testSecondaryPipeline
             };
@@ -28,7 +28,6 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
             primary.Combine(secondary);
 
             // Assert
-            Assert.True(primary.DryRun);
             Assert.Equal(testPrimaryProject, primary.Project);
             Assert.Equal(testSecondaryPipeline, secondary.Pipeline);
         }

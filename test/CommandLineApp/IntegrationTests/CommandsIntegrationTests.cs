@@ -76,7 +76,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                         Options:
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}     Show help information
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)}  Show version information
-                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)} {Strings.OptionDescription_Verbose} 
                         Commands:
                           { Strings.CommandName_Run}  {Strings.CommandDescription_Run}
                         Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command.";
@@ -134,7 +133,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                         Options:
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)} Show help information
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Version, Strings.OptionLongName_Version)} Show version information 
-                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)} {Strings.OptionDescription_Verbose} 
                         Commands:
                           { Strings.CommandName_Run} {Strings.CommandDescription_Run}
                         Use ""{Strings.CommandName_Root} [command] --help"" for more information about a command.";
@@ -169,31 +167,30 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         /// Ensures that CommandOptions are setup correctly and that arguments are processed correctly
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="pipelineOptions"></param>
+        /// <param name="pipelinesCEOptions"></param>
         [Theory]
         [MemberData(nameof(RunCommandData))]
-        public void RunCommand_LogsDebugMessageAndCallsRunnerRunWithSpecifiedOptions(string[] arguments, PipelineOptions pipelineOptions)
+        public void RunCommand_LogsDebugMessageAndCallsRunnerRunWithSpecifiedOptions(string[] arguments, PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
         {
             // Arrange
-            string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
-            string[] stubArgs = new string[] { json };
-
-            Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
-            mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(false);
+            string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, new PrivateFieldsJsonConverter());
+            string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, new PrivateFieldsJsonConverter());
+            string[] stubArgs = new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson };
 
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(pipelineOptions.Project)).Returns(pipelineOptions.Project);
+            mockPathService.Setup(p => p.GetAbsolutePath(pipelinesCEOptions.Project)).Returns(pipelinesCEOptions.Project);
 
-            Mock<ProjectRunner> mockRunner = _mockRepository.Create<ProjectRunner>(null, null, null, null, null, null, null);
-            mockRunner.
-                Setup(r => r.Run(pipelineOptions.Project, PipelineOptions.EntryAssemblyName, PipelineOptions.EntryClassName, It.IsAny<string>(), It.IsAny<string>(), stubArgs));
+            Mock<ProjectRunner> mockProjectRunner = _mockRepository.Create<ProjectRunner>(null, null, null, null, null, null, null);
+            mockProjectRunner.
+                Setup(r => r.Run(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName,
+                PipelinesCEOptions.EntryClassName, It.IsAny<string>(), It.IsAny<string>(),
+                stubArgs));
 
             Container container = new Container(new CommandLineAppRegistry());
             container.
                 Configure(registry =>
                 {
-                    registry.For<ProjectRunner>().Use(mockRunner.Object).Singleton();
-                    registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton();
+                    registry.For<ProjectRunner>().Use(mockProjectRunner.Object).Singleton();
                     registry.For<IPathService>().Use(mockPathService.Object).Singleton();
                 });
 
@@ -211,19 +208,22 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string testProject = "testProject";
             string testPipeline = "testPipeline";
 
-            yield return new object[] { new string[] { Strings.CommandName_Run }, new PipelineOptions() };
+            yield return new object[] { new string[] { Strings.CommandName_Run }, new PipelinesCEOptions(), new SharedPluginOptions() };
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}",
                 $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Debug}",
                 $"-{Strings.OptionShortName_Project}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
-                new PipelineOptions{
+                new PipelinesCEOptions{
                     Verbose = true,
-                    DryRun = true,
                     Debug = true,
                     Project = testProject,
                     Pipeline = testPipeline
+                },
+                new SharedPluginOptions
+                {
+                    DryRun = true
                 }
             };
             yield return new object[] {new string[] {Strings.CommandName_Run,
@@ -232,34 +232,43 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 $"--{Strings.OptionLongName_Debug}",
                 $"--{Strings.OptionLongName_Project}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
-                new PipelineOptions{
+                new PipelinesCEOptions{
                     Verbose = true,
-                    DryRun = true,
                     Debug = true,
                     Project = testProject,
                     Pipeline = testPipeline
+                },
+                new SharedPluginOptions
+                {
+                    DryRun = true
                 }
             };
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_DryRunOff}",
                 $"-{Strings.OptionShortName_VerboseOff}",
                 $"-{Strings.OptionShortName_DebugOff}" },
-                new PipelineOptions
+                new PipelinesCEOptions
                 {
-                    DryRun = false,
                     Verbose = false,
                     Debug = false
+                },
+                new SharedPluginOptions
+                {
+                    DryRun = false
                 }
             };
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_DryRunOff}",
                 $"--{Strings.OptionLongName_VerboseOff}" ,
                 $"--{Strings.OptionLongName_DebugOff}"},
-                new PipelineOptions
+                new PipelinesCEOptions
                 {
-                    DryRun = false,
                     Verbose = false,
                     Debug = false
+                },
+                new SharedPluginOptions
+                {
+                    DryRun = false
                 }
             };
         }

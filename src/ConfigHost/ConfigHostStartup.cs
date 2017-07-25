@@ -95,7 +95,6 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                     extraFields += Environment.NewLine + NormalizeFieldName(pair.Key);
                 }
 
-                // TODO split warning for each option instance?
                 warnings = string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch, extraFields, missingFields);
             }
 
