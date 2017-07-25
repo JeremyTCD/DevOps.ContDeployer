@@ -6,6 +6,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
@@ -22,15 +23,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private ICommandLineUtilsService _cluService { get; }
         private IPathService _pathService { get; }
-        private ProjectRunner _projectRunner { get; }
+        private MethodRunner _methodRunner { get; }
         private ILoggerFactory _loggerFactory { get; }
         private ProjectLoader _projectLoader { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, ProjectLoader projectLoader, ProjectRunner projectRunner, IPathService pathService, ILoggerFactory loggerFactory)
+        public RunCommand(ICommandLineUtilsService cluService, ProjectLoader projectLoader, MethodRunner methodRunner, IPathService pathService, ILoggerFactory loggerFactory)
         {
             _pathService = pathService;
             _cluService = cluService;
-            _projectRunner = projectRunner;
+            _methodRunner = methodRunner;
             _loggerFactory = loggerFactory;
             _projectLoader = projectLoader;
 
@@ -87,12 +88,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, pfjc);
             string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, pfjc);
 
-            //Assembly entryAssembly = _projectLoader.Load();
+            // Load config project
+            Assembly entryAssembly = _projectLoader.Load(_pathService.GetAbsolutePath(pipelinesCEOptions.Project), PipelinesCEOptions.EntryAssemblyName,
+                pipelinesCEOptions.Debug ? PipelinesCEOptions.DebugBuildConfiguration : PipelinesCEOptions.ReleaseBuildConfiguration);
 
-            return _projectRunner.Run(_pathService.GetAbsolutePath(pipelinesCEOptions.Project),
-                PipelinesCEOptions.EntryAssemblyName,
-                PipelinesCEOptions.EntryClassName,
-                args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
+            return _methodRunner.Run(entryAssembly, PipelinesCEOptions.EntryClassName, args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
         }
 
         private SharedPluginOptions CreateSharedPluginOptions()

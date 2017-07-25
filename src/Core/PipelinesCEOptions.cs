@@ -19,6 +19,8 @@ namespace JeremyTCD.PipelinesCE.Core
         public const bool DefaultDebug = false;
         public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.ConfigHost";
         public const string EntryClassName = "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup";
+        public const string DebugBuildConfiguration = "Debug";
+        public const string ReleaseBuildConfiguration = "Release";
 
         private bool? _verbose;
         private bool? _debug;

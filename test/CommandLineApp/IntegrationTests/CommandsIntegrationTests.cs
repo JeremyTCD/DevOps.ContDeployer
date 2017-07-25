@@ -10,6 +10,7 @@ using StructureMap;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using System.Reflection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
@@ -180,17 +181,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
             mockPathService.Setup(p => p.GetAbsolutePath(pipelinesCEOptions.Project)).Returns(pipelinesCEOptions.Project);
 
-            Mock<ProjectRunner> mockProjectRunner = _mockRepository.Create<ProjectRunner>(null, null, null, null, null, null, null);
-            mockProjectRunner.
-                Setup(r => r.Run(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName,
-                PipelinesCEOptions.EntryClassName, It.IsAny<string>(), It.IsAny<string>(),
-                stubArgs));
+            Mock<Assembly> mockAssembly = _mockRepository.Create<Assembly>();
+
+            Mock<ProjectLoader> mockProjectLoader = _mockRepository.Create<ProjectLoader>(null, null, null, null, null);
+            mockProjectLoader.
+                Setup(p => p.Load(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName, 
+                    pipelinesCEOptions.Debug ? PipelinesCEOptions.DebugBuildConfiguration : PipelinesCEOptions.ReleaseBuildConfiguration)).
+                Returns(mockAssembly.Object);
+
+            Mock<MethodRunner> mockMethodRunner = _mockRepository.Create<MethodRunner>(null, null, null);
+            mockMethodRunner.
+                Setup(r => r.Run(mockAssembly.Object, PipelinesCEOptions.EntryClassName, It.IsAny<string>(), stubArgs));
 
             Container container = new Container(new CommandLineAppRegistry());
             container.
                 Configure(registry =>
                 {
-                    registry.For<ProjectRunner>().Use(mockProjectRunner.Object).Singleton();
+                    registry.For<ProjectLoader>().Use(mockProjectLoader.Object).Singleton();
+                    registry.For<MethodRunner>().Use(mockMethodRunner.Object).Singleton();
                     registry.For<IPathService>().Use(mockPathService.Object).Singleton();
                 });
 
