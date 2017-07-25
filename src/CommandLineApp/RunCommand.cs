@@ -72,6 +72,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private int Run()
         {
+            ShowVersion();
             if (_loggingService.IsEnabled(LogLevel.Debug))
             {
                 _loggingService.LogDebug(Strings.Log_RunningCommand,
