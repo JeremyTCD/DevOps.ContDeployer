@@ -80,49 +80,49 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                     string.Join(Environment.NewLine, GetOptions().ToArray().Select(o => $"{o.LongName}={o.Value()}")));
             }
 
-            PipelineOptions pipelineOptions = CreatePipelineOptions();
-            string json = JsonConvert.SerializeObject(pipelineOptions, new PrivateFieldsJsonConverter());
+            // Process CommandOptions
+            PipelinesCEOptions pipelinesCEOptions = CreatePipelinesCEOptions();
+            SharedPluginOptions sharedPluginOptions = CreateSharedPluginOptions();
+            // Serialize options
+            PrivateFieldsJsonConverter pfjc = new PrivateFieldsJsonConverter();
+            string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, pfjc);
+            string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, pfjc);
 
             return _runner.Run(_pathService.GetAbsolutePath(pipelineOptions.Project),
                 PipelineOptions.EntryAssemblyName,
                 PipelineOptions.EntryClassName,
-                args: new string[] { json });
+                args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
         }
 
-        private PipelineOptions CreatePipelineOptions()
+        private SharedPluginOptions CreateSharedPluginOptions()
         {
-            PipelineOptions pipelineOptions = new PipelineOptions
+            SharedPluginOptions sharedPluginOptions = new SharedPluginOptions();
+
+            if (_dryRun.HasValue())
+                sharedPluginOptions.DryRun = true;
+            else if (_dryRunOff.HasValue())
+                sharedPluginOptions.DryRun = false;
+
+            return sharedPluginOptions;
+        }
+
+        private PipelinesCEOptions CreatePipelinesCEOptions()
+        {
+            PipelinesCEOptions pipelineOptions = new PipelinesCEOptions
             {
                 Project = _project.Value(),
                 Pipeline = _pipeline.Value(),
             };
 
-            if (_dryRun.HasValue())
-            {
-                pipelineOptions.DryRun = true;
-            }
-            else if (_dryRunOff.HasValue())
-            {
-                pipelineOptions.DryRun = false;
-            }
-
             if (_verbose.HasValue())
-            {
                 pipelineOptions.Verbose = true;
-            }
             else if (_verboseOff.HasValue())
-            {
                 pipelineOptions.Verbose = false;
-            }
 
             if (_debug.HasValue())
-            {
                 pipelineOptions.Debug = true;
-            }
             else if (_debugOff.HasValue())
-            {
                 pipelineOptions.Debug = false;
-            }
 
             return pipelineOptions;
         }

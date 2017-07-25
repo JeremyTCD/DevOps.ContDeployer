@@ -4,9 +4,9 @@ namespace JeremyTCD.PipelinesCE.Core
 {
     public class PipelineContextFactory : IPipelineContextFactory
     {
-        private PipelineOptions _pipelineOptions { get; set; }
+        private PipelinesCEOptions _pipelineOptions { get; set; }
 
-        public IPipelineContextFactory AddPipelineOptions(PipelineOptions pipelineOptions)
+        public IPipelineContextFactory AddPipelineOptions(PipelinesCEOptions pipelineOptions)
         {
             _pipelineOptions = pipelineOptions;
             return this;

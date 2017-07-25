@@ -43,7 +43,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.MSBuild
                 throw new InvalidOperationException($"{nameof(MSBuildPluginOptions)} required");
             }
 
-            if (!pipelineContext.PipelineOptions.DryRun)
+            if (!pipelineContext.SharedPluginOptions.DryRun)
             {
                 _msBuildService.Build(options.ProjOrSlnFile, options.Switches);
             }

@@ -2,7 +2,7 @@
 {
     public interface IPipelineContextFactory
     {
-        IPipelineContextFactory AddPipelineOptions(PipelineOptions pipelineOptions);
+        IPipelineContextFactory AddSharedPluginOptions(SharedPluginOptions sharedPluginOptions);
 
         IPipelineContext CreatePipelineContext();
     }

@@ -15,13 +15,13 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             _pipelineRunner = pipelineRunner;
         }
 
-        public void Run(PipelineOptions pipelineOptions)
+        public void Run(PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
         {
             // Load 
-            (Pipeline pipeline, IDictionary<string, IContainer> pluginContainers) = _pipelineLoader.Load(pipelineOptions);
+            (Pipeline pipeline, IDictionary<string, IContainer> pluginContainers) = _pipelineLoader.Load(pipelinesCEOptions);
 
             // Run
-            pipeline.Options = pipelineOptions.Combine(pipeline.Options);
+            pipeline.Options = sharedPluginOptions.Combine(pipeline.Options);
             _pipelineRunner.Run(pipeline, pluginContainers);
         }
     }

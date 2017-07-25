@@ -5,7 +5,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.Configuration
 {
     public class ConfigurationPluginOptions : IPluginOptions
     {
-        public virtual PipelineOptions PipelineOptions {get;set;}
+        public virtual PipelinesCEOptions PipelineOptions {get;set;}
 
         public void Validate()
         {

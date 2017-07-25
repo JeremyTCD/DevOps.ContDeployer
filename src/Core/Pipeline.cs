@@ -5,12 +5,12 @@ namespace JeremyTCD.PipelinesCE.Core
     public class Pipeline
     {
         public IEnumerable<IStep> Steps { get; set; }
-        public PipelineOptions Options { get; set; }
+        public SharedPluginOptions Options { get; set; }
 
-        public Pipeline(IEnumerable<IStep> steps, PipelineOptions options = null)
+        public Pipeline(IEnumerable<IStep> steps, SharedPluginOptions options = null)
         {
             Steps = steps;
-            Options = options ?? new PipelineOptions();
+            Options = options ?? new SharedPluginOptions();
         }
     }
 }

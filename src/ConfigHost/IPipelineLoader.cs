@@ -6,6 +6,6 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
 {
     public interface IPipelineLoader
     {
-        (Pipeline, IDictionary<string, IContainer>) Load(PipelineOptions pipelineOptions);
+        (Pipeline, IDictionary<string, IContainer>) Load(PipelinesCEOptions pipelineOptions);
     }
 }

@@ -53,11 +53,11 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         }
 
         /// <summary>
-        /// Loads <see cref="Pipeline"/> specified by <see cref="PipelineOptions.Pipeline"/>
+        /// Loads <see cref="Pipeline"/> specified by <see cref="PipelinesCEOptions.Pipeline"/>
         /// </summary>
         /// <param name="pipelineOptions"></param>
         /// <returns></returns>
-        public virtual (Pipeline, IDictionary<string, IContainer>) Load(PipelineOptions pipelineOptions)
+        public virtual (Pipeline, IDictionary<string, IContainer>) Load(PipelinesCEOptions pipelineOptions)
         {
             _loggingService.LogInformation(Strings.Log_LoadingPipeline);
 
@@ -174,7 +174,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// <exception cref="InvalidOperationException">
         /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipelineOptions"/>
         /// </exception>
-        public virtual IPipelineFactory CreatePipelineFactory(IEnumerable<Assembly> assemblies, PipelineOptions pipelineOptions)
+        public virtual IPipelineFactory CreatePipelineFactory(IEnumerable<Assembly> assemblies, PipelinesCEOptions pipelineOptions)
         {
             _loggingService.LogDebug(Strings.Log_CreatingPipelineFactory, pipelineOptions.Pipeline);
 
@@ -186,7 +186,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             }
 
             Type pipelineFactoryType;
-            if (pipelineOptions.Pipeline == PipelineOptions.DefaultPipeline)
+            if (pipelineOptions.Pipeline == PipelinesCEOptions.DefaultPipeline)
             {
                 if (pipelineFactoryTypes.Count() == 1)
                 {

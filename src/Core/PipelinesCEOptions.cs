@@ -6,23 +6,21 @@ namespace JeremyTCD.PipelinesCE.Core
     /// <summary>
     /// For backward and forward compatibility, all properties must have a default value.
     /// Properties must have nullable backing fields so there is some state that represents unset. 
-    /// This facilitates overwriting of unset properties, <see cref="Combine(PipelineOptions)"/>.
+    /// This facilitates overwriting of unset properties, <see cref="Combine(PipelinesCEOptions)"/>.
     /// </summary>
-    public class PipelineOptions
+    public class PipelinesCEOptions
     {
         public const string LogFileFormat = nameof(PipelinesCE) + "-{Date}.log";
         public const LogLevel VerboseMinLogLevel = LogLevel.Debug;
         public const LogLevel DefaultMinLogLevel = LogLevel.Information;
         public const string DefaultPipeline = "Default";
         public const string DefaultProject = "PipelinesCEConfig.csproj";
-        public const bool DefaultDryRun = false;
         public const bool DefaultVerbose = false;
         public const bool DefaultDebug = false;
         public const string EntryAssemblyName = "JeremyTCD.PipelinesCE.ConfigHost";
         public const string EntryClassName = "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup";
 
         private bool? _verbose;
-        private bool? _dryRun;
         private bool? _debug;
         private string _project;
         private string _pipeline;
@@ -58,21 +56,6 @@ namespace JeremyTCD.PipelinesCE.Core
         }
 
         /// <summary>
-        /// Defaults to false
-        /// </summary>
-        public virtual bool DryRun
-        {
-            get
-            {
-                return _dryRun ?? DefaultDryRun;
-            }
-            set
-            {
-                _dryRun = value;
-            }
-        }
-
-        /// <summary>
         /// Defaults to PipelinesCE.csproj
         /// </summary>
         public virtual string Project
@@ -102,18 +85,13 @@ namespace JeremyTCD.PipelinesCE.Core
             }
         }
 
-
+        // TODO incomplete
         /// <summary>
         /// Overwrites each property that has not been set with the value of its equivalent property in <paramref name="secondary"/>
         /// </summary>
         /// <param name="secondary"></param>
-        public virtual PipelineOptions Combine(PipelineOptions secondary)
+        public virtual PipelinesCEOptions Combine(PipelinesCEOptions secondary)
         {
-            if (_dryRun == null)
-            {
-                DryRun = secondary.DryRun;
-            }
-
             if (_project == null)
             {
                 Project = secondary.Project;

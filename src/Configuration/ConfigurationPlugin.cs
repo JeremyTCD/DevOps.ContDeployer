@@ -5,7 +5,7 @@ namespace JeremyTCD.PipelinesCE.Plugin.Configuration
     public class ConfigurationPlugin : IPlugin
     {
         /// <summary>
-        /// Specifies default values for <see cref="IPipelineContext.PipelineOptions"/>
+        /// Specifies default values for <see cref="IPipelineContext.SharedPluginOptions"/>
         /// </summary>
         /// <param name="pipelineContext"></param>
         /// <param name="stepContext"></param>

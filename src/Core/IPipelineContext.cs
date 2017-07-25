@@ -4,7 +4,7 @@ namespace JeremyTCD.PipelinesCE.Core
 {
     public interface IPipelineContext
     {
-        PipelineOptions PipelineOptions { get; set; }
+        SharedPluginOptions SharedPluginOptions { get; set; }
         IDictionary<string, object> SharedData { get; set; }
     }
 }

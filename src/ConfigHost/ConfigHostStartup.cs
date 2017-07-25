@@ -23,7 +23,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             try
             {
                 // Parse args into PipelineOptions
-                (PipelineOptions pipelineOptions, string parseArgsWarnings) = ParseArgs(args);
+                (PipelinesCEOptions pipelineOptions, SharedPluginOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
 
                 // Initialize container
                 container = new Container(new ConfigHostRegistry());
@@ -39,7 +39,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                 }
 
                 ConfigHostCore core = container.GetInstance<ConfigHostCore>();
-                core.Run(pipelineOptions);
+                core.Run(pipelineOptions, sharedPluginOptions);
 
                 container.Dispose();
                 exitCode = 0;
@@ -70,13 +70,15 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// </summary>
         /// <param name="args"></param>
         /// <returns>
-        /// <see cref="PipelineOptions"/>
+        /// <see cref="PipelinesCEOptions"/>
         /// </returns>
-        public static (PipelineOptions, string) ParseArgs(string[] args)
+        public static (PipelinesCEOptions, SharedPluginOptions, string) ParseArgs(string[] args)
         {
             PrivateFieldsJsonConverter converter = new PrivateFieldsJsonConverter();
-            PipelineOptions result = JsonConvert.DeserializeObject<PipelineOptions>(args[0], converter);
-            string warnings = null; // Can't log until LoggerFactory is setup, setting up LoggerFactory
+            PipelinesCEOptions pipelinesCEOptions = JsonConvert.DeserializeObject<PipelinesCEOptions>(args[0], converter);
+            SharedPluginOptions sharedPluginOptions = JsonConvert.DeserializeObject<SharedPluginOptions>(args[1], converter);
+
+            string warnings = null; // Can't log until LoggerFactory is setup
 
             if (converter.MissingFields.Count > 0 || converter.ExtraFields.Count > 0)
             {
@@ -93,23 +95,24 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                     extraFields += Environment.NewLine + NormalizeFieldName(pair.Key);
                 }
 
+                // TODO split warning for each option instance?
                 warnings = string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch, extraFields, missingFields);
             }
 
-            return (result, warnings);
+            return (pipelinesCEOptions, sharedPluginOptions, warnings);
         }
 
         // TODO should be private or internal
-        public static void Configure(IContainer container, PipelineOptions pipelineOptions)
+        public static void Configure(IContainer container, PipelinesCEOptions pipelineOptions)
         {
             ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
 
             // If need be, claOptions should be made configurable via json (using microsoft.extensions.configuration)
-            LogLevel logLevel = pipelineOptions.Verbose ? PipelineOptions.VerboseMinLogLevel : PipelineOptions.DefaultMinLogLevel;
+            LogLevel logLevel = pipelineOptions.Verbose ? PipelinesCEOptions.VerboseMinLogLevel : PipelinesCEOptions.DefaultMinLogLevel;
 
             loggerFactory.
                 AddConsole(logLevel).
-                AddFile(PipelineOptions.LogFileFormat, logLevel).
+                AddFile(PipelinesCEOptions.LogFileFormat, logLevel).
                 AddDebug(logLevel);
         }
 
