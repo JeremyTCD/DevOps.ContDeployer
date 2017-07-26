@@ -1,4 +1,4 @@
-﻿using StructureMap;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
@@ -6,22 +6,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
     {
         public static int Main(string[] args)
         {
-            IContainer container = null;
+            IServiceCollection services = new ServiceCollection();
+            services.AddCommandLineApp();
 
-            try
+            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
             {
-                // Initialize container
-                container = new Container(new CommandLineAppRegistry());
-
-                RootCommand rootCommand = container.GetInstance<RootCommand>();
+                RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
                 return rootCommand.Execute(args);
-            }
-            finally
-            {
-                if (container != null)
-                {
-                    container.Dispose(); // Impossible to know what resources services may use
-                }
             }
         }
     }

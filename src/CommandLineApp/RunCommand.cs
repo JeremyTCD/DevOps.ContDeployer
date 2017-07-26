@@ -23,11 +23,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
         private ICommandLineUtilsService _cluService { get; }
         private IPathService _pathService { get; }
-        private MethodRunner _methodRunner { get; }
+        private IMethodRunner _methodRunner { get; }
         private ILoggerFactory _loggerFactory { get; }
-        private ProjectLoader _projectLoader { get; }
+        private IProjectLoader _projectLoader { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, ProjectLoader projectLoader, MethodRunner methodRunner, IPathService pathService, ILoggerFactory loggerFactory)
+        public RunCommand(ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner, IPathService pathService, ILoggerFactory loggerFactory)
         {
             _pathService = pathService;
             _cluService = cluService;

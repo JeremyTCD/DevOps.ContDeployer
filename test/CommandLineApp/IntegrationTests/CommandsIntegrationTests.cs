@@ -1,16 +1,15 @@
-﻿using JeremyTCD.DotNetCore.Utils;
+﻿using JeremyTCD.DotNetCore.ProjectHost;
+using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.Core;
-using JeremyTCD.DotNetCore.ProjectHost;
 using Microsoft.Extensions.CommandLineUtils;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Newtonsoft.Json;
-using StructureMap;
 using System;
 using System.Collections.Generic;
-using Xunit;
 using System.Reflection;
+using Xunit;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 {
@@ -32,18 +31,27 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             _cluService = new CommandLineUtilsService(_mockRepository.Create<ILoggingService<CommandLineUtilsService>>().Object);
         }
 
+        private ServiceProvider CreateServiceProvider()
+        {
+            IServiceCollection services = new ServiceCollection();
+            services.AddCommandLineApp();
+
+            return services.BuildServiceProvider();
+        }
+
         [Fact]
         public void RootCommand_UnexpectedOptionThrowsExceptionAndPrintsHintToConsole()
         {
             // Arrange
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
-            Container container = new Container(new CommandLineAppRegistry());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
+            serviceProvider.Dispose();
             tssw.Dispose();
             string output = tssw.ToString();
             string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands.";
@@ -54,22 +62,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         public void RootCommand_LogsDebugMessageAndPrintsHelpTextToConsole()
         {
             // Arrange
-            Mock<ILoggingService<RunCommand>> mockLoggingService = _mockRepository.Create<ILoggingService<RunCommand>>();
-            mockLoggingService.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-            mockLoggingService.Setup(l => l.LogDebug(Strings.Log_RunningCommand, Strings.CommandFullName_Root, $"{Strings.OptionLongName_Help}=\n" +
-                $"{Strings.OptionLongName_Verbose}="));
-            Container container = new Container(new CommandLineAppRegistry());
-            container.Configure(registry => registry.For<ILoggingService<RunCommand>>().Use(mockLoggingService.Object).Singleton());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(new string[0]);
 
             // Assert
+            serviceProvider.Dispose();
             tssw.Dispose();
             string output = tssw.ToString();
             string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0
@@ -90,17 +94,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
-            Container container = new Container(new CommandLineAppRegistry());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
 
             // Assert
-            // TODO test using regex after version format is decided on
+            serviceProvider.Dispose();
             tssw.Dispose();
             string output = tssw.ToString();
+            // TODO test using regex after version format is decided on
             string expected = $@"{Strings.CommandFullName_Root}
                                 1.0.0.0";
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
@@ -119,14 +124,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
-            Container container = new Container(new CommandLineAppRegistry());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
 
             // Assert
+            serviceProvider.Dispose();
             tssw.Dispose();
             string output = tssw.ToString();
             string expected = $@"{Strings.CommandFullName_Root} 1.0.0.0
@@ -152,12 +158,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
-            Container container = new Container(new CommandLineAppRegistry());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act and Assert
             Assert.Throws<CommandParsingException>(() => rootCommand.Execute(new string[] { "--test" }));
+            serviceProvider.Dispose();
             tssw.Dispose();
             string output = tssw.ToString();
             string expected = $@"Specify --{Strings.OptionLongName_Help} for a list of available options and commands.";
@@ -185,7 +192,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
 
             Mock<ProjectLoader> mockProjectLoader = _mockRepository.Create<ProjectLoader>(null, null, null, null, null);
             mockProjectLoader.
-                Setup(p => p.Load(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName, 
+                Setup(p => p.Load(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName,
                     pipelinesCEOptions.Debug ? PipelinesCEOptions.DebugBuildConfiguration : PipelinesCEOptions.ReleaseBuildConfiguration)).
                 Returns(mockAssembly.Object);
 
@@ -193,22 +200,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             mockMethodRunner.
                 Setup(r => r.Run(mockAssembly.Object, PipelinesCEOptions.EntryClassName, It.IsAny<string>(), stubArgs));
 
-            Container container = new Container(new CommandLineAppRegistry());
-            container.
-                Configure(registry =>
-                {
-                    registry.For<ProjectLoader>().Use(mockProjectLoader.Object).Singleton();
-                    registry.For<MethodRunner>().Use(mockMethodRunner.Object).Singleton();
-                    registry.For<IPathService>().Use(mockPathService.Object).Singleton();
-                });
+            IServiceCollection services = new ServiceCollection();
+            services.AddCommandLineApp();
+            services.AddSingleton(mockProjectLoader.Object);
+            services.AddSingleton(mockMethodRunner.Object);
+            services.AddSingleton(mockPathService.Object);
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);
 
             // Assert
             _mockRepository.VerifyAll();
+            serviceProvider.Dispose();
         }
 
         public static IEnumerable<object[]> RunCommandData()
@@ -288,9 +294,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             // Arrange
             ThreadSpecificStringWriter tssw = new ThreadSpecificStringWriter();
             Console.SetOut(tssw);
-            Container container = new Container(new CommandLineAppRegistry());
+            ServiceProvider serviceProvider = CreateServiceProvider();
 
-            RootCommand rootCommand = container.GetInstance<RootCommand>();
+            RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
 
             // Act
             rootCommand.Execute(arguments);

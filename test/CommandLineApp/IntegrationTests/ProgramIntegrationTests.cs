@@ -1,9 +1,5 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
-using Microsoft.Extensions.Logging;
 using Moq;
-using StructureMap;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Xunit;

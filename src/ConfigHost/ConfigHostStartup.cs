@@ -1,6 +1,7 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
 using JeremyTCD.Newtonsoft.Json.Utils;
 using JeremyTCD.PipelinesCE.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,6 +14,11 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
 {
     public class ConfigHostStartup
     {
+        /// <summary>
+        /// Parses args, creates container and starts config host.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         // TODO should be private or internal
         public static int Main(string[] args)
         {
@@ -26,7 +32,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                 (PipelinesCEOptions pipelineOptions, SharedPluginOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
 
                 // Initialize container
-                container = new Container(new ConfigHostRegistry());
+                container = CreateContainer();
 
                 // Configure configurable services
                 Configure(container, pipelineOptions);
@@ -39,7 +45,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                 }
 
                 ConfigHostCore core = container.GetInstance<ConfigHostCore>();
-                core.Run(pipelineOptions, sharedPluginOptions);
+                core.Start(pipelineOptions, sharedPluginOptions);
 
                 container.Dispose();
                 exitCode = 0;
@@ -99,6 +105,21 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             }
 
             return (pipelinesCEOptions, sharedPluginOptions, warnings);
+        }
+
+        // TODO should be private or internal
+        /// <summary>
+        /// Use <see cref="Container"/> instead of <see cref="IServiceProvider"/> since plugins require child containers
+        /// </summary>
+        /// <returns>
+        /// <see cref="Container"/>
+        /// </returns>
+        public static Container CreateContainer()
+        {
+            IServiceCollection services = new ServiceCollection();
+            services.AddConfigHost();
+
+            return new Container(registry => registry.Populate(services));
         }
 
         // TODO should be private or internal

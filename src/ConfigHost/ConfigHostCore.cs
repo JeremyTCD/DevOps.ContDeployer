@@ -18,7 +18,12 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             _pipelineRunner = pipelineRunner;
         }
 
-        public void Run(PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
+        /// <summary>
+        /// Loads <see cref="Pipeline"/>, creates <see cref="PipelineContext"/> and runs <see cref="Pipeline"/>
+        /// </summary>
+        /// <param name="pipelinesCEOptions"></param>
+        /// <param name="sharedPluginOptions"></param>
+        public void Start(PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
         {
             // Load 
             (Pipeline pipeline, IDictionary<string, IContainer> pluginContainers) = _pipelineLoader.Load(pipelinesCEOptions);

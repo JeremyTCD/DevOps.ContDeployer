@@ -12,15 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.0.0-rtm-beta5" />
-    <PackageReference Include="StructureMap" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.ProjectHost\src\ProjectHost\JeremyTCD.DotNetCore.ProjectHost.csproj" />
-    <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
     <ProjectReference Include="..\..\..\JeremyTCD.Newtonsoft.Json.Utils\src\Utils\JeremyTCD.Newtonsoft.Json.Utils.csproj" />
     <ProjectReference Include="..\Core\JeremyTCD.PipelinesCE.Core.csproj" />
   </ItemGroup>
