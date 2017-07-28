@@ -229,4 +229,13 @@
   <data name="OptionDescription_DebugOff" xml:space="preserve">
     <value>Build config project in release configuration</value>
   </data>
+  <data name="OptionDescription_LogFile" xml:space="preserve">
+    <value>Log file</value>
+  </data>
+  <data name="OptionLongName_LogFile" xml:space="preserve">
+    <value>logfile</value>
+  </data>
+  <data name="OptionShortName_LogFile" xml:space="preserve">
+    <value>l</value>
+  </data>
 </root>

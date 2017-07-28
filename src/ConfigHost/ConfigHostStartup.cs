@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NLog.Config;
+using NLog.Extensions.Logging;
+using NLog.Targets;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -20,54 +23,29 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// <param name="args"></param>
         /// <returns></returns>
         // TODO should be private or internal
-        public static int Main(string[] args)
+        public static void Main(string[] args)
         {
-            ILoggingService<ConfigHostStartup> loggingService = null;
-            IContainer container = null;
-            int exitCode = 1;
+            // Parse args into PipelineOptions
+            (PipelinesCEOptions pipelineOptions, SharedPluginOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
 
-            try
+            // Initialize container
+            using (IContainer container = CreateContainer())
             {
-                // Parse args into PipelineOptions
-                (PipelinesCEOptions pipelineOptions, SharedPluginOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
-
-                // Initialize container
-                container = CreateContainer();
-
-                // Configure configurable services
-                Configure(container, pipelineOptions);
+                // Configure logging
+                ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
+                LoggingConfig.Configure(loggerFactory, pipelineOptions);
 
                 // Create logger
-                loggingService = container.GetInstance<ILoggingService<ConfigHostStartup>>();
+                ILoggingService<ConfigHostStartup> loggingService = container.GetInstance<ILoggingService<ConfigHostStartup>>();
                 if (!string.IsNullOrEmpty(parseArgsWarnings))
                 {
                     loggingService.LogWarning(parseArgsWarnings);
                 }
 
+                // Start
                 ConfigHostCore core = container.GetInstance<ConfigHostCore>();
                 core.Start(pipelineOptions, sharedPluginOptions);
-
-                container.Dispose();
-                exitCode = 0;
             }
-            catch (Exception exception)
-            {
-                // Catch unhandled exceptions and log them using loggingService. This ensures that unhandled exceptions are logged by all
-                // logging providers (such as file, debug etc - not just console).
-                if (loggingService != null)
-                {
-                    loggingService.LogError(exception.ToString());
-                }
-            }
-            finally
-            {
-                if (container != null)
-                {
-                    container.Dispose();
-                }
-            }
-
-            return exitCode;
         }
 
         // TODO should be private or internal
@@ -120,20 +98,6 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             services.AddConfigHost();
 
             return new Container(registry => registry.Populate(services));
-        }
-
-        // TODO should be private or internal
-        public static void Configure(IContainer container, PipelinesCEOptions pipelineOptions)
-        {
-            ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
-
-            // If need be, claOptions should be made configurable via json (using microsoft.extensions.configuration)
-            LogLevel logLevel = pipelineOptions.Verbose ? PipelinesCEOptions.VerboseMinLogLevel : PipelinesCEOptions.DefaultMinLogLevel;
-
-            loggerFactory.
-                AddConsole(logLevel).
-                AddFile(PipelinesCEOptions.LogFileFormat, logLevel).
-                AddDebug(logLevel);
         }
 
         // TODO should be private or internal

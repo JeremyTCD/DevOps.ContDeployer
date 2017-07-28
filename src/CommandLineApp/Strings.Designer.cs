@@ -179,6 +179,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log file.
+        /// </summary>
+        public static string OptionDescription_LogFile {
+            get {
+                return ResourceManager.GetString("OptionDescription_LogFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a Pipeline&apos;s name is its PipelineFactorys name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a Pipeline named &quot;Main&quot;. If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline..
         /// </summary>
         public static string OptionDescription_Pipeline {
@@ -256,6 +265,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionLongName_Help {
             get {
                 return ResourceManager.GetString("OptionLongName_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to logfile.
+        /// </summary>
+        public static string OptionLongName_LogFile {
+            get {
+                return ResourceManager.GetString("OptionLongName_LogFile", resourceCulture);
             }
         }
         
@@ -346,6 +364,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionShortName_Help {
             get {
                 return ResourceManager.GetString("OptionShortName_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to l.
+        /// </summary>
+        public static string OptionShortName_LogFile {
+            get {
+                return ResourceManager.GetString("OptionShortName_LogFile", resourceCulture);
             }
         }
         

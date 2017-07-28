@@ -20,15 +20,21 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _verboseOff { get; set; }
         private CommandOption _debug { get; set; }
         private CommandOption _debugOff { get; set; }
+        private CommandOption _logFile { get; set; }
 
         private ICommandLineUtilsService _cluService { get; }
         private IPathService _pathService { get; }
         private IMethodRunner _methodRunner { get; }
         private ILoggerFactory _loggerFactory { get; }
         private IProjectLoader _projectLoader { get; }
+        private IDirectoryService _directoryService { get; }
+        private ILoggingService<RunCommand> _loggingService { get; }
 
-        public RunCommand(ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner, IPathService pathService, ILoggerFactory loggerFactory)
+        public RunCommand(IDirectoryService directoryService, ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner,
+            IPathService pathService, ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService)
         {
+            _loggingService = loggingService;
+            _directoryService = directoryService;
             _pathService = pathService;
             _cluService = cluService;
             _methodRunner = methodRunner;
@@ -51,6 +57,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 CommandOptionType.SingleValue);
             _pipeline = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline),
                 Strings.OptionDescription_Pipeline,
+                CommandOptionType.SingleValue);
+            _logFile = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_LogFile, Strings.OptionLongName_LogFile),
+                Strings.OptionDescription_LogFile,
                 CommandOptionType.SingleValue);
             _dryRun = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun),
                 Strings.OptionDescription_DryRun,
@@ -81,18 +90,30 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             SharedPluginOptions sharedPluginOptions = CreateSharedPluginOptions();
 
             // Configure logging
-            ConfigureLogging(pipelinesCEOptions);
+            LoggingConfig.Configure(_loggerFactory, pipelinesCEOptions);
 
-            // Serialize options
-            PrivateFieldsJsonConverter pfjc = new PrivateFieldsJsonConverter();
-            string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, pfjc);
-            string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, pfjc);
+            try
+            {
+                // Serialize options
+                PrivateFieldsJsonConverter pfjc = new PrivateFieldsJsonConverter();
+                string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, pfjc);
+                string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, pfjc);
 
-            // Load config project
-            Assembly entryAssembly = _projectLoader.Load(_pathService.GetAbsolutePath(pipelinesCEOptions.Project), PipelinesCEOptions.EntryAssemblyName,
-                pipelinesCEOptions.Debug ? PipelinesCEOptions.DebugBuildConfiguration : PipelinesCEOptions.ReleaseBuildConfiguration);
+                // Load config project
+                Assembly entryAssembly = _projectLoader.Load(pipelinesCEOptions.ProjectFile, "JeremyTCD.PipelinesCE.ConfigHost",
+                    pipelinesCEOptions.Debug ? "Debug" : "Release");
 
-            return _methodRunner.Run(entryAssembly, PipelinesCEOptions.EntryClassName, args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
+                return _methodRunner.
+                    Run(entryAssembly, "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup",
+                        args: new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
+            }
+            catch (Exception exception)
+            {
+                // Log using logging service so that exception isn't just logged to console. Also, use Exception.ToString() instead of
+                // Exception.Message so inner exceptions and their stack traces are logged.
+                _loggingService.LogError(exception.ToString());
+                return 1;
+            }
         }
 
         private SharedPluginOptions CreateSharedPluginOptions()
@@ -100,47 +121,68 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             SharedPluginOptions sharedPluginOptions = new SharedPluginOptions();
 
             if (_dryRun.HasValue())
+            {
                 sharedPluginOptions.DryRun = true;
+            }
             else if (_dryRunOff.HasValue())
+            {
                 sharedPluginOptions.DryRun = false;
+            }
 
             return sharedPluginOptions;
         }
 
         private PipelinesCEOptions CreatePipelinesCEOptions()
         {
-            PipelinesCEOptions pipelineOptions = new PipelinesCEOptions
+            PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions();
+
+            // Project file
+            pipelinesCEOptions.ProjectFile = _pathService.
+                    GetFullPathOfExistingFile(_project.Value() ?? PipelinesCEOptions.DefaultProjectFileName);
+
+            // Log file
+            string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
+            string logFile = _logFile.Value();
+            if (logFile == null)
             {
-                Project = _project.Value(),
-                Pipeline = _pipeline.Value(),
-            };
+                pipelinesCEOptions.LogFile = _pathService.Combine(projectDir, PipelinesCEOptions.DefaultLogFileName);
+            }
+            else if (_pathService.IsPathRooted(logFile))
+            {
+                pipelinesCEOptions.LogFile = logFile;
+            }
+            else
+            {
+                _pathService.Combine(projectDir, logFile);
+            }
 
+            // Pipeline
+            if (_pipeline.HasValue())
+            {
+                pipelinesCEOptions.Pipeline = _pipeline.Value();
+            }
+
+            // Verbose
             if (_verbose.HasValue())
-                pipelineOptions.Verbose = true;
+            {
+                pipelinesCEOptions.Verbose = true;
+            }
             else if (_verboseOff.HasValue())
-                pipelineOptions.Verbose = false;
+            {
+                pipelinesCEOptions.Verbose = false;
+            }
 
+            // Debug
             if (_debug.HasValue())
-                pipelineOptions.Debug = true;
+            {
+                pipelinesCEOptions.Debug = true;
+            }
             else if (_debugOff.HasValue())
-                pipelineOptions.Debug = false;
+            {
+                pipelinesCEOptions.Debug = false;
+            }
 
-            return pipelineOptions;
-        }
-
-        private void ConfigureLogging(PipelinesCEOptions pipelinesCEOptions)
-        {
-            //_loggerFactory.
-            //    AddNLog();
-
-            //LoggingConfiguration config = new LoggingConfiguration();
-
-            //ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget();
-            //config.AddTarget(consoleTarget);
-            ////config.AddRule(LogLevel.)
-
-            //_loggerFactory.
-            //    ConfigureNLog(config);
+            return pipelinesCEOptions;
         }
     }
 }
