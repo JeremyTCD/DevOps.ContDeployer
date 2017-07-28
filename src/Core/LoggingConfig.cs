@@ -24,13 +24,21 @@ namespace JeremyTCD.PipelinesCE.Core
 
         public void Configure(ILoggerFactory loggerFactory, PipelinesCEOptions pipelinesCEOptions)
         {
-            LogLevel logLevel = pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose ? LogLevel.Debug :
-                LogLevel.Info;
+            LoggingConfiguration config = CreateLoggingConfiguration(pipelinesCEOptions);
+
+            loggerFactory.
+                AddNLog().
+                ConfigureNLog(config);
+        }
+
+        // TODO should be internal or private
+        public LoggingConfiguration CreateLoggingConfiguration(PipelinesCEOptions pipelinesCEOptions)
+        {
+            LogLevel logLevel = pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose ? LogLevel.Debug : LogLevel.Info;
             string layout = "[${longdate}][${logger}][${level: uppercase = true}] ${message}";
             string logFile = pipelinesCEOptions.LogFile;
-
             if (!_pathService.IsPathRooted(logFile))
-            { 
+            {
                 string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
                 logFile = _pathService.Combine(projectDir, logFile);
             }
@@ -68,9 +76,7 @@ namespace JeremyTCD.PipelinesCE.Core
                 config.LoggingRules.Add(debugRule);
             }
 
-            loggerFactory.
-                AddNLog().
-                ConfigureNLog(config);
+            return config;
         }
     }
 }
