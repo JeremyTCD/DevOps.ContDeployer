@@ -90,7 +90,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             Assert.Equal(testDryRun, stubSharedPluginOptions.DryRun);
             Assert.Equal(testPipeline, resultPipelinesCEOptions.Pipeline);
             Assert.Equal(PipelinesCEOptions.DefaultVerbose, resultPipelinesCEOptions.Verbose);
-            Assert.Equal(PipelinesCEOptions.DefaultProjectFileName, resultPipelinesCEOptions.ProjectFile);
+            Assert.Equal(PipelinesCEOptions.DefaultProjectFile, resultPipelinesCEOptions.ProjectFile);
             Assert.Equal(string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch,
                 $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(pipelinesCEOptionsExtraFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(sharedPluginOptionsExtraFieldKey)}",
                 $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(projectFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(dryRunFieldKey)}"),
