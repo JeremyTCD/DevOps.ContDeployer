@@ -137,30 +137,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions();
 
             // Project file
-            pipelinesCEOptions.ProjectFile = _pathService.
-                    GetFullPathOfExistingFile(_project.Value() ?? PipelinesCEOptions.DefaultProjectFileName);
+            pipelinesCEOptions.ProjectFile = _project.Value();
 
             // Log file
-            string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
-            string logFile = _logFile.Value();
-            if (logFile == null)
-            {
-                pipelinesCEOptions.LogFile = _pathService.Combine(projectDir, PipelinesCEOptions.DefaultLogFileName);
-            }
-            else if (_pathService.IsPathRooted(logFile))
-            {
-                pipelinesCEOptions.LogFile = logFile;
-            }
-            else
-            {
-                _pathService.Combine(projectDir, logFile);
-            }
+            pipelinesCEOptions.LogFile = _logFile.Value();
+
+
+
 
             // Pipeline
-            if (_pipeline.HasValue())
-            {
-                pipelinesCEOptions.Pipeline = _pipeline.Value();
-            }
+            pipelinesCEOptions.Pipeline = _pipeline.Value();
 
             // Verbose
             if (_verbose.HasValue())
