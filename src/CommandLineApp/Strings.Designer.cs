@@ -197,11 +197,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for &quot;PipelinesCE.csproj&quot; in the current directory..
+        ///   Looks up a localized string similar to Name or path of the PipelinesCE config project file to use. If a name is provided,  the file is located via a recursive search in the current directory. If a relative path is provided, the path is considered relative to current directory. The default value of this option is &quot;PipelinesCE.csproj&quot;..
         /// </summary>
-        public static string OptionDescription_Project {
+        public static string OptionDescription_ProjectFile {
             get {
-                return ResourceManager.GetString("OptionDescription_Project", resourceCulture);
+                return ResourceManager.GetString("OptionDescription_ProjectFile", resourceCulture);
             }
         }
         
@@ -287,11 +287,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to project.
+        ///   Looks up a localized string similar to projectfile.
         /// </summary>
-        public static string OptionLongName_Project {
+        public static string OptionLongName_ProjectFile {
             get {
-                return ResourceManager.GetString("OptionLongName_Project", resourceCulture);
+                return ResourceManager.GetString("OptionLongName_ProjectFile", resourceCulture);
             }
         }
         
@@ -386,11 +386,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pj.
+        ///   Looks up a localized string similar to pf.
         /// </summary>
-        public static string OptionShortName_Project {
+        public static string OptionShortName_ProjectFile {
             get {
-                return ResourceManager.GetString("OptionShortName_Project", resourceCulture);
+                return ResourceManager.GetString("OptionShortName_ProjectFile", resourceCulture);
             }
         }
         

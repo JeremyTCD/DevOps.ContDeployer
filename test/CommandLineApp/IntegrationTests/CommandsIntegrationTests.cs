@@ -227,7 +227,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 $"-{Strings.OptionShortName_Verbose}",
                 $"-{Strings.OptionShortName_DryRun}",
                 $"-{Strings.OptionShortName_Debug}",
-                $"-{Strings.OptionShortName_Project}", testProject,
+                $"-{Strings.OptionShortName_ProjectFile}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
                 new PipelinesCEOptions{
                     Verbose = true,
@@ -244,7 +244,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 $"--{Strings.OptionLongName_Verbose}",
                 $"--{Strings.OptionLongName_DryRun}",
                 $"--{Strings.OptionLongName_Debug}",
-                $"--{Strings.OptionLongName_Project}", testProject,
+                $"--{Strings.OptionLongName_ProjectFile}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
                 new PipelinesCEOptions{
                     Verbose = true,
@@ -308,7 +308,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                         Usage: {Strings.CommandName_Root} {Strings.CommandName_Run} [options]
                         Options:
                           {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}        Show help information
-                          {_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project)}    {Strings.OptionDescription_Project}
+                          {_cluService.CreateOptionTemplate(Strings.OptionShortName_ProjectFile, Strings.OptionLongName_ProjectFile)}    {Strings.OptionDescription_ProjectFile}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}

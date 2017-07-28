@@ -59,7 +59,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
 
             // Act
             _msBuildService.Build(claProjectFilePath, $"/t:Restore,Publish /p:Configuration=Release,RuntimeIdentifier={rid}");
-            int exitCode = _processService.Run(exePath, $"{Strings.CommandName_Run} --{Strings.OptionLongName_Project} {stubProjectFilePath} --{Strings.OptionLongName_Verbose}");
+            int exitCode = _processService.Run(exePath, $"{Strings.CommandName_Run} --{Strings.OptionLongName_ProjectFile} {stubProjectFilePath} --{Strings.OptionLongName_Verbose}");
 
             // Assert 
             Assert.Equal(0, exitCode);

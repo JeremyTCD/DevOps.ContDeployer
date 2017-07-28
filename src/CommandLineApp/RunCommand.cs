@@ -52,8 +52,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         {
             HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
 
-            _project = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Project, Strings.OptionLongName_Project),
-                Strings.OptionDescription_Project,
+            _project = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_ProjectFile, Strings.OptionLongName_ProjectFile),
+                Strings.OptionDescription_ProjectFile,
                 CommandOptionType.SingleValue);
             _pipeline = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline),
                 Strings.OptionDescription_Pipeline,

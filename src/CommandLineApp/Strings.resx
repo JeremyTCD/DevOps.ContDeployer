@@ -151,14 +151,14 @@
   <data name="OptionShortName_Pipeline" xml:space="preserve">
     <value>pl</value>
   </data>
-  <data name="OptionDescription_Project" xml:space="preserve">
-    <value>Name or path of the PipelinesCE project file to use. If a name is provided, PipelinesCE locates the file via a recursive search in the current directory. If this option is ommitted, PipelinesCE recursively searches for "PipelinesCE.csproj" in the current directory.</value>
+  <data name="OptionDescription_ProjectFile" xml:space="preserve">
+    <value>Name or path of the PipelinesCE config project file to use. If a name is provided,  the file is located via a recursive search in the current directory. If a relative path is provided, the path is considered relative to current directory. The default value of this option is "PipelinesCE.csproj".</value>
   </data>
-  <data name="OptionLongName_Project" xml:space="preserve">
-    <value>project</value>
+  <data name="OptionLongName_ProjectFile" xml:space="preserve">
+    <value>projectfile</value>
   </data>
-  <data name="OptionShortName_Project" xml:space="preserve">
-    <value>pj</value>
+  <data name="OptionShortName_ProjectFile" xml:space="preserve">
+    <value>pf</value>
   </data>
   <data name="CommandDescription_Root" xml:space="preserve">
     <value>PipelinesCE, a continuous everything tool.</value>

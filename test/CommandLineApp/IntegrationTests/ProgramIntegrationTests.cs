@@ -41,7 +41,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             int exitCode = Program.Main(new string[] { Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}",
                 $"-{Strings.OptionShortName_Debug}",
-                $"-{Strings.OptionShortName_Project}", stubProjectFilePath,
+                $"-{Strings.OptionShortName_ProjectFile}", stubProjectFilePath,
                 $"-{Strings.OptionShortName_Pipeline}", stubPipelineName });
 
             // Assert 
