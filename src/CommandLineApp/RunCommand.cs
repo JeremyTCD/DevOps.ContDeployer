@@ -29,10 +29,12 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private IProjectLoader _projectLoader { get; }
         private IDirectoryService _directoryService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
+        private ILoggingConfig _loggingConfig { get; }
 
         public RunCommand(IDirectoryService directoryService, ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner,
-            IPathService pathService, ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService)
+            IPathService pathService, ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService, ILoggingConfig loggingConfig)
         {
+            _loggingConfig = loggingConfig;
             _loggingService = loggingService;
             _directoryService = directoryService;
             _pathService = pathService;
@@ -90,7 +92,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             SharedPluginOptions sharedPluginOptions = CreateSharedPluginOptions();
 
             // Configure logging
-            LoggingConfig.Configure(_loggerFactory, pipelinesCEOptions);
+            _loggingConfig.Configure(_loggerFactory, pipelinesCEOptions);
 
             try
             {

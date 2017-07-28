@@ -30,7 +30,8 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             {
                 // Configure logging
                 ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
-                LoggingConfig.Configure(loggerFactory, pipelineOptions);
+                ILoggingConfig loggingConfig = container.GetInstance<ILoggingConfig>();
+                loggingConfig.Configure(loggerFactory, pipelineOptions);
 
                 // Create logger
                 ILoggingService<ConfigHostStartup> loggingService = container.GetInstance<ILoggingService<ConfigHostStartup>>();

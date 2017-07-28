@@ -3,6 +3,7 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Extensions.Logging;
 using LogLevel = NLog.LogLevel;
+using JeremyTCD.DotNetCore.Utils;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
@@ -10,19 +11,33 @@ namespace JeremyTCD.PipelinesCE.Core
     /// Programatically configures NLog provider for <see cref="ILoggerFactory"/>. This class facilitates consistent logging configuration
     /// across AssemblyLoadContexts.
     /// </summary>
-    public class LoggingConfig
+    public class LoggingConfig : ILoggingConfig
     {
-        public static void Configure(ILoggerFactory loggerFactory, PipelinesCEOptions pipelinesCEOptions)
+        private IPathService _pathService { get; }
+        private IDirectoryService _directoryService { get; }
+
+        public LoggingConfig(IPathService pathService, IDirectoryService directoryService)
+        {
+            _pathService = pathService;
+            _directoryService = directoryService;
+        }
+
+        public void Configure(ILoggerFactory loggerFactory, PipelinesCEOptions pipelinesCEOptions)
         {
             LogLevel logLevel = pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose ? LogLevel.Debug :
                 LogLevel.Info;
             string layout = "[${longdate}][${logger}][${level: uppercase = true}] ${message}";
+            string logFile = pipelinesCEOptions.LogFile;
 
-            loggerFactory.
-                AddNLog();
+            if (!_pathService.IsPathRooted(logFile))
+            { 
+                string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
+                logFile = _pathService.Combine(projectDir, logFile);
+            }
 
             LoggingConfiguration config = new LoggingConfiguration();
 
+            // Console
             ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget
             {
                 Layout = layout
@@ -31,15 +46,17 @@ namespace JeremyTCD.PipelinesCE.Core
             LoggingRule consoleRule = new LoggingRule("*", logLevel, consoleTarget);
             config.LoggingRules.Add(consoleRule);
 
+            // File
             FileTarget fileTarget = new FileTarget
             {
-                FileName = pipelinesCEOptions.LogFile,
+                FileName = logFile,
                 Layout = layout
             };
             config.AddTarget(nameof(FileTarget), fileTarget);
             LoggingRule fileRule = new LoggingRule("*", logLevel, fileTarget);
             config.LoggingRules.Add(fileRule);
 
+            // Debugger
             if (pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose)
             {
                 DebuggerTarget debuggerTarget = new DebuggerTarget
@@ -52,6 +69,7 @@ namespace JeremyTCD.PipelinesCE.Core
             }
 
             loggerFactory.
+                AddNLog().
                 ConfigureNLog(config);
         }
     }
