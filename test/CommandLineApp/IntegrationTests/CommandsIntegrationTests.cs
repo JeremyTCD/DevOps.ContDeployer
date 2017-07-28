@@ -59,7 +59,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         }
 
         [Fact]
-        public void RootCommand_LogsDebugMessageAndPrintsHelpTextToConsole()
+        public void RootCommand_PrintsHelpTextToConsole()
         {
             // Arrange
             ServiceProvider serviceProvider = CreateServiceProvider();
@@ -178,7 +178,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         /// <param name="pipelinesCEOptions"></param>
         [Theory]
         [MemberData(nameof(RunCommandData))]
-        public void RunCommand_LogsDebugMessageAndCallsRunnerRunWithSpecifiedOptions(string[] arguments, PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
+        public void RunCommand_CallsRunnerRunWithSpecifiedOptions(string[] arguments, PipelinesCEOptions pipelinesCEOptions, SharedPluginOptions sharedPluginOptions)
         {
             // Arrange
             string pipelinesCEOptionsJson = JsonConvert.SerializeObject(pipelinesCEOptions, new PrivateFieldsJsonConverter());
@@ -186,19 +186,19 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string[] stubArgs = new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson };
 
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetAbsolutePath(pipelinesCEOptions.Project)).Returns(pipelinesCEOptions.Project);
+            mockPathService.Setup(p => p.GetFullPathOfExistingFile(pipelinesCEOptions.ProjectFile)).Returns(pipelinesCEOptions.ProjectFile);
 
             Mock<Assembly> mockAssembly = _mockRepository.Create<Assembly>();
 
             Mock<ProjectLoader> mockProjectLoader = _mockRepository.Create<ProjectLoader>(null, null, null, null, null);
             mockProjectLoader.
-                Setup(p => p.Load(pipelinesCEOptions.Project, PipelinesCEOptions.EntryAssemblyName,
-                    pipelinesCEOptions.Debug ? PipelinesCEOptions.DebugBuildConfiguration : PipelinesCEOptions.ReleaseBuildConfiguration)).
+                Setup(p => p.Load(pipelinesCEOptions.ProjectFile, "JeremyTCD.PipelinesCE.ConfigHost",
+                    pipelinesCEOptions.Debug ? "Debug" : "Release")).
                 Returns(mockAssembly.Object);
 
             Mock<MethodRunner> mockMethodRunner = _mockRepository.Create<MethodRunner>(null, null, null);
             mockMethodRunner.
-                Setup(r => r.Run(mockAssembly.Object, PipelinesCEOptions.EntryClassName, It.IsAny<string>(), stubArgs));
+                Setup(r => r.Run(mockAssembly.Object, "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup", It.IsAny<string>(), stubArgs));
 
             IServiceCollection services = new ServiceCollection();
             services.AddCommandLineApp();
@@ -232,7 +232,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 new PipelinesCEOptions{
                     Verbose = true,
                     Debug = true,
-                    Project = testProject,
+                    ProjectFile = testProject,
                     Pipeline = testPipeline
                 },
                 new SharedPluginOptions
@@ -249,7 +249,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                 new PipelinesCEOptions{
                     Verbose = true,
                     Debug = true,
-                    Project = testProject,
+                    ProjectFile = testProject,
                     Pipeline = testPipeline
                 },
                 new SharedPluginOptions
