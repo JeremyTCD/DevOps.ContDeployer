@@ -59,6 +59,7 @@ namespace JeremyTCD.PipelinesCE.Core
 
                 FileTarget fileTarget = new FileTarget
                 {
+                    // KeepFileOpen = true, // Can improve performance but holds on to file lock. Profile.
                     FileName = logFile,
                     Layout = layout
                 };
