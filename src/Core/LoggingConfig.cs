@@ -36,13 +36,6 @@ namespace JeremyTCD.PipelinesCE.Core
         {
             LogLevel logLevel = pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose ? LogLevel.Debug : LogLevel.Info;
             string layout = "[${longdate}][${logger}][${level: uppercase = true}] ${message}";
-            string logFile = pipelinesCEOptions.LogFile;
-            if (!_pathService.IsPathRooted(logFile))
-            {
-                string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
-                logFile = _pathService.Combine(projectDir, logFile);
-            }
-
             LoggingConfiguration config = new LoggingConfiguration();
 
             // Console
@@ -55,14 +48,24 @@ namespace JeremyTCD.PipelinesCE.Core
             config.LoggingRules.Add(consoleRule);
 
             // File
-            FileTarget fileTarget = new FileTarget
+            if (pipelinesCEOptions.FileLogging)
             {
-                FileName = logFile,
-                Layout = layout
-            };
-            config.AddTarget(nameof(FileTarget), fileTarget);
-            LoggingRule fileRule = new LoggingRule("*", logLevel, fileTarget);
-            config.LoggingRules.Add(fileRule);
+                string logFile = pipelinesCEOptions.LogFile;
+                if (!_pathService.IsPathRooted(logFile))
+                {
+                    string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
+                    logFile = _pathService.Combine(projectDir, logFile);
+                }
+
+                FileTarget fileTarget = new FileTarget
+                {
+                    FileName = logFile,
+                    Layout = layout
+                };
+                config.AddTarget(nameof(FileTarget), fileTarget);
+                LoggingRule fileRule = new LoggingRule("*", logLevel, fileTarget);
+                config.LoggingRules.Add(fileRule);
+            }
 
             // Debugger
             if (pipelinesCEOptions.Debug || pipelinesCEOptions.Verbose)

@@ -143,7 +143,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Build config project in debug configuration.
+        ///   Looks up a localized string similar to Output verbose logs and build config project in debug configuration.
         /// </summary>
         public static string OptionDescription_Debug {
             get {
@@ -179,7 +179,25 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log file.
+        ///   Looks up a localized string similar to Enables file logging. Logs will be written to a log file named &quot;PipelinesCE.log&quot;. This log file will be located in the same directory as the target project..
+        /// </summary>
+        public static string OptionDescription_FileLogging {
+            get {
+                return ResourceManager.GetString("OptionDescription_FileLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disables file logging..
+        /// </summary>
+        public static string OptionDescription_FileLoggingOff {
+            get {
+                return ResourceManager.GetString("OptionDescription_FileLoggingOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log file. Can be an absolute path, a relative path or a file name. If a relative path is provided, it is resolved relative to the target project&apos;s directory. If a file name is provided, the file will be located in the same directory as the target project. .
         /// </summary>
         public static string OptionDescription_LogFile {
             get {
@@ -256,6 +274,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionLongName_DryRunOff {
             get {
                 return ResourceManager.GetString("OptionLongName_DryRunOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to filelogging.
+        /// </summary>
+        public static string OptionLongName_FileLogging {
+            get {
+                return ResourceManager.GetString("OptionLongName_FileLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to fileloggingoff.
+        /// </summary>
+        public static string OptionLongName_FileLoggingOff {
+            get {
+                return ResourceManager.GetString("OptionLongName_FileLoggingOff", resourceCulture);
             }
         }
         
@@ -359,6 +395,24 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to fl.
+        /// </summary>
+        public static string OptionShortName_FileLogging {
+            get {
+                return ResourceManager.GetString("OptionShortName_FileLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to flo.
+        /// </summary>
+        public static string OptionShortName_FileLoggingOff {
+            get {
+                return ResourceManager.GetString("OptionShortName_FileLoggingOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to h.
         /// </summary>
         public static string OptionShortName_Help {
@@ -368,7 +422,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to l.
+        ///   Looks up a localized string similar to lf.
         /// </summary>
         public static string OptionShortName_LogFile {
             get {

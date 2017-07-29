@@ -7,12 +7,23 @@
         public const string DefaultPipeline = "Default";
         public const bool DefaultVerbose = false;
         public const bool DefaultDebug = false;
+        public const bool DefaultFileLogging = false;
 
         private string _logFile;
         private string _projectFile;
         private bool? _debug;
         private bool? _verbose;
         private string _pipeline;
+        private bool? _fileLogging;
+
+        public virtual bool FileLogging
+        {
+            get
+            {
+                return _fileLogging ?? DefaultFileLogging;
+            }
+            set { _fileLogging = value; }
+        }
 
         public virtual string LogFile
         {

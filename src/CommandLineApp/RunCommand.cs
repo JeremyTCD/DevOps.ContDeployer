@@ -21,6 +21,8 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _debug { get; set; }
         private CommandOption _debugOff { get; set; }
         private CommandOption _logFile { get; set; }
+        private CommandOption _fileLogging { get; set; }
+        private CommandOption _fileLoggingOff { get; set; }
 
         private ICommandLineUtilsService _cluService { get; }
         private IPathService _pathService { get; }
@@ -80,6 +82,12 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 CommandOptionType.NoValue);
             _debugOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DebugOff, Strings.OptionLongName_DebugOff),
                 Strings.OptionDescription_DebugOff,
+                CommandOptionType.NoValue);
+            _fileLogging = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_FileLogging, Strings.OptionLongName_FileLogging),
+                Strings.OptionDescription_FileLogging,
+                CommandOptionType.NoValue);
+            _fileLoggingOff = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_FileLoggingOff, Strings.OptionLongName_FileLoggingOff),
+                Strings.OptionDescription_FileLoggingOff,
                 CommandOptionType.NoValue);
         }
 
@@ -144,8 +152,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             // Log file
             pipelinesCEOptions.LogFile = _logFile.Value();
 
-
-
+            // File logging
+            if (_fileLogging.HasValue())
+            {
+                pipelinesCEOptions.FileLogging = true;
+            }
+            else if (_fileLoggingOff.HasValue())
+            {
+                pipelinesCEOptions.FileLogging = false;
+            }
 
             // Pipeline
             pipelinesCEOptions.Pipeline = _pipeline.Value();

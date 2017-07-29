@@ -212,7 +212,7 @@
     <value>run</value>
   </data>
   <data name="OptionDescription_Debug" xml:space="preserve">
-    <value>Build config project in debug configuration</value>
+    <value>Output verbose logs and build config project in debug configuration</value>
   </data>
   <data name="OptionLongName_Debug" xml:space="preserve">
     <value>debug</value>
@@ -230,12 +230,30 @@
     <value>Build config project in release configuration</value>
   </data>
   <data name="OptionDescription_LogFile" xml:space="preserve">
-    <value>Log file</value>
+    <value>Log file. Can be an absolute path, a relative path or a file name. If a relative path is provided, it is resolved relative to the target project's directory. If a file name is provided, the file will be located in the same directory as the target project. </value>
   </data>
   <data name="OptionLongName_LogFile" xml:space="preserve">
     <value>logfile</value>
   </data>
   <data name="OptionShortName_LogFile" xml:space="preserve">
-    <value>l</value>
+    <value>lf</value>
+  </data>
+  <data name="OptionDescription_FileLogging" xml:space="preserve">
+    <value>Enables file logging. Logs will be written to a log file named "PipelinesCE.log". This log file will be located in the same directory as the target project.</value>
+  </data>
+  <data name="OptionDescription_FileLoggingOff" xml:space="preserve">
+    <value>Disables file logging.</value>
+  </data>
+  <data name="OptionLongName_FileLogging" xml:space="preserve">
+    <value>filelogging</value>
+  </data>
+  <data name="OptionLongName_FileLoggingOff" xml:space="preserve">
+    <value>fileloggingoff</value>
+  </data>
+  <data name="OptionShortName_FileLogging" xml:space="preserve">
+    <value>fl</value>
+  </data>
+  <data name="OptionShortName_FileLoggingOff" xml:space="preserve">
+    <value>flo</value>
   </data>
 </root>
