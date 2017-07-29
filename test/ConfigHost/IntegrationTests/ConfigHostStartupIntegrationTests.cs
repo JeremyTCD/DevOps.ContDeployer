@@ -96,36 +96,5 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
                 $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(projectFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(dryRunFieldKey)}"),
                 warnings);
         }
-
-        // TODO test logconfig.configure
-        //[Theory]
-        //[MemberData(nameof(ConfiguresLoggerFactoryData))]
-        //public void Configure_ConfiguresLoggerFactoryCorrectly(LogLevel minLogLevel, bool verbose)
-        //{
-        //    // Arrange
-        //    IContainer container = new Container(r =>
-        //    {
-        //        r.For<ILoggerFactory>().Singleton().Use<LoggerFactory>();
-        //    });
-
-        //    PipelinesCEOptions pipelineOptions = new PipelinesCEOptions
-        //    {
-        //        Verbose = verbose
-        //    };
-
-        //    // Act
-        //    ConfigHostStartup.Configure(container, pipelineOptions);
-
-        //    // Assert
-        //    ILoggerFactory loggerFactory = container.GetInstance<ILoggerFactory>();
-        //    ILogger logger = loggerFactory.CreateLogger("");
-        //    Assert.True(logger.IsEnabled(minLogLevel) && (minLogLevel == LogLevel.Trace || !logger.IsEnabled(minLogLevel - 1)));
-        //}
-
-        //public static IEnumerable<object[]> ConfiguresLoggerFactoryData()
-        //{
-        //    yield return new object[] { PipelinesCEOptions.DebugMinLogLevel, true };
-        //    yield return new object[] { PipelinesCEOptions.NormalMinLogLevel, false };
-        //}
     }
 }
