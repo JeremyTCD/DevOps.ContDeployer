@@ -3,7 +3,7 @@ using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace StubPlugin.Logger
+namespace StubProject.Logger
 {
     public class StubLogger
     {

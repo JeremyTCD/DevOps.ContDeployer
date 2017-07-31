@@ -74,7 +74,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Core.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.DotNetCore.ProjectHost", "..\JeremyTCD.DotNetCore.ProjectHost\src\ProjectHost\JeremyTCD.DotNetCore.ProjectHost.csproj", "{602D5A6F-FFD7-4F0F-9FF6-7D8486EDACF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StubPlugin.Logger", "test\StubPlugin.Logger\StubPlugin.Logger.csproj", "{3FD80CA1-C852-4876-834F-89543FBC2BE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubProject.Logger", "test\StubProject.Logger\StubProject.Logger.csproj", "{3FD80CA1-C852-4876-834F-89543FBC2BE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
