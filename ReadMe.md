@@ -1,5 +1,7 @@
+**Work in progress**. This project is incomplete. At present, this readme isn't fully coherent.
+*****
 # PipelinesCE
-PipelinesCE (continuous everything) is a tool for automating builds, integration and deployment. It is designed to minimize cognitive overhead for C# developers.
+PipelinesCE (continuous everything) is a tool for automating building, integrating and deploying. It is designed to minimize cognitive overhead for C# developers.
 
 ## Goals
 ### Low cognitive overhead   
@@ -7,6 +9,7 @@ PipelinesCE keeps cognitive overhead low by using technologies and patterns that
 - All interactions with PipelinesCE are done through a C# API rather than a DSL
 - Plugins are Nuget packages
 - Scripting is done in C#
+- A single pipeline handles everything from building to deploying
 ### Modularity and reusability
 PipelinesCE facilitates reusability through a modular architecture.
 - Plugins are easy to write and use
@@ -20,6 +23,8 @@ PipelinesCE is built using .net core for cross platform support.
 ### Distributed
 PipelinesCE keeps all relevant data within the project or solution being worked on. This means that there is no need to configure and manager a central server with
 plugins.
+### Parrellelism and asynchrony
+PipelinesCE allows for concurrent operations.
 
 ## System Architecture
 ### Levels
@@ -29,7 +34,7 @@ From top (closest to end users) to bottom:
 Provides a user facing interface. Converts user input into instances of options Types from PipelinesCE.Core. Uses ProjectHost to run 
 PipelinesCE.ConfigHost with serialized options instances as arguments.  
 #### PipelinesCE.ConfigHost
-Referenced by config projects, PipelinesCE.ConfigHost contains a main method that ProjectHost locates and calls. Loads
+Referenced by config projects, PipelinesCE.ConfigHost contains an entry method that ProjectHost locates and calls. Loads
 config project assemblies that reference PipelinesCE.Core. Intantiates instances of relevant types, sets up DI and 
 finally runs Pipeline defined in config project.
 #### PipelinesCE.Plugin
@@ -108,6 +113,7 @@ Tests that depend on CurrentDirectory should not run in parallel. https://xunit.
 - temp dirs should be named after the test class they belong to
 
 ## Plugins
+### Roslyn
 ### XUnit 
 #### What it should do
 - If assemblies are included in options, run them
@@ -115,4 +121,6 @@ Tests that depend on CurrentDirectory should not run in parallel. https://xunit.
 - If assemblies are excluded in options, run all that reference the xunit assembly other than the excluded ones
 - Option to kill pipeline if test fail
 - Test results should be output to xml/json
-
+### Nuget
+### Git
+### Github
