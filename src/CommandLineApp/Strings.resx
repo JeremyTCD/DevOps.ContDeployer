@@ -143,7 +143,7 @@
     <value>dryrun</value>
   </data>
   <data name="OptionDescription_Pipeline" xml:space="preserve">
-    <value>Name of the pipeline to run. By convention, a Pipeline's name is its PipelineFactorys name less "PipelineFactory". For example, "MainPipelineFactory" produces a Pipeline named "Main". If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline.</value>
+    <value>Name of the pipeline to run. By convention, a Pipeline's name is its PipelineFactorys name less "PipelineFactory". For example, "MainPipelineFactory" produces a Pipeline named "Main". If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline. File name can be an NLog layout. An NLog layout can be used to created multiple log files.</value>
   </data>
   <data name="OptionLongName_Pipeline" xml:space="preserve">
     <value>pipeline</value>
@@ -255,5 +255,14 @@
   </data>
   <data name="OptionShortName_FileLoggingOff" xml:space="preserve">
     <value>flo</value>
+  </data>
+  <data name="OptionDescription_ArchiveFile" xml:space="preserve">
+    <value>Archive file. Can be an absolute path, a relative path or a file name. If a relative path is provided, it is resolved relative to the target project's directory. If a file name is provided, the file will be located in the same directory as the target project. File name can have a "{####}" segment. Any such segment is substituted with a number unique to each archive file.</value>
+  </data>
+  <data name="OptionLongName_ArchiveFile" xml:space="preserve">
+    <value>archivefile</value>
+  </data>
+  <data name="OptionShortName_ArchiveFile" xml:space="preserve">
+    <value>af</value>
   </data>
 </root>

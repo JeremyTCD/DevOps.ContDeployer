@@ -143,6 +143,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Archive file. Can be an absolute path, a relative path or a file name. If a relative path is provided, it is resolved relative to the target project&apos;s directory. If a file name is provided, the file will be located in the same directory as the target project. File name can have a &quot;{####}&quot; segment. Any such segment is substituted with a number unique to each archive file..
+        /// </summary>
+        public static string OptionDescription_ArchiveFile {
+            get {
+                return ResourceManager.GetString("OptionDescription_ArchiveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output verbose logs and build config project in debug configuration.
         /// </summary>
         public static string OptionDescription_Debug {
@@ -206,7 +215,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a Pipeline&apos;s name is its PipelineFactorys name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a Pipeline named &quot;Main&quot;. If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline..
+        ///   Looks up a localized string similar to Name of the pipeline to run. By convention, a Pipeline&apos;s name is its PipelineFactorys name less &quot;PipelineFactory&quot;. For example, &quot;MainPipelineFactory&quot; produces a Pipeline named &quot;Main&quot;. If this option is ommitted and only one Pipeline has been defined, PipelinesCE will run the lone Pipeline. File name can be an NLog layout. An NLog layout can be used to created multiple log files..
         /// </summary>
         public static string OptionDescription_Pipeline {
             get {
@@ -238,6 +247,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionDescription_VerboseOff {
             get {
                 return ResourceManager.GetString("OptionDescription_VerboseOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to archivefile.
+        /// </summary>
+        public static string OptionLongName_ArchiveFile {
+            get {
+                return ResourceManager.GetString("OptionLongName_ArchiveFile", resourceCulture);
             }
         }
         
@@ -355,6 +373,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp {
         public static string OptionLongName_Version {
             get {
                 return ResourceManager.GetString("OptionLongName_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to af.
+        /// </summary>
+        public static string OptionShortName_ArchiveFile {
+            get {
+                return ResourceManager.GetString("OptionShortName_ArchiveFile", resourceCulture);
             }
         }
         

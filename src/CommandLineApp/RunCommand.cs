@@ -21,6 +21,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _debug { get; set; }
         private CommandOption _debugOff { get; set; }
         private CommandOption _logFile { get; set; }
+        private CommandOption _archiveFile { get; set; }
         private CommandOption _fileLogging { get; set; }
         private CommandOption _fileLoggingOff { get; set; }
 
@@ -62,6 +63,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 CommandOptionType.SingleValue);
             _logFile = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_LogFile, Strings.OptionLongName_LogFile),
                 Strings.OptionDescription_LogFile,
+                CommandOptionType.SingleValue);
+            _archiveFile = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_ArchiveFile, Strings.OptionLongName_ArchiveFile),
+                Strings.OptionDescription_ArchiveFile,
                 CommandOptionType.SingleValue);
             _dryRun = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun),
                 Strings.OptionDescription_DryRun,
@@ -149,6 +153,9 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 
             // Log file
             pipelinesCEOptions.LogFile = _logFile.Value();
+
+            // Archive file
+            pipelinesCEOptions.ArchiveFile = _archiveFile.Value();
 
             // File logging
             if (_fileLogging.HasValue())

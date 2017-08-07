@@ -3,6 +3,7 @@
     public class PipelinesCEOptions
     {
         public const string DefaultLogFile = "PipelinesCE.log";
+        public const string DefaultArchiveFile = "Run.{####}.log";
         public const string DefaultProjectFile = "PipelinesCEConfig.csproj";
         public const string DefaultPipeline = "Default";
         public const bool DefaultVerbose = false;
@@ -10,6 +11,7 @@
         public const bool DefaultFileLogging = false;
 
         private string _logFile;
+        private string _archiveFile;
         private string _projectFile;
         private bool? _debug;
         private bool? _verbose;
@@ -23,6 +25,15 @@
                 return _fileLogging ?? DefaultFileLogging;
             }
             set { _fileLogging = value; }
+        }
+
+        public virtual string ArchiveFile
+        {
+            get
+            {
+                return _archiveFile ?? DefaultArchiveFile;
+            }
+            set { _archiveFile = value; }
         }
 
         public virtual string LogFile
