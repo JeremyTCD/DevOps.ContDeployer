@@ -70,14 +70,17 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
         {
             // Arrange
             string testLogFile = "testLogFile";
+            string testArchiveFile = "testArchiveFile";
             PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
             {
                 FileLogging = true,
-                LogFile = testLogFile
+                LogFile = testLogFile,
+                ArchiveFile = testArchiveFile
             };
 
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
             mockPathService.Setup(p => p.IsPathRooted(testLogFile)).Returns(true);
+            mockPathService.Setup(p => p.IsPathRooted(testArchiveFile)).Returns(true);
 
             LoggingConfig loggingConfig = new LoggingConfig(mockPathService.Object, null);
 
