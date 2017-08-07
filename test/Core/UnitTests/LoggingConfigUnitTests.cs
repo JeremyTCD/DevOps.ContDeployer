@@ -107,6 +107,7 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
 
             Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
             mockPathService.Setup(p => p.IsPathRooted(testLogFile)).Returns(false);
+            mockPathService.Setup(p => p.IsPathRooted(stubPipelinesCEOptions.ArchiveFile)).Returns(true);
             mockPathService.Setup(p => p.Combine(testProjectDir, testLogFile)).Returns(testLogFileRooted);
 
             Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
@@ -122,6 +123,42 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.UnitTests
             FileTarget fileTarget = result.ConfiguredNamedTargets.Single(t => t.GetType() == typeof(FileTarget)) as FileTarget;
             Assert.NotNull(fileTarget);
             Assert.Equal($"'{testLogFileRooted}'", fileTarget.FileName.ToString());
+        }
+
+        [Fact]
+        public void CreateLoggingConfiguration_RootsArchiveFileIfItIsNotRooted()
+        {
+            //Arrange
+            string testArchiveFile = "testArchiveFile";
+            string testArchiveFileRooted = $"C:/{testArchiveFile}";
+            string testProjectFile = "C:/testProjectFile";
+            PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
+            {
+                FileLogging = true,
+                ArchiveFile = testArchiveFile,
+                ProjectFile = testProjectFile
+            };
+            DirectoryInfo stubDirectoryInfo = new DirectoryInfo("C:/");
+            string testProjectDir = stubDirectoryInfo.FullName;
+
+            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
+            mockPathService.Setup(p => p.IsPathRooted(testArchiveFile)).Returns(false);
+            mockPathService.Setup(p => p.IsPathRooted(stubPipelinesCEOptions.LogFile)).Returns(true);
+            mockPathService.Setup(p => p.Combine(testProjectDir, testArchiveFile)).Returns(testArchiveFileRooted);
+
+            Mock<IDirectoryService> mockDirectoryService = _mockRepository.Create<IDirectoryService>();
+            mockDirectoryService.Setup(d => d.GetParent(testProjectFile)).Returns(stubDirectoryInfo);
+
+            LoggingConfig loggingConfig = new LoggingConfig(mockPathService.Object, mockDirectoryService.Object);
+
+            // Act
+            LoggingConfiguration result = loggingConfig.CreateLoggingConfiguration(stubPipelinesCEOptions);
+
+            // Assert
+            _mockRepository.VerifyAll();
+            FileTarget fileTarget = result.ConfiguredNamedTargets.Single(t => t.GetType() == typeof(FileTarget)) as FileTarget;
+            Assert.NotNull(fileTarget);
+            Assert.Equal($"'{testArchiveFileRooted}'", fileTarget.ArchiveFileName.ToString());
         }
 
         [Theory]

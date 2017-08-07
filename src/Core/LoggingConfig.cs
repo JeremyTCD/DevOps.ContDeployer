@@ -51,17 +51,25 @@ namespace JeremyTCD.PipelinesCE.Core
             if (pipelinesCEOptions.FileLogging)
             {
                 string logFile = pipelinesCEOptions.LogFile;
-                if (!_pathService.IsPathRooted(logFile))
+                string archiveFile = pipelinesCEOptions.ArchiveFile;
+                bool logFileRooted = _pathService.IsPathRooted(logFile);
+                bool archiveFileRooted = _pathService.IsPathRooted(archiveFile);
+
+                if (!logFileRooted || !archiveFileRooted)
                 {
                     string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
-                    logFile = _pathService.Combine(projectDir, logFile);
+                    logFile = logFileRooted ? logFile : _pathService.Combine(projectDir, logFile);
+                    archiveFile = archiveFileRooted ? archiveFile : _pathService.Combine(projectDir, archiveFile);
                 }
 
                 FileTarget fileTarget = new FileTarget
                 {
                     // KeepFileOpen = true, // Can improve performance but holds on to file lock. Profile.
                     FileName = logFile,
-                    Layout = layout
+                    Layout = layout,
+                    ArchiveOldFileOnStartup = true,
+                    ArchiveFileName = archiveFile,
+                    ArchiveNumbering = ArchiveNumberingMode.Sequence
                 };
                 config.AddTarget(nameof(FileTarget), fileTarget);
                 LoggingRule fileRule = new LoggingRule("*", logLevel, fileTarget);
