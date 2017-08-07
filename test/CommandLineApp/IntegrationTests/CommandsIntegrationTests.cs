@@ -324,12 +324,16 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
                           {_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help)}        Show help information
                           {_cluService.CreateOptionTemplate(Strings.OptionShortName_ProjectFile, Strings.OptionLongName_ProjectFile)}    {Strings.OptionDescription_ProjectFile}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline)}   {Strings.OptionDescription_Pipeline}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_LogFile, Strings.OptionLongName_LogFile)}   {Strings.OptionDescription_LogFile}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_ArchiveFile, Strings.OptionLongName_ArchiveFile)}   {Strings.OptionDescription_ArchiveFile}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRun, Strings.OptionLongName_DryRun)}      {Strings.OptionDescription_DryRun}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_DryRunOff, Strings.OptionLongName_DryRunOff)}  {Strings.OptionDescription_DryRunOff}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Verbose, Strings.OptionLongName_Verbose)}    {Strings.OptionDescription_Verbose}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_VerboseOff, Strings.OptionLongName_VerboseOff)}  {Strings.OptionDescription_VerboseOff}
                           { _cluService.CreateOptionTemplate(Strings.OptionShortName_Debug, Strings.OptionLongName_Debug)}    {Strings.OptionDescription_Debug}
-                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_DebugOff, Strings.OptionLongName_DebugOff)}  {Strings.OptionDescription_DebugOff}";
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_DebugOff, Strings.OptionLongName_DebugOff)}  {Strings.OptionDescription_DebugOff}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_FileLogging, Strings.OptionLongName_FileLogging)}    {Strings.OptionDescription_FileLogging}
+                          { _cluService.CreateOptionTemplate(Strings.OptionShortName_FileLoggingOff, Strings.OptionLongName_FileLoggingOff)}  {Strings.OptionDescription_FileLoggingOff}";
             Assert.Equal(_stringService.RemoveWhiteSpace(expected), _stringService.RemoveWhiteSpace(output));
         }
 

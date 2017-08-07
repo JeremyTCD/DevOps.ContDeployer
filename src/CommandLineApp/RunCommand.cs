@@ -12,7 +12,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
 {
     public class RunCommand : CommandLineApplication
     {
-        private CommandOption _project { get; set; }
+        private CommandOption _projectFile { get; set; }
         private CommandOption _pipeline { get; set; }
         private CommandOption _dryRun { get; set; }
         private CommandOption _dryRunOff { get; set; }
@@ -55,7 +55,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         {
             HelpOption(_cluService.CreateOptionTemplate(Strings.OptionShortName_Help, Strings.OptionLongName_Help));
 
-            _project = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_ProjectFile, Strings.OptionLongName_ProjectFile),
+            _projectFile = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_ProjectFile, Strings.OptionLongName_ProjectFile),
                 Strings.OptionDescription_ProjectFile,
                 CommandOptionType.SingleValue);
             _pipeline = Option(_cluService.CreateOptionTemplate(Strings.OptionShortName_Pipeline, Strings.OptionLongName_Pipeline),
@@ -149,7 +149,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions();
 
             // Project file
-            pipelinesCEOptions.ProjectFile = _project.Value();
+            pipelinesCEOptions.ProjectFile = _projectFile.Value();
 
             // Log file
             pipelinesCEOptions.LogFile = _logFile.Value();
