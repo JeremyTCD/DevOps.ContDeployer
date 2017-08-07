@@ -185,18 +185,15 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             string sharedPluginOptionsJson = JsonConvert.SerializeObject(sharedPluginOptions, new PrivateFieldsJsonConverter());
             string[] stubArgs = new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson };
 
-            Mock<IPathService> mockPathService = _mockRepository.Create<IPathService>();
-            mockPathService.Setup(p => p.GetFullPathOfExistingFile(pipelinesCEOptions.ProjectFile)).Returns(pipelinesCEOptions.ProjectFile);
-
             Mock<Assembly> mockAssembly = _mockRepository.Create<Assembly>();
 
-            Mock<ProjectLoader> mockProjectLoader = _mockRepository.Create<ProjectLoader>(null, null, null, null, null);
+            Mock<IProjectLoader> mockProjectLoader = _mockRepository.Create<IProjectLoader>();
             mockProjectLoader.
                 Setup(p => p.Load(pipelinesCEOptions.ProjectFile, "JeremyTCD.PipelinesCE.ConfigHost",
                     pipelinesCEOptions.Debug ? "Debug" : "Release")).
                 Returns(mockAssembly.Object);
 
-            Mock<MethodRunner> mockMethodRunner = _mockRepository.Create<MethodRunner>(null, null, null);
+            Mock<IMethodRunner> mockMethodRunner = _mockRepository.Create<IMethodRunner>();
             mockMethodRunner.
                 Setup(r => r.Run(mockAssembly.Object, "JeremyTCD.PipelinesCE.ConfigHost.ConfigHostStartup", It.IsAny<string>(), stubArgs));
 
@@ -204,7 +201,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             services.AddCommandLineApp();
             services.AddSingleton(mockProjectLoader.Object);
             services.AddSingleton(mockMethodRunner.Object);
-            services.AddSingleton(mockPathService.Object);
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
             RootCommand rootCommand = serviceProvider.GetService<RootCommand>();
@@ -221,17 +217,25 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
         {
             string testProject = "testProject";
             string testPipeline = "testPipeline";
+            string testLogFile = "testLogFile";
+            string testArchiveFile = "testArchiveFile";
 
             yield return new object[] { new string[] { Strings.CommandName_Run }, new PipelinesCEOptions(), new SharedPluginOptions() };
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_Verbose}",
                 $"-{Strings.OptionShortName_DryRun}",
+                $"-{Strings.OptionShortName_FileLogging}",
                 $"-{Strings.OptionShortName_Debug}",
+                $"-{Strings.OptionShortName_LogFile}", testLogFile,
+                $"-{Strings.OptionShortName_ArchiveFile}", testArchiveFile,
                 $"-{Strings.OptionShortName_ProjectFile}", testProject,
                 $"-{Strings.OptionShortName_Pipeline}", testPipeline },
                 new PipelinesCEOptions{
                     Verbose = true,
                     Debug = true,
+                    FileLogging = true,
+                    LogFile = testLogFile,
+                    ArchiveFile = testArchiveFile,
                     ProjectFile = testProject,
                     Pipeline = testPipeline
                 },
@@ -243,12 +247,18 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] {new string[] {Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_Verbose}",
                 $"--{Strings.OptionLongName_DryRun}",
+                $"--{Strings.OptionLongName_FileLogging}",
                 $"--{Strings.OptionLongName_Debug}",
+                $"--{Strings.OptionLongName_LogFile}", testLogFile,
+                $"--{Strings.OptionLongName_ArchiveFile}", testArchiveFile,
                 $"--{Strings.OptionLongName_ProjectFile}", testProject,
                 $"--{Strings.OptionLongName_Pipeline}", testPipeline },
                 new PipelinesCEOptions{
                     Verbose = true,
                     Debug = true,
+                    FileLogging = true,
+                    LogFile = testLogFile,
+                    ArchiveFile = testArchiveFile,
                     ProjectFile = testProject,
                     Pipeline = testPipeline
                 },
@@ -260,11 +270,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"-{Strings.OptionShortName_DryRunOff}",
                 $"-{Strings.OptionShortName_VerboseOff}",
+                $"-{Strings.OptionShortName_FileLoggingOff}",
                 $"-{Strings.OptionShortName_DebugOff}" },
                 new PipelinesCEOptions
                 {
                     Verbose = false,
-                    Debug = false
+                    Debug = false,
+                    FileLogging = false
                 },
                 new SharedPluginOptions
                 {
@@ -274,11 +286,13 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.IntegrationTests
             yield return new object[] { new string[] { Strings.CommandName_Run,
                 $"--{Strings.OptionLongName_DryRunOff}",
                 $"--{Strings.OptionLongName_VerboseOff}" ,
+                $"-{Strings.OptionShortName_FileLoggingOff}",
                 $"--{Strings.OptionLongName_DebugOff}"},
                 new PipelinesCEOptions
                 {
                     Verbose = false,
-                    Debug = false
+                    Debug = false,
+                    FileLogging = false
                 },
                 new SharedPluginOptions
                 {
