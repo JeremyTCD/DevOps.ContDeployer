@@ -25,7 +25,6 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private CommandOption _fileLoggingOff { get; set; }
 
         private ICommandLineUtilsService _cluService { get; }
-        private IPathService _pathService { get; }
         private IMethodRunner _methodRunner { get; }
         private ILoggerFactory _loggerFactory { get; }
         private IProjectLoader _projectLoader { get; }
@@ -34,12 +33,11 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private ILoggingConfig _loggingConfig { get; }
 
         public RunCommand(IDirectoryService directoryService, ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner,
-            IPathService pathService, ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService, ILoggingConfig loggingConfig)
+            ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService, ILoggingConfig loggingConfig)
         {
             _loggingConfig = loggingConfig;
             _loggingService = loggingService;
             _directoryService = directoryService;
-            _pathService = pathService;
             _cluService = cluService;
             _methodRunner = methodRunner;
             _loggerFactory = loggerFactory;
