@@ -9,7 +9,7 @@ namespace StubProject.Logger
     {
         private ILogger _logger { get; set; }
 
-        public void Configure(string logFile, string loggerName)
+        public void Configure(string logFile, string archiveFile, string loggerName)
         {
             IServiceCollection services = new ServiceCollection();
             services.AddUtils();
@@ -21,7 +21,8 @@ namespace StubProject.Logger
             PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions
             {
                 FileLogging = true,
-                LogFile = logFile
+                LogFile = logFile,
+                ArchiveFile = archiveFile
             };
 
             LoggingConfig loggingConfig = new LoggingConfig(pathService, null);

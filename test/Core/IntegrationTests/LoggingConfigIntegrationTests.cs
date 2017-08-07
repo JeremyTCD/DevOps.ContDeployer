@@ -36,6 +36,8 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
             // Arrange
             string testLogFileName = "test.log";
             string testLogFile = $"{_tempDir}/{testLogFileName}";
+            string testArchiveFileName = "testArchive.log";
+            string testArchiveFile = $"{_tempDir}/{testArchiveFileName}"; // Provide a rooted archive file since rooting is tested in other tests
             string testLoggerName = "testLoggerName";
             string testLogMessage = "testLogMessage";
 
@@ -49,14 +51,15 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
             MethodInfo configureMethodInfo = stubLoggerType.GetMethod("Configure");
             MethodInfo logInformationMethodInfo = stubLoggerType.GetMethod("LogInformation");
             object stubLoggerInstance = Activator.CreateInstance(stubLoggerType);
-            configureMethodInfo.Invoke(stubLoggerInstance, new object[] { testLogFile, testLoggerName });
+            configureMethodInfo.Invoke(stubLoggerInstance, new object[] { testLogFile, testArchiveFile, testLoggerName });
 
             // Default context
             ILoggerFactory loggerFactory = new LoggerFactory();
             PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions
             {
                 FileLogging = true,
-                LogFile = testLogFile
+                LogFile = testLogFile,
+                ArchiveFile = testArchiveFile
                 // No way to redirect debugger output
                 //,Verbose = true
             };
