@@ -59,9 +59,9 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
             {
                 FileLogging = true,
                 LogFile = testLogFile,
-                ArchiveFile = testArchiveFile
-                // No way to redirect debugger output
-                //,Verbose = true
+                ArchiveFile = testArchiveFile,
+                // TODO look for a way to verify debugger output
+                Debug = true
             };
 
             Mock<ILoggingService<PathService>> mockPathServiceLS = _mockRepository.Create<ILoggingService<PathService>>();

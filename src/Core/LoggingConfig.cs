@@ -41,9 +41,10 @@ namespace JeremyTCD.PipelinesCE.Core
             // Console
             ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget
             {
+                Name = nameof(ConsoleTarget),
                 Layout = layout
             };
-            config.AddTarget(nameof(ConsoleTarget), consoleTarget);
+            config.AddTarget(consoleTarget);
             LoggingRule consoleRule = new LoggingRule("*", logLevel, consoleTarget);
             config.LoggingRules.Add(consoleRule);
 
@@ -64,6 +65,7 @@ namespace JeremyTCD.PipelinesCE.Core
 
                 FileTarget fileTarget = new FileTarget
                 {
+                    Name = nameof(FileTarget),
                     // KeepFileOpen = true, // Can improve performance but holds on to file lock. Profile.
                     FileName = logFile,
                     Layout = layout,
@@ -71,7 +73,7 @@ namespace JeremyTCD.PipelinesCE.Core
                     ArchiveFileName = archiveFile,
                     ArchiveNumbering = ArchiveNumberingMode.Sequence
                 };
-                config.AddTarget(nameof(FileTarget), fileTarget);
+                config.AddTarget(fileTarget);
                 LoggingRule fileRule = new LoggingRule("*", logLevel, fileTarget);
                 config.LoggingRules.Add(fileRule);
             }
@@ -81,9 +83,10 @@ namespace JeremyTCD.PipelinesCE.Core
             {
                 DebuggerTarget debuggerTarget = new DebuggerTarget
                 {
+                    Name = nameof(DebugTarget),
                     Layout = layout
                 };
-                config.AddTarget(nameof(DebugTarget), debuggerTarget);
+                config.AddTarget(debuggerTarget);
                 LoggingRule debugRule = new LoggingRule("*", logLevel, debuggerTarget);
                 config.LoggingRules.Add(debugRule);
             }
