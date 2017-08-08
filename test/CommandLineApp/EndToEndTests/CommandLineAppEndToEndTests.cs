@@ -1,11 +1,16 @@
 ﻿using JeremyTCD.DotNetCore.Utils;
+using JeremyTCD.PipelinesCE.Core;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NLog.Config;
+using NLog.Extensions.Logging;
+using NLog.Targets;
 using System;
 using System.IO;
 using System.Reflection;
 using Xunit;
+using LogLevel = NLog.LogLevel;
 
 namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
 {
@@ -27,9 +32,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             // TODO log to debug output
             _directoryService = new DirectoryService(_mockRepository.Create<ILoggingService<DirectoryService>>().Object);
             _loggerFactory = new LoggerFactory();
-            _loggerFactory.
-                AddConsole(LogLevel.Debug).
-                AddDebug(LogLevel.Debug);
+            ConfigureLoggerFactory(_loggerFactory);
             ILogger<ProcessService> logger = _loggerFactory.CreateLogger<ProcessService>();
             _processService = new ProcessService(new LoggingService<ProcessService>(logger));
             _msBuildService = new MSBuildService(_processService, _mockRepository.Create<ILoggingService<MSBuildService>>().Object);
@@ -68,6 +71,36 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp.Tests.EndToEndTests
             string output = tssw.ToString();
             Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPipeline, "Stub"), output);
             Assert.Contains(string.Format(ConfigHost.Strings.Log_FinishedRunningPlugin, "StubPlugin"), output);
+        }
+
+        private void ConfigureLoggerFactory(ILoggerFactory loggerFactory)
+        {
+            string layout = "[${longdate}][${logger}][${level: uppercase = true}] ${message}";
+            LoggingConfiguration config = new LoggingConfiguration();
+
+            // Console
+            ColoredConsoleTarget consoleTarget = new ColoredConsoleTarget
+            {
+                Name = nameof(ConsoleTarget),
+                Layout = layout
+            };
+            config.AddTarget(consoleTarget);
+            LoggingRule consoleRule = new LoggingRule("*", LogLevel.Debug, consoleTarget);
+            config.LoggingRules.Add(consoleRule);
+
+            // Debugger
+            DebuggerTarget debuggerTarget = new DebuggerTarget
+            {
+                Name = nameof(DebugTarget),
+                Layout = layout
+            };
+            config.AddTarget(debuggerTarget);
+            LoggingRule debugRule = new LoggingRule("*", LogLevel.Debug, debuggerTarget);
+            config.LoggingRules.Add(debugRule);
+
+            loggerFactory.
+                AddNLog().
+                ConfigureNLog(config);
         }
     }
 }
