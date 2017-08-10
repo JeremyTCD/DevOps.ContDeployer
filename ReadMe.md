@@ -13,7 +13,8 @@ PipelinesCE keeps cognitive overhead low by using technologies and patterns that
 ### Modularity and reusability
 PipelinesCE facilitates reusability through a modular architecture.
 - Plugins are easy to write and use
-- Each plugin can define its own IOC container
+- Plugins form pipelines, which can in turn form larger pipelines
+- Both plugins and pipelines are discrete objects that are easy to reuse.
 ### Responsive pipelines
 PiplinesCE allows manipulation of pipeline steps while a pipeline is executing. This dynamism facilitates organizing of logic that 
 responds to different situations.
@@ -25,20 +26,27 @@ PipelinesCE keeps all relevant data within the project or solution being worked 
 plugins.
 ### Parrellelism and asynchrony
 PipelinesCE allows for concurrent operations.
+### Debuggable
+PipelinesCE allows for stepping through pipelines in Visual Studio.
+### Testable
+PipelinesCE is built with testability in mind. Plugins can have dependencencies injected and pipelines can be run in `dryrun` mode.
 
 ## System Architecture
 ### Levels
-The PipelinesCE system consists of three levels.
+The PipelinesCE system consists of five levels.
 From top (closest to end users) to bottom:
 #### PipelinesCE.CommandLineApp
-Provides a user facing interface. Converts user input into instances of options Types from PipelinesCE.Core. Uses ProjectHost to run 
-PipelinesCE.ConfigHost with serialized options instances as arguments.  
+Provides a user facing interface. Exposes useful commands like `init`, `run` and `update`. On `run`, uses ProjectHost to run config project. 
+#### Config Projects
+Config projects contain an entry method that ProjectHost locates and calls, passing command line arguments along. This entry method 
+utilizes PipelinesCE.ConfigHost.
 #### PipelinesCE.ConfigHost
-Referenced by config projects, PipelinesCE.ConfigHost contains an entry method that ProjectHost locates and calls. Loads
-config project assemblies that reference PipelinesCE.Core. Intantiates instances of relevant types, sets up DI and 
-finally runs Pipeline defined in config project.
+Referenced by config projects, PipelinesCE.ConfigHost parses command line arguments, intantiates instances of relevant types, sets up DI and 
+finally runs the specified Pipeline.
+#### PipelinesCE.Pipeline
+All pipelines implement this type. A pipeline defines a sequence of steps. Each step utilizes a PipelinesCE.Plugin.
 #### PipelinesCE.Plugin
-Runs within a Pipeline. 
+One or more plugins make up a pipeline. Both PipelinesCE.Plugin and PipelinesCE.Pipeline are steps.
 ### Shared Libraries
 The PipelinesCE system defines 2 shared libraries:
 #### PipelinesCE.Core
@@ -124,3 +132,38 @@ Tests that depend on CurrentDirectory should not run in parallel. https://xunit.
 ### Nuget
 ### Git
 ### Github
+
+## Alternatives
+### Cake
+### Nuke
+#### Nuke vs PipelinesCE
+- Auto generating cli tool options is a good idea
+- Has no concept of plugins
+	- additional tools are just plain packages. Methods from these packages are called from lamda expressions.
+	- this causes a haphazard gulp like feel but it is quite flexible
+	- it does hurt reusability since every build project that requires these methods must redefine each target
+	- adding lamda expression alternatives to PipelinesCE should bring it on par
+- Has no parrallelism/asynchrony
+- Has no concept of pipelines (workflows)
+- requires a build.ps1 to execute, has several bootstrap files
+	- PipelinesCE is cleaner in this regard
+- Has lots of plugins already / Comes with a bunch of core tools (nuget etc)
+	- can simply copy nukes plugins to be on par
+	- probably not important, easy to dl each plugin as required using nuget
+    - can add a core plugins package to be on par
+- Has init code
+	- A "pipelinesce init" command would bring PipelinesCE on par
+- Has a good video and website
+	- Will have to churn these out
+
+#### Plugins vs plain code
+Nuke is basically the C# equivalent of Gulp without plugins. Targets are simply delegates that are executed by Nuke.
+This system is lighter weight since it requires less code. However, plugins do have advantages:
+
+- Plugins provide structure
+  - They provide a mental model for breaking down a set of operations into atomic blocks
+  - This facilitates reusability
+  - Also, they provide a means of enforcing consistency 
+    - Plain code can be of any form. This means users may create plugins with varied architectures, thereby increasing cognitive overhead.
+    - Nonetheless, plain code should be supported for trivial tasks
+- Plugins facilitate testing
