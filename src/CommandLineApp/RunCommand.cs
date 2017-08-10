@@ -32,10 +32,12 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
         private IDirectoryService _directoryService { get; }
         private ILoggingService<RunCommand> _loggingService { get; }
         private ILoggingConfig _loggingConfig { get; }
+        private IPathService _pathService { get; }
 
         public RunCommand(IDirectoryService directoryService, ICommandLineUtilsService cluService, IProjectLoader projectLoader, IMethodRunner methodRunner,
-            ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService, ILoggingConfig loggingConfig)
+            ILoggerFactory loggerFactory, ILoggingService<RunCommand> loggingService, ILoggingConfig loggingConfig, IPathService pathService)
         {
+            _pathService = pathService;
             _loggingConfig = loggingConfig;
             _loggingService = loggingService;
             _directoryService = directoryService;
@@ -124,6 +126,7 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
                 // Log using logging service so that exception isn't just logged to console. Also, use Exception.ToString() instead of
                 // Exception.Message so inner exceptions and their stack traces are logged.
                 _loggingService.LogError(exception.ToString());
+
                 return 1;
             }
         }
@@ -149,13 +152,10 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             PipelinesCEOptions pipelinesCEOptions = new PipelinesCEOptions();
 
             // Project file
-            pipelinesCEOptions.ProjectFile = _projectFile.Value();
-
-            // Log file
-            pipelinesCEOptions.LogFile = _logFile.Value();
-
-            // Archive file
-            pipelinesCEOptions.ArchiveFile = _archiveFile.Value();
+            if (_projectFile.HasValue())
+            {
+                pipelinesCEOptions.ProjectFile = _pathService.GetFullPathOfExistingFile(_projectFile.Value());
+            }
 
             // File logging
             if (_fileLogging.HasValue())
@@ -165,6 +165,28 @@ namespace JeremyTCD.PipelinesCE.CommandLineApp
             else if (_fileLoggingOff.HasValue())
             {
                 pipelinesCEOptions.FileLogging = false;
+            }
+
+            // Log file
+            if (_logFile.HasValue())
+            {
+                pipelinesCEOptions.LogFile = _logFile.Value();
+            }
+            if (!_pathService.IsPathRooted(pipelinesCEOptions.LogFile))
+            {
+                string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
+                pipelinesCEOptions.LogFile = _pathService.Combine(projectDir, pipelinesCEOptions.LogFile);
+            }
+
+            // Archive file
+            if (_archiveFile.HasValue())
+            {
+                pipelinesCEOptions.ArchiveFile = _archiveFile.Value();
+            }
+            if (!_pathService.IsPathRooted(pipelinesCEOptions.ArchiveFile))
+            {
+                string projectDir = _directoryService.GetParent(pipelinesCEOptions.ProjectFile).FullName;
+                pipelinesCEOptions.ArchiveFile = _pathService.Combine(projectDir, pipelinesCEOptions.ArchiveFile);
             }
 
             // Pipeline
