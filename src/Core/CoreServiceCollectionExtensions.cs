@@ -8,7 +8,7 @@ namespace JeremyTCD.PipelinesCE.Core
         public static void AddCore(this IServiceCollection services)
         {
             services.TryAdd(ServiceDescriptor.Singleton<IStepContextFactory, StepContextFactory>());
-            services.TryAdd(ServiceDescriptor.Singleton<IPipelineContextFactory, PipelineContextFactory>());
+            services.TryAdd(ServiceDescriptor.Singleton<IPipelineContextBuilder, PipelineContextBuilder>());
             services.TryAdd(ServiceDescriptor.Singleton<ILoggingConfig, LoggingConfig>());
         }
     }
