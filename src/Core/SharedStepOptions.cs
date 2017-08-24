@@ -5,7 +5,7 @@
     /// Properties must have nullable backing fields so there is some state that represents unset. 
     /// This facilitates overwriting of unset properties, <see cref="Combine(PipelinesCEOptions)"/>.
     /// </summary>
-    public class SharedPluginOptions
+    public class SharedStepOptions
     {
         public const bool DefaultDryRun = false;
         
@@ -26,7 +26,7 @@
             }
         }
 
-        public virtual SharedPluginOptions Combine(SharedPluginOptions secondary)
+        public virtual SharedStepOptions Combine(SharedStepOptions secondary)
         {
             if (_dryRun == null)
             {
