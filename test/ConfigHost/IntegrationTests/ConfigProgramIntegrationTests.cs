@@ -6,13 +6,13 @@ using Newtonsoft.Json.Linq;
 using System;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Config.Tests.IntegrationTests
 {
-    public class ConfigHostStartupIntegrationTests
+    public class ConfigProgramIntegrationTests
     {
         /// <summary>
-        /// This test ensures that <see cref="ConfigHostStartup.CreateContainer"/> configures services correctly as well
-        /// as that <see cref="ConfigHostStartup.Configure(IContainer, PipelinesCEOptions)"/> configures logging correctly.
+        /// This test ensures that <see cref="ConfigProgram.CreateContainer"/> configures services correctly as well
+        /// as that <see cref="ConfigProgram.Configure(IContainer, PipelinesCEOptions)"/> configures logging correctly.
         /// </summary>
         [Fact]
         public void Main_ConfiguresServicesAndRunsPipeline()
@@ -26,7 +26,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
                 // TODO write to temp folder for verification
                 LogFile = "C:/Users/Jeremy/Documents/Visual Studio 2017/Projects/JeremyTCD.PipelinesCE/test/ConfigHost/test.log"
             };
-            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions();
+            SharedStepOptions stubSharedPluginOptions = new SharedStepOptions();
 
             string pipelinesCEOptionsJson = JsonConvert.SerializeObject(stubPipelinesCEOptions, new PrivateFieldsJsonConverter());
             string sharedPluginOptionsJson = JsonConvert.SerializeObject(stubSharedPluginOptions, new PrivateFieldsJsonConverter());
@@ -35,7 +35,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             Console.SetOut(tssw);
 
             // Act
-            ConfigHostStartup.Main(new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
+            //ConfigHost.Main(new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson });
 
             // Assert
             tssw.Dispose();
@@ -63,7 +63,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
                 ProjectFile = testProject
             };
 
-            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions
+            SharedStepOptions stubSharedPluginOptions = new SharedStepOptions
             {
                 // Arbitrarily chosen properties
                 DryRun = testDryRun
@@ -81,10 +81,8 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             jObject.Remove(dryRunFieldKey);
             sharedPluginOptionsJson = jObject.ToString();
 
-            ConfigHostStartup program = new ConfigHostStartup();
-
             // Act
-            (PipelinesCEOptions resultPipelinesCEOptions, SharedPluginOptions resultSharedPluginOptions, string warnings) = ConfigHostStartup.
+            (PipelinesCEOptions resultPipelinesCEOptions, SharedStepOptions resultSharedPluginOptions, string warnings) = ConfigProgram.
                 ParseArgs(new string[] { pipelinesCEOptionsJson, sharedPluginOptionsJson});
 
             // TODO warnings are wrong
@@ -94,8 +92,8 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             Assert.Equal(PipelinesCEOptions.DefaultVerbose, resultPipelinesCEOptions.Verbose);
             Assert.Equal(PipelinesCEOptions.DefaultProjectFile, resultPipelinesCEOptions.ProjectFile);
             Assert.Equal(string.Format(Strings.Log_ExecutableAndProjectVersionsDoNotMatch,
-                $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(pipelinesCEOptionsExtraFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(sharedPluginOptionsExtraFieldKey)}",
-                $"{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(projectFileFieldKey)}{Environment.NewLine}{ConfigHostStartup.NormalizeFieldName(dryRunFieldKey)}"),
+                $"{Environment.NewLine}{ConfigProgram.NormalizeFieldName(pipelinesCEOptionsExtraFieldKey)}{Environment.NewLine}{ConfigProgram.NormalizeFieldName(sharedPluginOptionsExtraFieldKey)}",
+                $"{Environment.NewLine}{ConfigProgram.NormalizeFieldName(projectFileFieldKey)}{Environment.NewLine}{ConfigProgram.NormalizeFieldName(dryRunFieldKey)}"),
                 warnings);
         }
     }

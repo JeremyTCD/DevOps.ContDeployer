@@ -9,12 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost
+namespace JeremyTCD.PipelinesCE.Config
 {
-    public class PipelineLoader : IPipelineLoader, IDisposable
+    public class ConfigLoader : IConfigLoader, IDisposable
     {
         private IAssemblyService _assemblyService { get; }
-        private ILoggingService<PipelineLoader> _loggingService { get; }
+        private ILoggingService<ConfigLoader> _loggingService { get; }
         private IPathService _pathService { get; }
         private IDirectoryService _directoryService { get; }
         private IMSBuildService _msBuildService { get; }
@@ -33,14 +33,14 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             }
         }
 
-        public PipelineLoader(IActivatorService activatorService,
+        public ConfigLoader(IActivatorService activatorService,
             IDependencyContextService dependencyContextService,
             IAssemblyService assemblyService,
             IPathService pathService,
             IDirectoryService directoryService,
             IMSBuildService msBuildService,
             IContainer mainContainer,
-            ILoggingService<PipelineLoader> loggingService)
+            ILoggingService<ConfigLoader> loggingService)
         {
             _dependencyContextService = dependencyContextService;
             _mainContainer = mainContainer;
@@ -84,7 +84,6 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return (pipeline, _pluginContainers);
         }
 
-        // TODO Access modifier should be internal or private but no good way to test if so
         /// <summary>
         /// Loads assemblies that reference JeremyTCD.PipelinesCE.Core from the directory that the executing assembly is located in
         /// </summary>
@@ -97,9 +96,9 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// <exception cref="InvalidOperationException">
         /// Thrown if no *.deps.json file exists in directory
         /// </exception>
-        public virtual IEnumerable<Assembly> LoadAssemblies()
+        internal IEnumerable<Assembly> LoadAssemblies()
         {
-            string directory = _directoryService.GetParent(typeof(PipelineLoader).GetTypeInfo().Assembly.Location).FullName;
+            string directory = _directoryService.GetParent(typeof(ConfigLoader).GetTypeInfo().Assembly.Location).FullName;
 
             string[] possibleDepsFiles = _directoryService.GetFiles(directory, "*.deps.json", SearchOption.TopDirectoryOnly);
             if (possibleDepsFiles.Length > 1)
@@ -118,13 +117,12 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return _assemblyService.CreateReferencingAssemblies(context, typeof(IPlugin).GetTypeInfo().Assembly);
         }
 
-        // TODO Access modifier should be internal or private but no good way to test if so
         /// <summary>
         /// Creates an IOC container for each <see cref="IPlugin"/> implementation in <paramref name="assemblies"/>. Populates containers 
         /// using corresponding <see cref="IPluginStartup"/> implementations.
         /// </summary>
         /// <param name="assemblies"></param>
-        public virtual IDictionary<string, IContainer> CreatePluginIoCContainers(IEnumerable<Assembly> assemblies)
+        internal IDictionary<string, IContainer> CreatePluginIoCContainers(IEnumerable<Assembly> assemblies)
         {
             IDictionary<string, IContainer> result = new Dictionary<string, IContainer>();
 
@@ -154,7 +152,6 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return result;
         }
 
-        // TODO Access modifier should be internal or private but no good way to test if so
         /// <summary>
         /// Gets <see cref="IPipelineFactory"/> from project assemblies that creates a pipeline with name 
         /// <paramref name="pipelineOptions"/>. If <paramref name="pipelineOptions"/> is null and there is only one <see cref="IPipelineFactory"/> 
@@ -174,7 +171,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// <exception cref="InvalidOperationException">
         /// Thrown if no <see cref="IPipelineFactory"/> produces a pipeline with name <paramref name="pipelineOptions"/>
         /// </exception>
-        public virtual IPipelineFactory CreatePipelineFactory(IEnumerable<Assembly> assemblies, PipelinesCEOptions pipelineOptions)
+        internal IPipelineFactory CreatePipelineFactory(IEnumerable<Assembly> assemblies, PipelinesCEOptions pipelineOptions)
         {
             _loggingService.LogDebug(Strings.Log_CreatingPipelineFactory, pipelineOptions.Pipeline);
 
@@ -220,8 +217,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return (IPipelineFactory)_activatorService.CreateInstance(pipelineFactoryType);
         }
 
-        // TODO Access modifier should be internal or private but no good way to test if so
-        public virtual string PipelineFactoryPipelineName(Type pipelineFactoryType)
+        internal string PipelineFactoryPipelineName(Type pipelineFactoryType)
         {
             return pipelineFactoryType.Name.Replace("PipelineFactory", "");
         }

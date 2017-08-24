@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>JeremyTCD.PipelinesCE.Config.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\JeremyTCD.DotNetCore.Utils\src\JeremyTCD.DotNetCore.Utils\JeremyTCD.DotNetCore.Utils.csproj" />
-    <ProjectReference Include="..\..\src\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.csproj" />
+    <ProjectReference Include="..\..\src\ConfigHost\JeremyTCD.PipelinesCE.Config.csproj" />
     <ProjectReference Include="..\StubProject.PipelinesCEConfig\StubProject.PipelinesCEConfig.csproj" />
   </ItemGroup>
 

@@ -7,13 +7,13 @@ using StructureMap;
 using System.Collections.Generic;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
+namespace JeremyTCD.PipelinesCE.Config.Tests.UnitTests
 {
-    public class PipelineRunnerUnitTests
+    public class ConfigRunnerUnitTests
     {
         private MockRepository _mockRepository { get; }
 
-        public PipelineRunnerUnitTests()
+        public ConfigRunnerUnitTests()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose) { DefaultValue = DefaultValue.Mock };
         }
@@ -27,18 +27,18 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
             string stubPlugin2Name = typeof(StubPlugin2).Name;
             StubPlugin1Options plugin1Options = new StubPlugin1Options();
             StubPlugin2Options plugin2Options = new StubPlugin2Options();
-            IEnumerable<IStep> steps = new IStep[] {
-                new Step<StubPlugin1>(plugin1Options),
-                new Step<StubPlugin2>(plugin2Options)
+            IEnumerable<Core.Step> steps = new Core.Step[] {
+                //new Step<StubPlugin1>(plugin1Options),
+                //new Step<StubPlugin2>(plugin2Options)
             };
-            SharedPluginOptions stubSharedPluginOptions = new SharedPluginOptions();
-            Pipeline pipeline = new Pipeline(steps, stubSharedPluginOptions);
+            SharedStepOptions stubSharedPluginOptions = new SharedStepOptions();
+            Pipeline pipeline = null;// new Pipeline(null, stubSharedPluginOptions);
             PipelinesCEOptions stubPipelinesCEOptions = new PipelinesCEOptions
             {
                 Pipeline = testPipeline
             };
 
-            Mock<ILoggingService<PipelineRunner>> loggingService = _mockRepository.Create<ILoggingService<PipelineRunner>>();
+            Mock<ILoggingService<ConfigRunner>> loggingService = _mockRepository.Create<ILoggingService<ConfigRunner>>();
             using (Sequence.Create())
             {
                 loggingService.Setup(l => l.LogInformation(Strings.Log_RunningPipeline, testPipeline)).InSequence();
@@ -72,15 +72,15 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.UnitTests
                 Mock<IStepContext> mockStepContext = _mockRepository.Create<IStepContext>();
 
                 Mock<IStepContextFactory> mockStepContextFactory = _mockRepository.Create<IStepContextFactory>();
-                mockStepContextFactory.Setup(s => s.AddPluginOptions(plugin1Options)).Returns(mockStepContextFactory.Object);
-                mockStepContextFactory.Setup(s => s.AddPluginOptions(plugin2Options)).Returns(mockStepContextFactory.Object);
-                mockStepContextFactory.Setup(s => s.AddRemainingSteps(It.Is<LinkedList<IStep>>(ll => ll.Count == 1))).Returns(mockStepContextFactory.Object);
-                mockStepContextFactory.Setup(s => s.AddRemainingSteps(It.Is<LinkedList<IStep>>(ll => ll.Count == 0))).Returns(mockStepContextFactory.Object);
+                //mockStepContextFactory.Setup(s => s.AddPluginOptions(plugin1Options)).Returns(mockStepContextFactory.Object);
+                //mockStepContextFactory.Setup(s => s.AddPluginOptions(plugin2Options)).Returns(mockStepContextFactory.Object);
+                //mockStepContextFactory.Setup(s => s.AddRemainingSteps(It.Is<LinkedList<Core.Step>>((LinkedList<Core.Step> ll) => ll.Count == 1))).Returns(mockStepContextFactory.Object);
+                //mockStepContextFactory.Setup(s => s.AddRemainingSteps(It.Is<LinkedList<Core.Step>>((LinkedList<Core.Step> ll) => ll.Count == 0))).Returns(mockStepContextFactory.Object);
                 mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin1Logger.Object)).Returns(mockStepContextFactory.Object);
                 mockStepContextFactory.Setup(s => s.AddLogger(mockPlugin2Logger.Object)).Returns(mockStepContextFactory.Object);
                 mockStepContextFactory.Setup(s => s.CreateStepContext()).Returns(mockStepContext.Object);
 
-                PipelineRunner runner = new PipelineRunner(loggingService.Object, mockStepContextFactory.Object, mockLoggerFactory.Object);
+                ConfigRunner runner = new ConfigRunner(loggingService.Object, mockStepContextFactory.Object, mockLoggerFactory.Object);
 
                 // Act
                 runner.Run(pipeline, mockPipelineContext.Object);

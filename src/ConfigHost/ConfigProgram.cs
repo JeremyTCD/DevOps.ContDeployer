@@ -10,20 +10,20 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost
+namespace JeremyTCD.PipelinesCE.Config
 {
-    public class ConfigHostStartup
+    public class ConfigProgram
     {
         /// <summary>
         /// Parses args, creates container and starts config host.
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        // TODO should be private or internal
-        public static void Main(string[] args)
+        public int Run(string[] args)
         {
             // Parse args into PipelineOptions
-            (PipelinesCEOptions pipelineOptions, SharedPluginOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
+            // TODO parse using commandlineparser
+            (PipelinesCEOptions pipelineOptions, SharedStepOptions sharedPluginOptions, string parseArgsWarnings) = ParseArgs(args);
 
             // Initialize container
             using (IContainer container = CreateContainer())
@@ -34,19 +34,20 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
                 loggingConfig.Configure(loggerFactory, pipelineOptions);
 
                 // Create logger
-                ILoggingService<ConfigHostStartup> loggingService = container.GetInstance<ILoggingService<ConfigHostStartup>>();
+                ILoggingService<ConfigProgram> loggingService = container.GetInstance<ILoggingService<ConfigProgram>>();
                 if (!string.IsNullOrEmpty(parseArgsWarnings))
                 {
                     loggingService.LogWarning(parseArgsWarnings);
                 }
 
                 // Start
-                ConfigHostCore core = container.GetInstance<ConfigHostCore>();
-                core.Start(pipelineOptions, sharedPluginOptions);
+                ConfigRunner runner = container.GetInstance<ConfigRunner>();
+                runner.Run(pipelineOptions, sharedPluginOptions);
             }
+
+            return 0;
         }
 
-        // TODO should be private or internal
         /// <summary>
         /// Parses args. Logs if there is a version mismatch between PipelinesCE executable and config project
         /// </summary>
@@ -54,11 +55,11 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
         /// <returns>
         /// <see cref="PipelinesCEOptions"/>
         /// </returns>
-        public static (PipelinesCEOptions, SharedPluginOptions, string) ParseArgs(string[] args)
+        internal static (PipelinesCEOptions, SharedStepOptions, string) ParseArgs(string[] args)
         {
             PrivateFieldsJsonConverter converter = new PrivateFieldsJsonConverter();
             PipelinesCEOptions pipelinesCEOptions = JsonConvert.DeserializeObject<PipelinesCEOptions>(args[0], converter);
-            SharedPluginOptions sharedPluginOptions = JsonConvert.DeserializeObject<SharedPluginOptions>(args[1], converter);
+            SharedStepOptions sharedPluginOptions = JsonConvert.DeserializeObject<SharedStepOptions>(args[1], converter);
 
             string warnings = null; // Can't log until LoggerFactory is setup
 
@@ -83,14 +84,13 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return (pipelinesCEOptions, sharedPluginOptions, warnings);
         }
 
-        // TODO should be private or internal
         /// <summary>
         /// Use <see cref="Container"/> instead of <see cref="IServiceProvider"/> since plugins require child containers
         /// </summary>
         /// <returns>
         /// <see cref="Container"/>
         /// </returns>
-        public static Container CreateContainer()
+        internal static Container CreateContainer()
         {
             IServiceCollection services = new ServiceCollection();
             services.AddConfigHost();
@@ -98,8 +98,7 @@ namespace JeremyTCD.PipelinesCE.ConfigHost
             return new Container(registry => registry.Populate(services));
         }
 
-        // TODO should be private or internal
-        public static string NormalizeFieldName(string fieldName)
+        internal static string NormalizeFieldName(string fieldName)
         {
             return fieldName.Replace("_", "").ToLowerInvariant();
         }

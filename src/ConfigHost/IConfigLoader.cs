@@ -2,9 +2,9 @@
 using StructureMap;
 using System.Collections.Generic;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost
+namespace JeremyTCD.PipelinesCE.Config
 {
-    public interface IPipelineLoader
+    public interface IConfigLoader
     {
         (Pipeline, IDictionary<string, IContainer>) Load(PipelinesCEOptions pipelineOptions);
     }

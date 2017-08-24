@@ -4,9 +4,9 @@ using StructureMap;
 using System.Linq;
 using Xunit;
 
-namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
+namespace JeremyTCD.PipelinesCE.Config.Tests.IntegrationTests
 {
-    public class ConfigHostServiceCollectionExtensionsIntegrationTests
+    public class ConfigServiceCollectionExtensionsIntegrationTests
     {
         [Fact]
         public void AddConfigHost_ConfiguresServicesCorrectly()
@@ -19,9 +19,8 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
 
             // Assert
             ServiceDescriptorComparer comparer = new ServiceDescriptorComparer();
-            Assert.True(services.Contains(ServiceDescriptor.Singleton<ConfigHostCore, ConfigHostCore>(), comparer));
-            Assert.True(services.Contains(ServiceDescriptor.Singleton<IPipelineLoader, PipelineLoader>(), comparer));
-            Assert.True(services.Contains(ServiceDescriptor.Singleton<IPipelineRunner, PipelineRunner>(), comparer));
+            Assert.True(services.Contains(ServiceDescriptor.Singleton<IConfigRunner, ConfigRunner>(), comparer));
+            Assert.True(services.Contains(ServiceDescriptor.Singleton<IConfigLoader, ConfigLoader>(), comparer));
         }
 
         [Fact]
@@ -30,9 +29,9 @@ namespace JeremyTCD.PipelinesCE.ConfigHost.Tests.IntegrationTests
             // Arrange
             ServiceCollection services = new ServiceCollection();
             services.AddConfigHost();
-            Container container = new Container(r => r.Populate(services)); // PipelineLoader requires an IContainer instance
+            Container container = new Container(r => r.Populate(services)); // ConfigLoader requires an IContainer instance
 
-            PipelineLoader pipelineLoader = container.GetInstance<IPipelineLoader>() as PipelineLoader;
+            ConfigLoader pipelineLoader = container.GetInstance<IConfigLoader>() as ConfigLoader;
 
             // Act
             container.Dispose();

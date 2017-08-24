@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JeremyTCD.PipelinesCE.ConfigHost {
+namespace JeremyTCD.PipelinesCE.Config {
     using System;
     
     
