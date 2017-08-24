@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CommandLineApp\JeremyTCD.PipelinesCE.CommandLineApp.csproj" />
-    <ProjectReference Include="..\..\src\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.csproj" />
+    <ProjectReference Include="..\..\src\Config\JeremyTCD.PipelinesCE.Config.csproj" />
   </ItemGroup>
 
   <ItemGroup>

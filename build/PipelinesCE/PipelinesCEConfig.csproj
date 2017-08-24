@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Config\JeremyTCD.PipelinesCE.Config.csproj" />
     <ProjectReference Include="..\..\src\Core\JeremyTCD.PipelinesCE.Core.csproj" />
     <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj" />
   </ItemGroup>

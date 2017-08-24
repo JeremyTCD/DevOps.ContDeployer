@@ -62,9 +62,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubProject.PipelinesCEConf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubProject.Plugin", "test\StubProject.Plugin\StubProject.Plugin.csproj", "{F2921616-F09A-45B4-A69A-C5E9CE8241BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.ConfigHost", "src\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.csproj", "{E3C73164-0199-45C3-979F-8BCEAEF99ED1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Config", "src\Config\JeremyTCD.PipelinesCE.Config.csproj", "{E3C73164-0199-45C3-979F-8BCEAEF99ED1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.ConfigHost.Tests", "test\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.Tests.csproj", "{D79C47D2-522B-4D45-A6CE-0179D1DB9639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.PipelinesCE.Config.Tests", "test\Config\JeremyTCD.PipelinesCE.Config.Tests.csproj", "{D79C47D2-522B-4D45-A6CE-0179D1DB9639}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeremyTCD.Newtonsoft.Json.Utils", "..\JeremyTCD.Newtonsoft.Json.Utils\src\Utils\JeremyTCD.Newtonsoft.Json.Utils.csproj", "{64E4BCBD-F406-4DCB-B15A-9851B8DCC8C3}"
 EndProject

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ConfigHost\JeremyTCD.PipelinesCE.ConfigHost.csproj" />
+    <ProjectReference Include="..\..\src\Config\JeremyTCD.PipelinesCE.Config.csproj" />
     <ProjectReference Include="..\StubProject.Plugin\StubProject.Plugin.csproj" />
   </ItemGroup>
 </Project>
