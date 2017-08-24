@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
-    public class Step<T> : IStep where T : IPlugin
+    public abstract class Step : IComposable
     {
+        public string Name { get; }
+        public List<Step> Dependencies { get; }
+        public List<Step> Dependents { get; }
+        public Task Task { get; set; }
+        public ILogger Logger { get; set; }
 
-        public Step(IPluginOptions options)
+        public Step(string name, IEnumerable<Step> dependencies = null)
         {
-            PluginType = typeof(T);
-            PluginOptions = options;
+            Name = name;
+            Dependencies = dependencies != null ? dependencies.ToList() : new List<Step>();
+            Dependents = new List<Step>();
         }
 
-        /// <summary>
-        /// Name of plugin
-        /// </summary>
-        public Type PluginType { get; set; }
-
-        /// <summary>
-        /// Instantiated options
-        /// </summary>
-        public IPluginOptions PluginOptions { get; set; }
+        public abstract void Run(IPipelineContext pipelineContext);
     }
 }
