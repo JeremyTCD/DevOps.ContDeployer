@@ -18,6 +18,8 @@ namespace JeremyTCD.PipelinesCE.Core
 
             composableGroup.PopulateStepGraph(stepGraph, new HashSet<Step>());
 
+            // TODO validate step graph
+
             foreach(Step step in stepGraph)
             {
                 step.Logger = _loggerFactory.CreateLogger(step.Name);
