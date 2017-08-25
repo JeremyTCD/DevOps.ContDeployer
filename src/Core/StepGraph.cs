@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,22 +19,18 @@ namespace JeremyTCD.PipelinesCE.Core
 
         public void Run(IPipelineContext pipelineContext)
         {
-            // Verify integrity of graph
-            // - fix sort, contains isn't efficient?
-            // - no cycles
-            //      - in tsort, if a step has a child that has already been traversed, there is a cycle
-            //      - https://www.youtube.com/watch?v=rKQaZuoUR4M
-
             // Sort steps topologically
-            Sort();
+            TopologicalSort();
 
             // Create CancellationTokenSource
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken cancellationToken = cts.Token;
 
+            // TODO exception handling
+            // TODO cancellation?
             // Run steps
             foreach (Step step in _steps)
-            { 
+            {
                 if (step.Dependencies.Count == 0)
                 {
                     step.Task = Task.Factory.StartNew(() => RunStep(step, pipelineContext, cts), cancellationToken);
@@ -51,7 +48,7 @@ namespace JeremyTCD.PipelinesCE.Core
         private void RunStep(Step step, IPipelineContext pipelineContext, CancellationTokenSource cts)
         {
             try
-            { 
+            {
                 step.Logger.LogInformation(Strings.Log_RunningStep, step.Name);
                 step.Run(pipelineContext);
                 step.Logger.LogInformation(Strings.Log_FinishedRunningStep, step.Name);
@@ -72,8 +69,8 @@ namespace JeremyTCD.PipelinesCE.Core
         {
             int color = 0;
             Dictionary<Step, int> stepColors = _steps.ToDictionary(s => s, s => -1);
-            
-            foreach(Step step in _steps)
+
+            foreach (Step step in _steps)
             {
                 ColorStep(step, stepColors, color++);
             }
@@ -88,10 +85,10 @@ namespace JeremyTCD.PipelinesCE.Core
 
         private void ColorStep(Step step, Dictionary<Step, int> stepColors, int color)
         {
-            if(stepColors[step] == -1)
+            if (stepColors[step] == -1)
             {
                 stepColors[step] = color;
-                foreach(Step neighbour in step.Dependencies.Concat(step.Dependents))
+                foreach (Step neighbour in step.Dependencies.Concat(step.Dependents))
                 {
                     ColorStep(neighbour, stepColors, color);
                 }
@@ -102,36 +99,63 @@ namespace JeremyTCD.PipelinesCE.Core
         /// Sorts steps topologically. Steps are ordered from roots to leaves.
         /// </summary>
         /// <exception cref="Exception">Thrown if StepGraph has one or more cycles</exception>
-        public void Sort()
+        public void TopologicalSort()
         {
-            Stack<Step> sorted = new Stack<Step>();
+            Dictionary<Step, StepSortState> stepStates = _steps.ToDictionary(s => s, s => StepSortState.Untouched);
+            Stack<Step> sortedSteps = new Stack<Step>(_steps.Count);
 
             foreach (Step step in _steps)
             {
-                TopologicalSort(step, sorted);
+                SortStep(step, stepStates, sortedSteps, new Stack<Step>());
             }
 
-            _steps = new HashSet<Step>(sorted);
+            _steps = new HashSet<Step>(sortedSteps);
         }
 
-        private void TopologicalSort(Step step, Stack<Step> sorted)
+        private void SortStep(Step step, Dictionary<Step, StepSortState> stepStates, Stack<Step> sortedSteps, Stack<Step> currentPath)
         {
-            if (sorted.Contains(step))
+            if (stepStates[step] == StepSortState.Sorted)
             {
                 return;
             }
+            else if (stepStates[step] == StepSortState.Sorting)
+            {
+                string cycle = step.Name;
+                Step currentStep = null;
+
+                do
+                {
+                    currentStep = currentPath.Pop();
+                    cycle = $"{currentStep.Name}->{cycle}";
+                } while (currentStep != step);
+
+                throw new Exception(cycle);
+            }
+
+            stepStates[step] = StepSortState.Sorting;
+            currentPath.Push(step);
 
             foreach (Step child in step.Dependents)
             {
-                if (!sorted.Contains(child))
+                if (!sortedSteps.Contains(child))
                 {
-                    TopologicalSort(child, sorted);
+                    SortStep(child, stepStates, sortedSteps, currentPath);
                 }
             }
 
-            sorted.Push(step);
+            currentPath.Pop();
+            sortedSteps.Push(step);
+            stepStates[step] = StepSortState.Sorted;
         }
 
+        private enum StepSortState
+        {
+            Untouched,
+            Sorting,
+            Sorted
+        }
+
+        #region IEnumerable<T> member implementations
         public IEnumerator<Step> GetEnumerator()
         {
             return _steps.GetEnumerator();
@@ -146,5 +170,6 @@ namespace JeremyTCD.PipelinesCE.Core
         {
             _steps.Add(step);
         }
+        #endregion
     }
 }

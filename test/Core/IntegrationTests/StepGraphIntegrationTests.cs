@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
@@ -75,6 +77,61 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
 
             // Assert
             Assert.Equal(0, result.Count);
+        }
+
+        [Fact]
+        public void TopologicalSort_SortsStepsTopographically()
+        {
+            // Arrange
+            DummyStep dummyStep1 = new DummyStep("1");
+            DummyStep dummyStep2 = new DummyStep("2");
+            DummyStep dummyStep3 = new DummyStep("3");
+            DummyStep dummyStep4 = new DummyStep("4");
+            DummyStep dummyStep5 = new DummyStep("5");
+            DummyStep dummyStep6 = new DummyStep("6");
+            dummyStep1.Dependents.Add(dummyStep3);
+            dummyStep2.Dependents.Add(dummyStep3);
+            dummyStep3.Dependencies.AddRange(new[] { dummyStep1, dummyStep2 }); // Multiple dependencies
+            dummyStep3.Dependents.AddRange(new[] { dummyStep4, dummyStep5 }); // Multiple dependents
+            dummyStep4.Dependencies.Add(dummyStep3); // Single dependency
+            dummyStep4.Dependents.Add(dummyStep6); // Single dependent
+            dummyStep5.Dependencies.Add(dummyStep3);
+            dummyStep6.Dependencies.Add(dummyStep4);
+
+            StepGraph stepGraph = new StepGraph(new[] { dummyStep5, dummyStep2, dummyStep1, dummyStep3, dummyStep4, dummyStep6 }); // Random order
+
+            // Act
+            stepGraph.TopologicalSort();
+
+            // Assert
+            List<Step> sortedSteps = stepGraph.ToList();
+            Assert.Equal(dummyStep1, sortedSteps[0]);
+            Assert.Equal(dummyStep2, sortedSteps[1]);
+            Assert.Equal(dummyStep3, sortedSteps[2]);
+            Assert.Equal(dummyStep4, sortedSteps[3]);
+            Assert.Equal(dummyStep6, sortedSteps[4]);
+            Assert.Equal(dummyStep5, sortedSteps[5]);
+        }
+
+        [Fact]
+        public void TopologicalSort_ThrowsExceptionIfGraphHasOneOrMoreCycles()
+        {
+            // Arrange
+            DummyStep dummyStep1 = new DummyStep("1");
+            DummyStep dummyStep2 = new DummyStep("2");
+            DummyStep dummyStep3 = new DummyStep("3");
+            dummyStep1.Dependencies.Add(dummyStep3);
+            dummyStep1.Dependents.Add(dummyStep2);
+            dummyStep2.Dependencies.Add(dummyStep1);
+            dummyStep2.Dependents.Add(dummyStep3);
+            dummyStep3.Dependencies.Add(dummyStep2);
+            dummyStep3.Dependents.Add(dummyStep1);
+
+            StepGraph stepGraph = new StepGraph(new[] { dummyStep2, dummyStep1, dummyStep3 }); // Random order
+
+            // Act and Assert
+            Exception exception = Assert.Throws<Exception>(() => stepGraph.TopologicalSort());
+            Assert.Equal($"{dummyStep2.Name}->{dummyStep3.Name}->{dummyStep1.Name}->{dummyStep2.Name}", exception.Message);
         }
 
         [Fact]
