@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
 {
     public class StepGraphIntegrationTests
     {
+        private StepGraphFactory _stepGraphFactory { get; }
+
+        public StepGraphIntegrationTests()
+        {
+            _stepGraphFactory = new StepGraphFactory();
+        }
+
         [Fact]
         public void GetSubGraphs_ReturnsListContainingSubgraphsWhenThereAreMultipleSubgraphs()
         {
@@ -14,20 +22,15 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
             DummyStep dummyStep1 = new DummyStep("1");
 
             DummyStep dummyStep2 = new DummyStep("2");
-            DummyStep dummyStep3 = new DummyStep("3");
-            dummyStep2.Dependents.Add(dummyStep3);
-            dummyStep3.Dependencies.Add(dummyStep2);
+            DummyStep dummyStep3 = new DummyStep("3", new[] { dummyStep2 });
 
             DummyStep dummyStep4 = new DummyStep("4");
-            DummyStep dummyStep5 = new DummyStep("5");
-            DummyStep dummyStep6 = new DummyStep("6");
-            // Ensure that GetSubGraphs ignores edge direction
-            dummyStep4.Dependencies.Add(dummyStep5); 
-            dummyStep5.Dependents.Add(dummyStep4);
-            dummyStep5.Dependents.Add(dummyStep6);
-            dummyStep6.Dependencies.Add(dummyStep5);
+            // Ensure that GetSubGraphs ignores edge direction when generating subgraphs
+            DummyStep dummyStep5 = new DummyStep("5", new[] { dummyStep4 });
+            DummyStep dummyStep6 = new DummyStep("6", new[] { dummyStep4 });
 
-            StepGraph stepGraph = new StepGraph(new[] { dummyStep1, dummyStep2, dummyStep3, dummyStep4, dummyStep5, dummyStep6 });
+            StepGraph stepGraph = _stepGraphFactory.
+                CreateFromComposableGroup(new Pipeline(null, new[] { dummyStep1, dummyStep2, dummyStep3, dummyStep4, dummyStep5, dummyStep6 }));
 
             // Act
             List<StepGraph> result = stepGraph.GetSubgraphs();
@@ -47,14 +50,10 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
         {
             // Arrange
             DummyStep dummyStep1 = new DummyStep("1");
-            DummyStep dummyStep2 = new DummyStep("2");
-            DummyStep dummyStep3 = new DummyStep("3");
-            dummyStep1.Dependents.Add(dummyStep2);
-            dummyStep2.Dependencies.Add(dummyStep1);
-            dummyStep2.Dependents.Add(dummyStep3);
-            dummyStep3.Dependencies.Add(dummyStep2);
+            DummyStep dummyStep2 = new DummyStep("2", new[] { dummyStep1 });
+            DummyStep dummyStep3 = new DummyStep("3", new[] { dummyStep2 });
 
-            StepGraph stepGraph = new StepGraph(new[] { dummyStep1, dummyStep2, dummyStep3 });
+            StepGraph stepGraph = _stepGraphFactory.CreateFromComposableGroup(new Pipeline(null, new[] { dummyStep1, dummyStep2, dummyStep3 }));
 
             // Act
             List<StepGraph> result = stepGraph.GetSubgraphs();
@@ -80,28 +79,21 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
         }
 
         [Fact]
-        public void TopologicalSort_SortsStepsTopographically()
+        public void SortTopologically_SortsStepsTopographically()
         {
             // Arrange
             DummyStep dummyStep1 = new DummyStep("1");
             DummyStep dummyStep2 = new DummyStep("2");
-            DummyStep dummyStep3 = new DummyStep("3");
-            DummyStep dummyStep4 = new DummyStep("4");
-            DummyStep dummyStep5 = new DummyStep("5");
-            DummyStep dummyStep6 = new DummyStep("6");
-            dummyStep1.Dependents.Add(dummyStep3);
-            dummyStep2.Dependents.Add(dummyStep3);
-            dummyStep3.Dependencies.AddRange(new[] { dummyStep1, dummyStep2 }); // Multiple dependencies
-            dummyStep3.Dependents.AddRange(new[] { dummyStep4, dummyStep5 }); // Multiple dependents
-            dummyStep4.Dependencies.Add(dummyStep3); // Single dependency
-            dummyStep4.Dependents.Add(dummyStep6); // Single dependent
-            dummyStep5.Dependencies.Add(dummyStep3);
-            dummyStep6.Dependencies.Add(dummyStep4);
+            DummyStep dummyStep3 = new DummyStep("3", new[] { dummyStep1, dummyStep2 }); // This step has multiple dependencies and multiple dependents
+            DummyStep dummyStep4 = new DummyStep("4", new[] { dummyStep3 });  // This step has a single dependency and a single dependent
+            DummyStep dummyStep5 = new DummyStep("5", new[] { dummyStep3 });
+            DummyStep dummyStep6 = new DummyStep("6", new[] { dummyStep4 });
 
-            StepGraph stepGraph = new StepGraph(new[] { dummyStep5, dummyStep2, dummyStep1, dummyStep3, dummyStep4, dummyStep6 }); // Random order
+            StepGraph stepGraph = _stepGraphFactory.
+                CreateFromComposableGroup(new Pipeline(null, new[] { dummyStep5, dummyStep2, dummyStep1, dummyStep3, dummyStep4, dummyStep6 })); // Random order
 
             // Act
-            stepGraph.TopologicalSort();
+            stepGraph.SortTopologically();
 
             // Assert
             List<Step> sortedSteps = stepGraph.ToList();
@@ -110,35 +102,23 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
             Assert.Equal(dummyStep3, sortedSteps[2]);
             Assert.Equal(dummyStep4, sortedSteps[3]);
             Assert.Equal(dummyStep6, sortedSteps[4]);
-            Assert.Equal(dummyStep5, sortedSteps[5]);
+            Assert.Equal(dummyStep5, sortedSteps[5]); // SortTopologically is not deterministic. Initial order of steps affects the sorted order.
         }
 
         [Fact]
-        public void TopologicalSort_ThrowsExceptionIfGraphHasOneOrMoreCycles()
+        public void SortTopologically_ThrowsExceptionIfGraphHasOneOrMoreCycles()
         {
             // Arrange
             DummyStep dummyStep1 = new DummyStep("1");
-            DummyStep dummyStep2 = new DummyStep("2");
-            DummyStep dummyStep3 = new DummyStep("3");
+            DummyStep dummyStep2 = new DummyStep("2", new[] { dummyStep1 });
+            DummyStep dummyStep3 = new DummyStep("3", new[] { dummyStep2 });
             dummyStep1.Dependencies.Add(dummyStep3);
-            dummyStep1.Dependents.Add(dummyStep2);
-            dummyStep2.Dependencies.Add(dummyStep1);
-            dummyStep2.Dependents.Add(dummyStep3);
-            dummyStep3.Dependencies.Add(dummyStep2);
-            dummyStep3.Dependents.Add(dummyStep1);
 
-            StepGraph stepGraph = new StepGraph(new[] { dummyStep2, dummyStep1, dummyStep3 }); // Random order
+            StepGraph stepGraph = _stepGraphFactory.CreateFromComposableGroup(new Pipeline(null, new[] { dummyStep2, dummyStep1, dummyStep3 })); // Random order
 
             // Act and Assert
-            Exception exception = Assert.Throws<Exception>(() => stepGraph.TopologicalSort());
+            Exception exception = Assert.Throws<Exception>(() => stepGraph.SortTopologically());
             Assert.Equal($"{dummyStep2.Name}->{dummyStep3.Name}->{dummyStep1.Name}->{dummyStep2.Name}", exception.Message);
-        }
-
-        [Fact]
-        public void Run_CancelsAllTasksIfAStepThrowsAnException()
-        {
-            // The continuation is passed a System.Threading.CancellationToken whose IsCancellationRequested property is true.In this case, the continuation does not start, and it transitions to the System.Threading.Tasks.TaskStatus.Canceled state.
-            // The continuation never runs because the condition set by its TaskContinuationOptions argument was not met. For example, if an antecedent goes into a System.Threading.Tasks.TaskStatus.Faulted state, its continuation that was passed the System.Threading.Tasks.TaskContinuationOptions.NotOnFaulted option will not run but will transition to the Canceled state.
         }
 
         private class DummyStep : Step
@@ -147,9 +127,9 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
                 base(name, dependencies)
             { }
 
-            public override void Run(IPipelineContext pipelineContext)
+            public override void Run(IPipelineContext pipelineContext, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }
