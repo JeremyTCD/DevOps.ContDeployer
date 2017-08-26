@@ -2,6 +2,7 @@
 using JeremyTCD.PipelinesCE.Core;
 using Microsoft.Extensions.Logging;
 using StructureMap;
+using System;
 using System.Collections.Generic;
 
 namespace JeremyTCD.PipelinesCE.Config
@@ -9,19 +10,17 @@ namespace JeremyTCD.PipelinesCE.Config
     public class ConfigRunner : IConfigRunner
     {
         private IConfigLoader _pipelineLoader { get; }
-        private IStepGraphFactory _stepGraphFactory { get; }
         private IPipelineContextBuilder _pipelineContextBuilder { get; }
-        private ILoggerFactory _loggerFactory { get; }
         private ILoggingService<ConfigRunner> _loggingService { get; }
+        private IPipelineRunner _pipelineRunner { get; }
 
-        public ConfigRunner(IConfigLoader pipelineLoader, IStepGraphFactory stepGraphFactory, ILoggerFactory loggerFactory,
-            IPipelineContextBuilder pipelineContextBuilder, ILoggingService<ConfigRunner> loggingService)
+        public ConfigRunner(IConfigLoader pipelineLoader, IPipelineContextBuilder pipelineContextBuilder, 
+            ILoggingService<ConfigRunner> loggingService, IPipelineRunner pipelineRunner)
         {
             _pipelineContextBuilder = pipelineContextBuilder;
             _pipelineLoader = pipelineLoader;
-            _stepGraphFactory = stepGraphFactory;
-            _loggerFactory = loggerFactory;
             _loggingService = loggingService;
+            _pipelineRunner = pipelineRunner;
         }
 
         /// <summary>
@@ -34,9 +33,6 @@ namespace JeremyTCD.PipelinesCE.Config
             // Load Pipeline
             (Pipeline pipeline, IDictionary<string, IContainer> pluginContainers) = _pipelineLoader.Load(pipelinesCEOptions);
 
-            // Create StepGraph
-            StepGraph stepGraph = _stepGraphFactory.CreateFromComposableGroup(pipeline);
-
             // Create pipeline context
             IPipelineContext pipelineContext = _pipelineContextBuilder.
                 AddPipelinesCEOptions(pipelinesCEOptions).
@@ -46,7 +42,7 @@ namespace JeremyTCD.PipelinesCE.Config
 
             // Run
             _loggingService.LogInformation(Strings.Log_RunningPipeline, pipelineContext.PipelinesCEOptions.Pipeline);
-            stepGraph.Run(pipelineContext);
+            _pipelineRunner.Run(pipeline, pipelineContext);
             _loggingService.LogInformation(Strings.Log_FinishedRunningPipeline, pipelineContext.PipelinesCEOptions.Pipeline);
         }
     }

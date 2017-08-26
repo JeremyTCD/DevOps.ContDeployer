@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
@@ -12,51 +9,11 @@ namespace JeremyTCD.PipelinesCE.Core
     {
         private HashSet<Step> _steps { get; set; } = new HashSet<Step>();
 
-        public StepGraph(IEnumerable<Step> steps = null)
+        public StepGraph() { }
+
+        public StepGraph(IEnumerable<Step> steps)
         {
             _steps = new HashSet<Step>(steps);
-        }
-
-        public void Run(IPipelineContext pipelineContext)
-        {
-            // Sort steps topologically
-            TopologicalSort();
-
-            // Create CancellationTokenSource
-            CancellationTokenSource cts = new CancellationTokenSource();
-            CancellationToken cancellationToken = cts.Token;
-
-            // TODO exception handling
-            // TODO cancellation?
-            // Run steps
-            foreach (Step step in _steps)
-            {
-                if (step.Dependencies.Count == 0)
-                {
-                    step.Task = Task.Factory.StartNew(() => RunStep(step, pipelineContext, cts), cancellationToken);
-                }
-                else
-                {
-                    step.Task = Task.Factory.ContinueWhenAll(step.Dependencies.Select(p => p.Task).ToArray(),
-                        _ => RunStep(step, pipelineContext, cts), cancellationToken);
-                }
-
-                Task.WaitAll(_steps.Select(s => s.Task).ToArray());
-            }
-        }
-
-        private void RunStep(Step step, IPipelineContext pipelineContext, CancellationTokenSource cts)
-        {
-            try
-            {
-                step.Logger.LogInformation(Strings.Log_RunningStep, step.Name);
-                step.Run(pipelineContext);
-                step.Logger.LogInformation(Strings.Log_FinishedRunningStep, step.Name);
-            }
-            finally
-            {
-                cts.Cancel();
-            }
         }
 
         /// <summary>
@@ -99,7 +56,7 @@ namespace JeremyTCD.PipelinesCE.Core
         /// Sorts steps topologically. Steps are ordered from roots to leaves.
         /// </summary>
         /// <exception cref="Exception">Thrown if StepGraph has one or more cycles</exception>
-        public void TopologicalSort()
+        public void SortTopologically()
         {
             Dictionary<Step, StepSortState> stepStates = _steps.ToDictionary(s => s, s => StepSortState.Untouched);
             Stack<Step> sortedSteps = new Stack<Step>(_steps.Count);
