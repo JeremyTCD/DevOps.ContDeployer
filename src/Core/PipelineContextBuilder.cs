@@ -1,6 +1,5 @@
 ﻿using StructureMap;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
 
 namespace JeremyTCD.PipelinesCE.Core
 {
@@ -9,13 +8,6 @@ namespace JeremyTCD.PipelinesCE.Core
         public IDictionary<string, IContainer> _pluginContainers { get; private set; }
         private SharedStepOptions _sharedPluginOptions { get; set; }
         private PipelinesCEOptions _pipelinesCEOptions { get; set; }
-        private ILoggerFactory _loggerFactory { get; set; }
-
-        public IPipelineContextBuilder AddLoggerFactory(ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory;
-            return this;
-        }
 
         public IPipelineContextBuilder AddPipelinesCEOptions(PipelinesCEOptions pipelinesCEOptions)
         {

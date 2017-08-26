@@ -9,7 +9,6 @@ namespace JeremyTCD.PipelinesCE.Core
         IPipelineContextBuilder AddSharedStepOptions(SharedStepOptions sharedStepOptions);
         IPipelineContextBuilder AddPipelinesCEOptions(PipelinesCEOptions pipelinesCEOptions);
         IPipelineContextBuilder AddPluginContainers(IDictionary<string, IContainer> pluginContainers);
-        IPipelineContextBuilder AddLoggerFactory(ILoggerFactory loggerFactory);
         IPipelineContext BuildPipelineContext();
     }
 }

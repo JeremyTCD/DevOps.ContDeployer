@@ -42,7 +42,6 @@ namespace JeremyTCD.PipelinesCE.Config
                 AddPipelinesCEOptions(pipelinesCEOptions).
                 AddSharedStepOptions(sharedStepOptions).
                 AddPluginContainers(pluginContainers).
-                AddLoggerFactory(_loggerFactory).
                 BuildPipelineContext();
 
             // Run
