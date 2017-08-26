@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Xunit;
 
 namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
@@ -328,7 +329,7 @@ namespace JeremyTCD.PipelinesCE.Core.Tests.IntegrationTests
                 base(name, dependencies)
             { }
 
-            public override void Run(IPipelineContext pipelineContext)
+            public override void Run(IPipelineContext pipelineContext, CancellationToken cancellationToken)
             {
                 throw new System.NotImplementedException();
             }
