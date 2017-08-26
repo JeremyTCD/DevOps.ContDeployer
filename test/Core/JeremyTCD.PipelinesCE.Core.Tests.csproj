@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>JeremyTCD.PipelinesCE.PluginTools.Tests</AssemblyName>
+    <AssemblyName>JeremyTCD.PipelinesCE.Core.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
