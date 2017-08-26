@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <OutputType>exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Config\JeremyTCD.PipelinesCE.Config.csproj" />
     <ProjectReference Include="..\..\src\Core\JeremyTCD.PipelinesCE.Core.csproj" />
-    <ProjectReference Include="..\..\src\MSBuild\JeremyTCD.PipelinesCE.Plugin.MSBuild.csproj" />
   </ItemGroup>
 </Project>
